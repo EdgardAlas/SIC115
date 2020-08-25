@@ -7,12 +7,12 @@ class Controller
         Flight::render($ruta, $variables);
     }
 
-    protected function view($main, $variables = array()){
-        /* Flight::render('template/navbar', array(), 'navbar');
+    protected function view($main = '', $variables = array()){
+        Flight::render('template/header', array(), 'header');
         Flight::render('template/sidebar', array(), 'sidebar');
-        Flight::render($main, array(), 'main');
+        ($main!=='') ? Flight::render($main, array(), 'main') : '';
         Flight::render('template/footer', array(), 'footer');
-        Flight::render('template/layout', $variables); */
+        Flight::render('template/layout', $variables);
     }
     
     //validar el metodo correcto para el acceso

@@ -11,4 +11,8 @@ class Utiles
         return iconv('ISO-8859-2', 'UTF-8', strftime("%A, %d - %B - %Y", strtotime($fecha)));
         //return date("Y-m-d", strtotime($fecha));
     }
+
+    public static function printScript($script){
+        return "<script src = '".URL_BASE."/public/js/".$script.".js'></script>";
+    }
 }

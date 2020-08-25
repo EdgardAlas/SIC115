@@ -14,15 +14,9 @@ class HomeController extends Controller
     public function index()
     {
 
-        $datos = [
-            'username' => 'y'
-        ];
-
-        print_r($this->modelo->validarCampos($datos));
-
-        $this->viewOne('Home', array(
-            'inicio' => 'Peraza'
-        ));
+        $this->view('content_blank', [
+            'js_especifico' => Utiles::printScript('home')
+        ]);
     }
 
     public function guardar()
