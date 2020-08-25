@@ -1,0 +1,36 @@
+<?php
+
+class Controller
+{
+
+    protected function viewOne($ruta, $variables = array()){
+        Flight::render($ruta, $variables);
+    }
+
+    protected function view($main, $variables = array()){
+        /* Flight::render('template/navbar', array(), 'navbar');
+        Flight::render('template/sidebar', array(), 'sidebar');
+        Flight::render($main, array(), 'main');
+        Flight::render('template/footer', array(), 'footer');
+        Flight::render('template/layout', $variables); */
+    }
+    
+    //validar el metodo correcto para el acceso
+    protected function validarPeticion($request,$metodo){
+        if($request!==$metodo){
+            Exepcion::generarExcepcion('Peticion no permitida');
+        }
+    }
+
+    protected function isAjax(){
+        if(!flight::request()->ajax){
+            Exepcion::generarExcepcion('No es una peticion ajax');
+        }
+    }
+
+    protected function isNotAjax(){
+        if(flight::request()->ajax){
+            Exepcion::generarExcepcion('Es peticion ajax');
+        }
+    }
+}

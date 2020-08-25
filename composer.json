@@ -1,0 +1,7 @@
+{
+    "require": {
+        "mikecao/flight": "^1.3",
+        "catfan/medoo": "^1.7",
+        "wixel/gump": "^1.11"
+    }
+}
