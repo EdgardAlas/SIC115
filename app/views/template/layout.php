@@ -16,7 +16,7 @@
             },
             custom: {
                 "families": ["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"],
-                urls: ['<?=URL_BASE?>/public/assets/css/fonts.min.css']
+                urls: ['<?=URL_BASE?>/public/assets/login/fonts.min.css']
             },
             active: function() {
                 sessionStorage.fonts = true;

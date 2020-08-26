@@ -23,7 +23,7 @@
             "families": ["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands",
                 "simple-line-icons"
             ],
-            urls: ['<?=URL_BASE?>/public/assets/login/css/fonts.min.css']
+            urls: ['<?=URL_BASE?>/public/assets/login/fonts.min.css']
         },
         active: function() {
             sessionStorage.fonts = true;
@@ -39,7 +39,7 @@
 <body class="login">
     <div class="wrapper wrapper-login">
         <div class="container container-login animated fadeIn" style="display: block;">
-            <h3 class="text-center">Iniciar sesión</h3>
+            <h3 class="text-center">Iniciar Sesión</h3>
             <div class="login-form">
                 <div class="form-group form-floating-label">
                     <input id="username" name="username" type="text" class="form-control input-border-bottom"
