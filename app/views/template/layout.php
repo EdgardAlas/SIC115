@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Atlantis Lite - Bootstrap 4 Admin Dashboard</title>
+    <title>SIC115</title>
     <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
     <link rel="icon" href="<?=URL_BASE?>/public/assets/img/icon.ico" type="image/x-icon" />
 
@@ -63,9 +63,6 @@
     <!-- Datatables -->
     <script src="<?=URL_BASE?>/public/assets/js/plugin/datatables/datatables.min.js"></script>
 
-    <!-- Bootstrap Notify -->
-    <script src="<?=URL_BASE?>/public/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
-
     <!-- jQuery Vector Maps -->
     <script src="<?=URL_BASE?>/public/assets/js/plugin/jqvmap/jquery.vmap.min.js"></script>
     <script src="<?=URL_BASE?>/public/assets/js/plugin/jqvmap/maps/jquery.vmap.world.js"></script>
@@ -78,6 +75,7 @@
 
     <!-- js especifico -->
     <script src="<?=URL_BASE?>/public/js/sidebar.js"></script>
+    <script src="<?=URL_BASE?>/public/js/utils.js"></script>
     <?= isset($js_especifico) ? $js_especifico : '';?>
 </body>
 

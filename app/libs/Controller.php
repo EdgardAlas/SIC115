@@ -56,6 +56,12 @@ class Controller
         return;
     }
 
+    protected function validarMetodoPeticion($metodo){
+        if(Flight::request()->method!==$metodo){
+            Exepcion::generarExcepcion('Error en la peticion');
+        }
+    }
+
     protected function sesionActivaAjax(){
         $sesion = new Session();
         if($sesion->get('login')===null){

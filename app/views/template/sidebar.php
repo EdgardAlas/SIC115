@@ -10,7 +10,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/cuentas">
+                    <a href="/cuenta">
                         <i class="fas fa-home"></i>
                         <p>Cuentas</p>
                     </a>

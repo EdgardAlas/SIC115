@@ -40,7 +40,12 @@ class LoginController extends Controller
             Exepcion::json(['error' => false, 'url' => '/']);
         }
         Exepcion::json(['error' => true, 'tipo' => 'no_encontrado']);
+    }
 
+    public function cerrarSesion(){
+        $sesion = new Session();
+        $sesion->destroy();
+        Flight::redirect('/login', 200);
     }
 
     public function guardar()
