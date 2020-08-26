@@ -12,4 +12,9 @@ class Exepcion
         Flight::notFound();
         exit();
     }
+
+    public static function json($json){
+        Flight::json($json);
+        exit();
+    }
 }

@@ -25,7 +25,7 @@ class Model
         if ($gump->errors()) {
             $retorno_json = [
                 'error' => true, 
-                'tipo ' => 'validaciones', 
+                'tipo' => 'validaciones', 
                 'errores' => $gump->get_errors_array()
             ];
         } else {
@@ -54,14 +54,14 @@ class Model
         return $this->conexion->delete($this->tabla, $condicion)->rowCount();
     }
 
-    public function seleccionar($campos, $condicion)
+    public function seleccionar($campos, $condicion = '')
     {
-        return $this->conexion->select($this->tabla, $campos, $condicion = '');
+        return $this->conexion->select($this->tabla, $campos, $condicion);
     }
 
-    public function existe($condicion)
+    public function existe($condicion = '')
     {
-        return $this->conexion->has($this->tabla, $condicion = '');
+        return $this->conexion->has($this->tabla, $condicion);
     }
 
     public function last()

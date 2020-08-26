@@ -33,4 +33,33 @@ class Controller
             Exepcion::generarExcepcion('Es peticion ajax');
         }
     }
+
+    protected function sesionActiva(){
+        $this->isNotAjax();
+
+        $sesion = new Session();
+
+        if($sesion->get('login')===null && Flight::request()->url==='/login'){
+            return '';
+        }
+
+        if($sesion->get('login')===null){
+            Flight::redirect('/login', 200);
+            exit();
+        }
+
+        if($sesion->get('login')!==null && Flight::request()->url==='/login'){
+            Flight::redirect('/', 200);
+            exit();
+        }
+
+        return;
+    }
+
+    protected function sesionActivaAjax(){
+        $sesion = new Session();
+        if($sesion->get('login')===null){
+            Exepcion::generarExcepcion('No ha iniciado sesion');
+        }
+    }
 }

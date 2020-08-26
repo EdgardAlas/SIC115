@@ -40,24 +40,26 @@
     <div class="wrapper wrapper-login">
         <div class="container container-login animated fadeIn" style="display: block;">
             <h3 class="text-center">Iniciar Sesión</h3>
-            <div class="login-form">
-                <div class="form-group form-floating-label">
-                    <input id="username" name="username" type="text" class="form-control input-border-bottom"
-                        required="">
-                    <label for="username" class="placeholder">Username</label>
-                </div>
-                <div class="form-group form-floating-label">
-                    <input id="password" name="password" type="password" class="form-control input-border-bottom"
-                        required="">
-                    <label for="password" class="placeholder">Password</label>
-                    <div class="show-password">
-                        <i class="icon-eye"></i>
+            <form name='form_login'>
+                <div class="login-form">
+                    <div class="form-group form-floating-label">
+                        <input id="usuario" name="usuario" type="text" class="form-control input-border-bottom"
+                            required="">
+                        <label for="usuario" class="placeholder">Username</label>
+                    </div>
+                    <div class="form-group form-floating-label">
+                        <input id="contrasena" name="contrasena" type="password" class="form-control input-border-bottom"
+                            required="">
+                        <label for="contrasena" class="placeholder">Password</label>
+                        <div class="show-password">
+                            <i class="icon-eye"></i>
+                        </div>
+                    </div>
+                    <div class="form-action mb-3">
+                        <button type='submit' class='btn btn-primary btn-rounded btn-login'>Iniciar Sesión</button>
                     </div>
                 </div>
-                <div class="form-action mb-3">
-                    <button class='btn btn-primary btn-rounded btn-login'>Iniciar Sesión</button>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
     <script src="<?=URL_BASE?>/public/assets/js/core/jquery.3.2.1.min.js"></script>
@@ -65,6 +67,7 @@
     <script src="<?=URL_BASE?>/public/assets/js/core/bootstrap.min.js"></script>
     <script src="<?=URL_BASE?>/public/assets/login/jquery-ui.min.js.descargar"></script>
     <script src="<?=URL_BASE?>/public/assets/js/atlantis.min.js"></script>
+    <script src="<?=URL_BASE?>/public/js/login.js"></script>
 
 </body>
 
