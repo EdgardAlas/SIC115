@@ -17,7 +17,7 @@
                         <td>".$cuenta['codigo']."</td>
                         <td>".$cuenta['nombre']."</td>
                         <td>".$cuenta['tipo_saldo']."</td>
-                        <td><button type='button' class='btn btn-link btn-primary btn-lg' 
+                        <td><button type='button' id ='btn_editar_cuenta' class='btn btn-link btn-primary btn-lg' 
                         data-toggle='tooltip' data-placement='top'
                         title='' data-original-title='Editar' data-id = '".
                             base64_encode($cuenta['id'])

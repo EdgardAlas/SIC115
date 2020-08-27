@@ -30,6 +30,35 @@ class CuentaController extends Controller
         ));
     }
 
+    public function modalGuardar(){
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('GET');
+
+        Flight::render('ajax/cuentas/modal-guardar');
+    }
+
+    public function modalEditar($id){
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('GET');
+
+        if($id===null)
+            exit(1);
+
+        $id = base64_decode($id);
+        $sesion = new Session();
+        $empresa = $sesion->get('login')['id'];
+
+        $cuenta = $this->modelo->seleccionar('*', array(
+            'empresa' => $empresa,
+            'id' => $id
+        ));
+
+        Flight::render('ajax/cuentas/modal-editar', array(
+            'cuenta' => $cuenta[0]
+        ));
+    }
 
     public function guardar()
     {

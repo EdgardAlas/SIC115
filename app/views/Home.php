@@ -19,7 +19,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <h3>xdxd</h3>
+                            
                         </div>
                     </div>
                 </div>

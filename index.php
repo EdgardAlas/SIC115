@@ -13,6 +13,7 @@ Flight::map('error', function (Exception $ex) {
     /* header("HTTP/1.0 500 Internal Server Error");
     Flight::render('error/500'); */
     echo $ex->getMessage();
+    
 });  
 
 //MVC creditos: https://steemit.com/php/@kalangaum/easy-php-routing-management

@@ -73,6 +73,9 @@
     <!-- Atlantis JS -->
     <script src="<?=URL_BASE?>/public/assets/js/atlantis.min.js"></script>
 
+    <!-- shorcut -->
+    <script src="<?=URL_BASE?>/public/assets/js/shortcut.js"></script>
+
     <!-- js especifico -->
     <script src="<?=URL_BASE?>/public/js/sidebar.js"></script>
     <script src="<?=URL_BASE?>/public/js/utils.js"></script>
