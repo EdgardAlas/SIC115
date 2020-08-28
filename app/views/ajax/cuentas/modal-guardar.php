@@ -10,11 +10,11 @@
         <div class="row form-group">
             <div class="col-6">
                 <label for="codigo">Código</label>
-                <input type="text" name="codigo" id="codigo" class="form-control">
+                <input type="text" name="codigo" id="codigo" class="form-control text-uppercase">
             </div>
-            <div class="col-6" id='validarMayor'>
-                <label for="validar">&nbsp;</label>
-                <input type="text" name="validar" id="validar" data-mayor=<?=base64_encode(-1)?> class="form-control" readonly>
+            <div class="col-6" id='validar_padre'>
+                <label for="padre">&nbsp;</label>
+                <input type="text" name="padre" id="padre" data-mayor=<?=base64_encode(-1)?> class="form-control" readonly tabindex="-1">
             </div>
         </div>
         <div class="row form-group">

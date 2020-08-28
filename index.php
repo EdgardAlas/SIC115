@@ -12,7 +12,7 @@ Flight::map('notFound', function () {
 Flight::map('error', function (Exception $ex) {
     /* header("HTTP/1.0 500 Internal Server Error");
     Flight::render('error/500'); */
-    echo $ex->getMessage();
+    echo $ex->getTraceAsString();
     
 });  
 
