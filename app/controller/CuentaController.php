@@ -24,7 +24,13 @@ class CuentaController extends Controller
         $this->sesionActivaAjax();
         $this->validarMetodoPeticion('GET');
 
-        $datos = $this->modelo->listarCuentas();
+        $sesion = new Session();
+        $empresa = $sesion->get('login')['id'];
+
+        $datos = $this->modelo->seleccionar('*', array(
+            'empresa' => $empresa
+        ));
+
         Flight::render('ajax/cuentas/tabla-cuentas', array(
             'datos' => $datos
         ));

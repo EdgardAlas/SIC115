@@ -22,7 +22,7 @@ const focus = (id) => {
 const tablaPaginacion = (id) => {
     $(`#${id}`).dataTable({
         "language": {
-            "url": "public/js/es.json"
+            "url": "/public/js/es.json"
         },
         "lengthMenu": [
             [5, 10, 50, -1],

@@ -43,7 +43,7 @@
 
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-info" data-dismiss="modal">Cerrar</button>
         <button type="submit" class="btn btn-primary" id='btnEditar' data-cuenta = '
         <?= !empty($cuenta_editar) ? base64_encode($cuenta_editar['codigo']) : '' ?>'>
             Editar Cuenta

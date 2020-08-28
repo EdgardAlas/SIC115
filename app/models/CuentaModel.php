@@ -13,12 +13,14 @@ class CuentaModel extends Model
 
         $this->validaciones = [
             "reglas" => [
-                'usuario'    => 'required|alpha_numeric|max_len,100|min_len,6',
-                'contrasena'    => 'required|max_len,100|min_len,8',
+                'codigo'    => 'required|alpha_numeric|',
+                'nombre'    => 'required',
+                'tipo_saldo'    => 'required|alpha',
             ],
             "filtros" => [
-                'usuario' => 'trim|sanitize_string',
-                'contrasena' => 'trim'
+                'codigo' => 'trim|sanitize_string|upper_case',
+                'nombre' => 'trim|sanitize_string',
+                'tipo_saldo' => 'trim|sanitize_string'
             ]
         ];
 
