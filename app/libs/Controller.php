@@ -2,6 +2,11 @@
 
 class Controller
 {
+    protected $sesion;
+
+    public function __construct(){
+        $this->sesion = new Session();
+    }
 
     protected function viewOne($ruta, $variables = array()){
         Flight::render($ruta, $variables);

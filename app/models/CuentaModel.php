@@ -13,15 +13,12 @@ class CuentaModel extends Model
 
         $this->validaciones = [
             "reglas" => [
-                'codigo'    => 'required|alpha_numeric|',
+                'codigo'    => 'required',
                 'nombre'    => 'required',
-                'tipo_saldo'    => 'required|alpha',
+                'tipo_saldo'    => 'required',
+                'padre' => 'required'
             ],
-            "filtros" => [
-                'codigo' => 'trim|sanitize_string|upper_case',
-                'nombre' => 'trim|sanitize_string',
-                'tipo_saldo' => 'trim|sanitize_string'
-            ]
+            "filtros" => []
         ];
 
         parent::__construct($this->tabla, $conexion);

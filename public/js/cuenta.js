@@ -18,9 +18,68 @@ function buscarCuentaPadre() {
     let codigo = $("#codigo").val();
     $("#validar_padre").load("/cuenta/obtenerDatosCuentaPadre", {
         codigo
-    }, function(data) {
+    });
+}
+
+function focusOnEnter(tecla, valor_input, minimo_text_input, id_foco) {
+    if (tecla == 13 && valor_input.length > minimo_text_input) {
+        focus(id_foco);
+    }
+}
+
+function isEnter(tecla, valor_input, minimo_text_input) {
+    return (tecla == 13 && valor_input.length > minimo_text_input);
+
+}
+
+function validarCuentaGuardar() {
+
+    //objeto de cuenta
+    let cuenta = {
+        codigo: $('#codigo').val(),
+        nombre: $('#nombre').val(),
+        padre: $('#padre').data('padre'),
+        tipo_saldo: $('#tipo_saldo').val()
+    }
+    log(cuenta);
+    // casos de error
+    if (cuenta.codigo.length === 0 || cuenta.padre === btoa(-1)) {
+        focus('codigo');
+        return false;
+    }
+
+    if (cuenta.nombre.length === 0) {
+        focus('nombre');
+        return false;
+    }
+
+    //confirmar guardar
+    alertify.confirm("This is a confirm dialog.",
+        function() {
+            alertify.success('Ok');
+        },
+        function() {
+            alertify.error('Cancel');
+        });
+}
+
+function guardarCuenta(cuenta) {
+    $.post('/cuenta/guardar', { cuenta }, function(data) {
         log(data);
     });
+}
+
+function submitFormularioEspecico() {
+    let formulario = $("#nombre").closest('form');
+    let id = formulario.attr('id'),
+        accion = formulario.data('accion');
+
+
+    if (accion === 'guardar') {
+        validarCuentaGuardar();
+    } else {
+        validarCuentaEditar();
+    }
 }
 
 /* Inicio */
@@ -65,6 +124,7 @@ $(document).ready((event) => {
                 event.keyCode == 114 || // R
                 event.keyCode == 82 || // r
                 event.keyCode == 116 || // f5
+                event.keyCode == 123 || // f12, remover en la version final
                 (event.keyCode >= 48 && event.keyCode <= 57) || // numeros del teclado
                 (event.keyCode >= 96 && event.keyCode <= 105)
             ) // numeros del teclado numerico
@@ -82,18 +142,34 @@ $(document).ready((event) => {
     });
 
     $(document).on("keyup", "#codigo", function(e) {
+        focusOnEnter(
+            e.keyCode,
+            $(this).val(),
+            0,
+            'nombre'
+        );
         buscarCuentaPadre();
     });
 
+    $(document).on("keyup", "#nombre", function(e) {
+        if (isEnter(e.keyCode, $(this).val(), 0)) {
+            submitFormularioEspecico();
+        }
+    });
+
+    $(document).on("click", "#btn_guardar", function(e) {
+        $('#btn_guardar').blur();
+        submitFormularioEspecico();
+
+    });
 
     /*
      * Combinacione de teclas
      */
 
     shortcut.add("Alt+G", function() {
-        /* let id = $("#nombre").closest('form').attr('id');
-        $('#' + id).submit(); */
-        alert('simular guardar');
+
+        submitFormularioEspecico();
     });
 
     //usar la tecle f8 para cambiar entre el saldo de la cuenta

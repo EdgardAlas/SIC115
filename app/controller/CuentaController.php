@@ -9,6 +9,7 @@ class CuentaController extends Controller
     public function __construct($conexion)
     {
         $this->modelo = new CuentaModel($conexion);
+        parent::__construct();
     }
 
     public function index()
@@ -24,8 +25,7 @@ class CuentaController extends Controller
         $this->sesionActivaAjax();
         $this->validarMetodoPeticion('GET');
 
-        $sesion = new Session();
-        $empresa = $sesion->get('login')['id'];
+        $empresa = $this->sesion->get('login')['id'];
 
         $datos = $this->modelo->seleccionar('*', array(
             'empresa' => $empresa
@@ -53,8 +53,8 @@ class CuentaController extends Controller
             exit(1);
 
         $id = base64_decode($id);
-        $sesion = new Session();
-        $empresa = $sesion->get('login')['id'];
+       
+        $empresa = $this->sesion->get('login')['id'];
 
         $cuenta = $this->modelo->seleccionar('*', array(
             'empresa' => $empresa,
@@ -78,8 +78,8 @@ class CuentaController extends Controller
         $this->isAjax();
         $this->sesionActivaAjax();
         $this->validarMetodoPeticion('POST');
-        $sesion = new Session();
-        $empresa = $sesion->get('login')['id'];
+
+        $empresa = $this->sesion->get('login')['id'];
 
         $codigo = isset($_POST['codigo']) ? $_POST['codigo'] : '';
         
@@ -117,7 +117,43 @@ class CuentaController extends Controller
 
     public function guardar()
     {
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('POST');
 
+        $resultado_validaciones = [];
+
+        if (!isset($_POST['cuenta'])) {
+            Exepcion::json(['error' => true]);
+        }
+
+        $cuenta_guardar = $_POST['cuenta'];
+
+        $resultado_validaciones = $this->modelo->validarCampos($cuenta_guardar);
+        
+        if ($resultado_validaciones['error'] === true) {
+            Exepcion::json($resultado_validaciones);
+        }
+
+        $cuenta_guardar = $this->ordenarDatosCuentaGuardar($cuenta_guardar);
+
+        $resultado_guardar = $this->modelo->insertar($cuenta_guardar);
+
+        if($resultado_guardar!==null){
+            if (isset($cuenta_guardar['padre'])) {
+                $this->modelo->actualizar([
+                    'ultimo_nivel' => 0,
+                ], array(
+                    'id' => $cuenta_guardar['padre'],
+                ));
+            }
+
+            Exepcion::json(['error' => false,
+                'mensaje' => 'Cuenta Guardada',
+            ]);
+        }
+
+        Exepcion::json(['error' => true]);
     }
 
     public function editar()
@@ -191,5 +227,33 @@ class CuentaController extends Controller
         }
 
         return '';
+    }
+
+    private function ordenarDatosCuentaGuardar($datos)
+    {
+        
+        $datos['empresa'] = $this->sesion->get('login')['id'];
+
+        $datos['codigo'] = strtoupper($datos['codigo']);
+        $datos['padre'] = base64_decode($datos['padre']);
+
+        $codigoR = $datos['codigo'];
+        if (strpos($datos['codigo'], "R") !== false) {
+            $codigoR = str_replace('R', '', $datos['codigo']);
+        }
+
+        $datos['orden'] = $datos['codigo'][0];
+
+        if ($datos['padre'] == 0) {
+            unset($datos['padre']);
+        }
+
+        $datos['nivel'] = 1;
+
+        if (strlen($codigoR) > 1) {
+            $datos['nivel'] = (strlen($codigoR) / 2) + 1;
+        }
+
+        return $datos;
     }
 }

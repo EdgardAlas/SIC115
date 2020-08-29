@@ -55,8 +55,9 @@ Flight::route('/(@controlador(/@metodo(/@id)))', function ($controlador, $metodo
         }
         try {
             $objControlador->$metodo($id);
-        } catch (\Throwable $th) {
-            Exepcion::generarExcepcion('');
+        } catch (Exception $e) {
+//            Exepcion::generarExcepcion('');
+            echo $e->getMessage();
         }
     }
 });

@@ -4,7 +4,7 @@
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<form id='formGuardar'>
+<form id='form_guardar' data-accion = 'guardar'>
     <div class="modal-body">
 
         <div class="row form-group">
@@ -34,6 +34,6 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-info" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" id='btnGuardar'>Guardar Cuenta</button>
+        <button type="button" class="btn btn-primary" id='btn_guardar'>Guardar Cuenta</button>
     </div>
 </form>
