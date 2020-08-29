@@ -32,6 +32,20 @@ function isEnter(tecla, valor_input, minimo_text_input) {
 
 }
 
+function cargarModalGuardar() {
+    $('#modal-content-body').load('/cuenta/modalGuardar');
+}
+
+function cargarModalEditar(id) {
+    $('#modal-content-body').load(`/cuenta/modalEditar/${id}`);
+}
+
+function limpiarCampos() {
+    $('#modal-content-body').load('/cuenta/modalGuardar', function() {
+        focus('codigo');
+    });
+}
+
 function validarCuentaGuardar() {
 
     //objeto de cuenta
@@ -54,18 +68,100 @@ function validarCuentaGuardar() {
     }
 
     //confirmar guardar
-    alertify.confirm("This is a confirm dialog.",
-        function() {
-            alertify.success('Ok');
-        },
-        function() {
-            alertify.error('Cancel');
-        });
+    Swal.fire({
+        title: 'Atención',
+        text: "¿Esta seguro de guardar esta cuenta?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#6777ef',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+    }).then((result) => {
+        if (result.value) {
+            guardarCuenta(cuenta);
+        } else {
+            focus('codigo');
+        }
+    })
+}
+
+function validarCuentaEditar() {
+
+    //objeto de cuenta
+    let cuenta = {
+        id: $('#btn_editar').data('cuenta'),
+        nombre: $('#nombre').val(),
+        tipo_saldo: $('#tipo_saldo').val()
+    }
+    log(cuenta);
+    // casos de error
+    if (cuenta.nombre.length === 0) {
+        focus('nombre');
+        return false;
+    }
+
+    //confirmar guardar
+    Swal.fire({
+        title: 'Atención',
+        text: "¿Esta seguro de editar esta cuenta?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#6777ef',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+    }).then((result) => {
+        if (result.value) {
+            editarCuenta(cuenta);
+        } else {
+            focus('nombre');
+        }
+    })
 }
 
 function guardarCuenta(cuenta) {
     $.post('/cuenta/guardar', { cuenta }, function(data) {
-        log(data);
+        if (!data.error) {
+            Swal.fire({
+                title: 'Exito',
+                text: data.mensaje,
+                icon: 'success',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                limpiarCampos();
+                cargarTablaCuentas();
+            })
+        }
+    });
+}
+
+function editarCuenta(cuenta) {
+    $.post('/cuenta/editar', { cuenta }, function(data) {
+        console.log(data)
+        if (!data.error) {
+            Swal.fire({
+                title: 'Exito',
+                text: data.mensaje,
+                icon: 'success',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                $('#modal_acciones_cuenta').modal('hide');
+                cargarTablaCuentas();
+            })
+        } else {
+            Swal.fire({
+                title: 'Error',
+                text: data.mensaje,
+                icon: 'warning',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                $('#modal_acciones_cuenta').modal('hide');
+            })
+        }
     });
 }
 
@@ -95,7 +191,7 @@ $(document).ready((event) => {
 
     //abrir modal guardar
     $('#btn_acciones_cuenta').on('click', function() {
-        $('#modal-content-body').load('/cuenta/modalGuardar');
+        cargarModalGuardar();
         $('#modal_acciones_cuenta').modal('show');
     })
 
@@ -110,7 +206,7 @@ $(document).ready((event) => {
 
     $(document).on('click', '#btn_editar_cuenta', function() {
         let id = $(this).data('id');
-        $('#modal-content-body').load(`/cuenta/modalEditar/${id}`);
+        cargarModalEditar(id);
         $('#modal_acciones_cuenta').modal('show');
     })
 
@@ -124,6 +220,8 @@ $(document).ready((event) => {
                 event.keyCode == 114 || // R
                 event.keyCode == 82 || // r
                 event.keyCode == 116 || // f5
+                event.keyCode == 16 || // shift
+                event.keyCode == 36 || // inicio
                 event.keyCode == 123 || // f12, remover en la version final
                 (event.keyCode >= 48 && event.keyCode <= 57) || // numeros del teclado
                 (event.keyCode >= 96 && event.keyCode <= 105)
@@ -161,6 +259,11 @@ $(document).ready((event) => {
         $('#btn_guardar').blur();
         submitFormularioEspecico();
 
+    });
+
+    $(document).on("click", "#btn_editar", function(e) {
+        $('#btn_editar').blur();
+        submitFormularioEspecico();
     });
 
     /*

@@ -1,0 +1,36 @@
+.back-to-top {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    display: none;
+    z-index: 99999;
+    background-color: rgba(205, 211, 216, 0.5)
+}
+
+.desbordamiento {
+    position: relative;
+    height: 430px;
+    overflow: auto;
+}
+
+.desbordamientoBuscar {
+    position: relative;
+    height: 500px;
+    overflow: auto;
+}
+
+.centrarDiv {
+    margin: 0 auto;
+}
+
+.has-error .select2-selection {
+    border-color: rgb(185, 74, 72) !important;
+}
+
+.wrap {
+    word-break: break-all;
+}
+
+.select2 {
+    width: 100% !important;
+}

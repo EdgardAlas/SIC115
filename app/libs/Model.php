@@ -69,4 +69,9 @@ class Model
         return $this->conexion->last();
     }
 
+    public function error()
+    {
+        return $this->conexion->error();
+    }
+
 }

@@ -16,11 +16,12 @@ class CuentaController extends Controller
     {
         $this->sesionActiva();
         $this->view('cuenta', [
-            'js_especifico' => Utiles::printScript('cuenta')
+            'js_especifico' => Utiles::printScript('cuenta'),
         ]);
     }
 
-    public function tablaCuentas(){
+    public function tablaCuentas()
+    {
         $this->isAjax();
         $this->sesionActivaAjax();
         $this->validarMetodoPeticion('GET');
@@ -28,15 +29,16 @@ class CuentaController extends Controller
         $empresa = $this->sesion->get('login')['id'];
 
         $datos = $this->modelo->seleccionar('*', array(
-            'empresa' => $empresa
+            'empresa' => $empresa,
         ));
 
         Flight::render('ajax/cuentas/tabla-cuentas', array(
-            'datos' => $datos
+            'datos' => $datos,
         ));
     }
 
-    public function modalGuardar(){
+    public function modalGuardar()
+    {
         $this->isAjax();
         $this->sesionActivaAjax();
         $this->validarMetodoPeticion('GET');
@@ -44,25 +46,27 @@ class CuentaController extends Controller
         Flight::render('ajax/cuentas/modal-guardar');
     }
 
-    public function modalEditar($id){
+    public function modalEditar($id)
+    {
         $this->isAjax();
         $this->sesionActivaAjax();
         $this->validarMetodoPeticion('GET');
 
-        if($id===null)
+        if ($id === null) {
             exit(1);
+        }
 
         $id = base64_decode($id);
-       
+
         $empresa = $this->sesion->get('login')['id'];
 
         $cuenta = $this->modelo->seleccionar('*', array(
             'empresa' => $empresa,
-            'id' => $id
+            'id' => $id,
         ));
 
         Flight::render('ajax/cuentas/modal-editar', array(
-            'cuenta' => $cuenta[0]
+            'cuenta' => $cuenta[0],
         ));
     }
 
@@ -82,7 +86,7 @@ class CuentaController extends Controller
         $empresa = $this->sesion->get('login')['id'];
 
         $codigo = isset($_POST['codigo']) ? $_POST['codigo'] : '';
-        
+
         $datos = null;
         $existe_cuenta = array(
             'codigo' => $codigo,
@@ -112,7 +116,7 @@ class CuentaController extends Controller
 
         Flight::render('ajax/cuentas/input-encontrar-padre', array(
             'datosBD' => $datos,
-        )); 
+        ));
     }
 
     public function guardar()
@@ -130,7 +134,7 @@ class CuentaController extends Controller
         $cuenta_guardar = $_POST['cuenta'];
 
         $resultado_validaciones = $this->modelo->validarCampos($cuenta_guardar);
-        
+
         if ($resultado_validaciones['error'] === true) {
             Exepcion::json($resultado_validaciones);
         }
@@ -139,7 +143,7 @@ class CuentaController extends Controller
 
         $resultado_guardar = $this->modelo->insertar($cuenta_guardar);
 
-        if($resultado_guardar!==null){
+        if ($resultado_guardar !== null) {
             if (isset($cuenta_guardar['padre'])) {
                 $this->modelo->actualizar([
                     'ultimo_nivel' => 0,
@@ -158,14 +162,54 @@ class CuentaController extends Controller
 
     public function editar()
     {
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('POST');
 
+        $empresa = $this->sesion->get('login')['id'];
+
+        if (!isset($_POST['cuenta'])) {
+            Exepcion::json(['error' => true, 'mensaje' => 'Hubo un error interno']);
+        }
+
+        $cuenta_editar = $_POST['cuenta'];
+
+        if ($cuenta_editar['id'] === '' || $cuenta_editar['nombre'] === ''
+            || $cuenta_editar['tipo_saldo'] === '') {
+            Exepcion::json(['error' => true, 'mensaje' => 'Hubo un error interno']);
+        }
+
+        $id = base64_decode($cuenta_editar['id']);
+        unset($cuenta_editar['id']);
+
+        $resultado = $this->modelo->actualizar($cuenta_editar, array(
+            'id' => $id,
+            'empresa' => $empresa,
+        ));
+
+        if ($resultado !== 0) {
+            Exepcion::json(['error' => false,
+                'mensaje' => 'Cuenta Editada',
+            ]);
+        } else {
+            if ($this->modelo->error()[2] !== null) {
+                Exepcion::json(['error' => true,
+                    'mensaje' => 'Error al editar en la cuenta',
+                ]);
+            }else{
+                
+            }
+            Exepcion::json(['error' => false,
+                'mensaje' => 'Cuenta Editada',
+            ]);
+
+        }
     }
 
     public function eliminar()
     {
 
     }
-
 
     /*Metodos privados*/
 
@@ -231,7 +275,7 @@ class CuentaController extends Controller
 
     private function ordenarDatosCuentaGuardar($datos)
     {
-        
+
         $datos['empresa'] = $this->sesion->get('login')['id'];
 
         $datos['codigo'] = strtoupper($datos['codigo']);

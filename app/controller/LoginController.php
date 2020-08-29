@@ -69,7 +69,7 @@ class LoginController extends Controller
     {
 
         $sesion = new Session();
-        $data = $this->modelo->seleccionar(array('id', 'nombre'), array('usuario' => $usuario));
+        $data = $this->modelo->seleccionar(array('id', 'nombre', 'usuario'), array('usuario' => $usuario));
 
         $data = $data[0];
         $periodoModel = new PeriodoModel(new Conexion());

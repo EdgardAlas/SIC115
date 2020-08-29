@@ -14,7 +14,7 @@ class HomeController extends Controller
     public function index()
     {
         $this->sesionActiva();
-        $this->view('Home', [
+        $this->view('inicio', [
             'js_especifico' => Utiles::printScript('home')
         ]);
     }

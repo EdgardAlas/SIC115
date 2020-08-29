@@ -1,74 +1,98 @@
 <!DOCTYPE html>
-<!-- saved from url=(0072)http://demo.themekita.com/atlantis/livepreview/examples/demo1/login.html -->
-<html lang="en"
-    class="wf-flaticon-n4-inactive wf-lato-n7-active wf-lato-n9-active wf-fontawesome5solid-n4-active wf-fontawesome5regular-n4-active wf-fontawesome5brands-n4-active wf-simplelineicons-n4-active wf-lato-n4-active wf-lato-n3-active wf-active">
+<html lang="en">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Login</title>
-    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport">
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <title>Iniciar Sesión</title>
 
-    <!-- Fonts and icons -->
-    <script src="<?=URL_BASE?>/public/assets/login/webfont.min.js.descargar"></script>
-    <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/login/css" media="all">
-    <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/login/fonts.min.css" media="all">
-    <link rel="icon" href="<?=URL_BASE?>/public/assets/img/icon.ico" type="image/x-icon" />
-    <script>
-    WebFont.load({
-        google: {
-            "families": ["Lato:300,400,700,900"]
-        },
-        custom: {
-            "families": ["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands",
-                "simple-line-icons"
-            ],
-            urls: ['<?=URL_BASE?>/public/assets/login/fonts.min.css']
-        },
-        active: function() {
-            sessionStorage.fonts = true;
-        }
-    });
-    </script>
+    <!-- General CSS Files -->
+    <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/css/all.css">
 
-    <!-- CSS Files -->
-    <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/login/bootstrap.min.css">
-    <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/login/atlantis.css">
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/css/style.css">
+    <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/css/custom.css" />
+    <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/css/components.css">
 </head>
 
-<body class="login">
-    <div class="wrapper wrapper-login">
-        <div class="container container-login animated fadeIn" style="display: block;">
-            <h3 class="text-center">Iniciar Sesión</h3>
-            <form name='form_login'>
-                <div class="login-form">
-                    <div class="form-group form-floating-label">
-                        <input id="usuario" name="usuario" type="text" class="form-control input-border-bottom"
-                            required="">
-                        <label for="usuario" class="placeholder">Username</label>
-                    </div>
-                    <div class="form-group form-floating-label">
-                        <input id="contrasena" name="contrasena" type="password" class="form-control input-border-bottom"
-                            required="">
-                        <label for="contrasena" class="placeholder">Password</label>
-                        <div class="show-password">
-                            <i class="icon-eye"></i>
+<body>
+    <div id="app">
+        <section class="section">
+            <div class="container mt-5">
+                <div class="row">
+                    <div
+                        class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
+                        <!--<div class="login-brand">
+              <img src="../assets/img/stisla-fill.svg" alt="logo" width="100" class="shadow-light rounded-circle">
+            </div>-->
+
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h4>Login</h4>
+                            </div>
+
+                            <div class="card-body">
+                                <form method="POST" action="#" class="needs-validation" novalidate="" name='form_login'>
+                                    <div class="form-group">
+                                        <label for="usuario">Usuario</label>
+                                        <input id="usuario" type="text" class="form-control" name="usuario" tabindex="1"
+                                            required autofocus>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="d-block">
+                                            <label for="contrasena" class="control-label">Contraseña</label>
+                                            <div class="float-right">
+                                                <a href="auth-forgot-password.html" class="text-small">
+                                                    Forgot Password?
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <input id="contrasena" type="password" class="form-control" name="contrasena"
+                                            tabindex="2" required>
+                                    </div>
+
+                                    <div class="form-group">
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <button type="submit" id='login' class="btn btn-primary btn-lg btn-block"
+                                            tabindex="4">
+                                            Login
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="simple-footer">
+                            SIC175 © 2020
                         </div>
                     </div>
-                    <div class="form-action mb-3">
-                        <button type='submit' class='btn btn-primary btn-rounded btn-login'>Iniciar Sesión</button>
-                    </div>
                 </div>
-            </form>
-        </div>
+            </div>
+        </section>
     </div>
-    <script src="<?=URL_BASE?>/public/assets/js/core/jquery.3.2.1.min.js"></script>
-    <script src="<?=URL_BASE?>/public/assets/js/core/popper.min.js"></script>
-    <script src="<?=URL_BASE?>/public/assets/js/core/bootstrap.min.js"></script>
-    <script src="<?=URL_BASE?>/public/assets/login/jquery-ui.min.js.descargar"></script>
-    <script src="<?=URL_BASE?>/public/assets/js/atlantis.min.js"></script>
-    <script src="<?=URL_BASE?>/public/js/login.js"></script>
 
+    <!-- General JS Scripts -->
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/jquery-3.4.1.min.js"></script>
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/popper.min.js"></script>
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/bootstrap.min.js"></script>
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/jquery.nicescroll.min.js"></script>
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/moment.min.js"></script>
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/stisla.js"></script>
+
+    <!-- JS Libraies -->
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/sweetalert2.js"></script>
+
+    <!-- Template JS File -->
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/scripts.js"></script>
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/custom.js"></script>
+    <script src="<?=URL_BASE?>/public/assets/js/sidebar/sidebar.js"></script>
+
+    <!-- Page Specific JS File -->
+    <script src="<?=URL_BASE?>/public/js/login.js"></script>
 </body>
 
 </html>

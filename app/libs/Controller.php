@@ -13,7 +13,7 @@ class Controller
     }
 
     protected function view($main = '', $variables = array()){
-        Flight::render('template/header', array(), 'header');
+        Flight::render('template/navbar', array(), 'navbar');
         Flight::render('template/sidebar', array(), 'sidebar');
         ($main!=='') ? Flight::render($main, array(), 'main') : '';
         Flight::render('template/footer', array(), 'footer');

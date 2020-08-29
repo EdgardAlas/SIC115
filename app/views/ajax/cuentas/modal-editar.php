@@ -29,11 +29,11 @@
                 <label for="tipo_saldo">Tipo de saldo</label>
                 <select name="tipo_saldo" id="tipo_saldo" class="form-control">
                     <option value="Deudor"
-                    <?= !empty($cuenta_editar) ? ($cuenta_editar['saldo'] === 'Deudor') ? 'selected' : '' : '' ?> >
+                    <?= !empty($cuenta_editar) ? ($cuenta_editar['tipo_saldo'] === 'Deudor') ? 'selected' : '' : '' ?> >
                         Deudor
                     </option>
                     <option value="Acreedor"
-                    <?= !empty($cuenta_editar) ? ($cuenta_editar['saldo'] === 'Acreedor') ? 'selected' : '' : '' ?>
+                    <?= !empty($cuenta_editar) ? ($cuenta_editar['tipo_saldo'] === 'Acreedor') ? 'selected' : '' : '' ?>
                     >
                         Acreedor
                     </option>
@@ -43,9 +43,8 @@
 
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-info" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary" id='btnEditar' data-cuenta = '
-        <?= !empty($cuenta_editar) ? base64_encode($cuenta_editar['codigo']) : '' ?>'>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" id='btn_editar' data-cuenta = '<?= !empty($cuenta_editar) ? base64_encode($cuenta_editar['id']) : '' ?>'>
             Editar Cuenta
         </button>
     </div>
