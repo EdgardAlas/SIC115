@@ -288,4 +288,24 @@ $(document).ready((event) => {
         propagate: true,
         target: document,
     });
+
+    shortcut.add("Alt+N", function() {
+        let modal_activo = $('#modal_acciones_cuenta').is(':visible');
+        log(modal_activo);
+        if (modal_activo)
+            focus('nombre');
+
+    });
+
+    shortcut.add("Alt+C", function() {
+        let formulario = $("#nombre").closest('form');
+        let accion = formulario.data('accion');
+        let modal_activo = $('#modal_acciones_cuenta').is(':visible');
+        log(modal_activo);
+        if (modal_activo)
+            if (accion === 'guardar') {
+                focus('codigo');
+            }
+
+    });
 });
