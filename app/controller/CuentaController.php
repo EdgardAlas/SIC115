@@ -99,7 +99,7 @@ class CuentaController extends Controller
             ));
         } else {
             $codigo_auxiliar = $codigo;
-            $codigo = $this->ObtenerCodigoPadre($codigo);
+            $codigo = $this->obtenerCodigoPadre($codigo);
 
             if (strlen($codigo) > 0) {
                 $datos = $this->modelo->seleccionar([
@@ -213,11 +213,12 @@ class CuentaController extends Controller
 
     /*Metodos privados*/
 
-    private function ObtenerCodigoPadre($codigo_hijo)
+    function obtenerCodigoPadre($codigo_hijo)
     {
         if (strlen($codigo_hijo) > 0) {
             $codigo_hijo = strtoupper($codigo_hijo);
             $codigo_guardar = str_replace('R', '', $codigo_hijo);
+            $tam_hijo = strlen($codigo_hijo);
             $size = strlen($codigo_hijo);
             $padre = '';
 
@@ -265,6 +266,10 @@ class CuentaController extends Controller
                 }
             } else if ($size == 1 && strlen($codigo_guardar) == 2) {
                 $padre .= $codigo_hijo[0];
+            }
+            
+            if($tam_hijo>4 && $cuentaR>0){
+                $padre.='R';
             }
 
             return $padre;
