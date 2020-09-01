@@ -213,7 +213,7 @@ class CuentaController extends Controller
 
     /*Metodos privados*/
 
-    function obtenerCodigoPadre($codigo_hijo)
+    private function obtenerCodigoPadre($codigo_hijo)
     {
         if (strlen($codigo_hijo) > 0) {
             $codigo_hijo = strtoupper($codigo_hijo);
