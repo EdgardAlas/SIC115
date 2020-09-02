@@ -28,9 +28,11 @@ class CuentaController extends Controller
 
         $empresa = $this->sesion->get('login')['id'];
 
-        $datos = $this->modelo->seleccionar('*', array(
+        $datos = $this->catalogoDeCuentas($empresa);
+
+        /* $datos = $this->modelo->seleccionar('*', array(
             'empresa' => $empresa,
-        ));
+        )); */
 
         Flight::render('ajax/cuentas/tabla-cuentas', array(
             'datos' => $datos,
@@ -196,8 +198,8 @@ class CuentaController extends Controller
                 Exepcion::json(['error' => true,
                     'mensaje' => 'Error al editar en la cuenta',
                 ]);
-            }else{
-                
+            } else {
+
             }
             Exepcion::json(['error' => false,
                 'mensaje' => 'Cuenta Editada',
@@ -267,18 +269,19 @@ class CuentaController extends Controller
             } else if ($size == 1 && strlen($codigo_guardar) == 2) {
                 $padre .= $codigo_hijo[0];
             }
-            //1201R -> 12R 
+            //1201R -> 12R
             /* if($tam_hijo>4 && $cuentaR>0){
-                $padre.='R';
+            $padre.='R';
             } */
 
-            if($cuentaR>0){
+            if ($cuentaR > 0) {
                 $tam_hijo--;
-                if($tam_hijo>4)
-                    $padre.='R';
+                if ($tam_hijo > 4) {
+                    $padre .= 'R';
+                }
+
             }
 
-            
             return $padre;
         }
 
@@ -311,5 +314,51 @@ class CuentaController extends Controller
         }
 
         return $datos;
+    }
+
+    private function catalogoDeCuentas($empresa)
+    {
+        $arreglo = array();
+
+        $nivel_maximo = $this->modelo->obtenerUno(['nivel'], [
+            'empresa' => $empresa,
+            'ORDER' => [
+                'nivel' => 'DESC',
+            ],
+        ]);
+
+        $niveles = $this->modelo->seleccionar('*', [
+            'empresa' => $empresa,
+            'nivel' => 1,
+        ]);
+
+        foreach ($niveles as $key => $nivel) {
+
+            array_push($arreglo, $nivel);
+            $this->subCuentas($arreglo, 2, $nivel['id'], $nivel_maximo, $empresa);
+        }
+
+        return $arreglo;
+
+    }
+
+    private function subCuentas(&$arreglo, $nivel, $id, $nivel_maximo, $empresa)
+    {
+        if ($nivel <= $nivel_maximo) {
+            $sub_cuentas = $this->modelo->seleccionar('*', [
+                'empresa' => $empresa,
+                'nivel' => $nivel,
+                'padre' => $id,
+                'ORDER' => array(
+                    'codigo' => 'ASC'
+                )
+            ]);
+
+            foreach ($sub_cuentas as $key => $sub_cuenta) {
+                array_push($arreglo, $sub_cuenta);
+                $this->subCuentas($arreglo, $nivel + 1, $sub_cuenta['id'], $nivel_maximo, $empresa);
+            }
+        }
+
     }
 }

@@ -21,6 +21,8 @@ const focus = (id) => {
 
 const tablaPaginacion = (id) => {
     $(`#${id}`).dataTable({
+        "order": [],
+        "aaSorting": [],
         "language": {
             "url": "/public/js/es.json"
         },

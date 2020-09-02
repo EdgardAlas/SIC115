@@ -16,6 +16,10 @@ Flight::map('error', function (Exception $ex) {
     
 });  
 
+Flight::route('/catalogo', function(){
+    echo "hola";
+});
+
 //MVC creditos: https://steemit.com/php/@kalangaum/easy-php-routing-management
 
 Flight::route('/(@controlador(/@metodo(/@id)))', function ($controlador, $metodo, $id) {

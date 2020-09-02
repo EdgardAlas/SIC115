@@ -59,6 +59,11 @@ class Model
         return $this->conexion->select($this->tabla, $campos, $condicion);
     }
 
+    public function obtenerUno($campos, $condicion = '')
+    {
+        return $this->conexion->get($this->tabla, $campos, $condicion);
+    }
+
     public function existe($condicion = '')
     {
         return $this->conexion->has($this->tabla, $condicion);
@@ -72,6 +77,11 @@ class Model
     public function error()
     {
         return $this->conexion->error();
+    }
+
+    public function conexion()
+    {
+        return $this->conexion;
     }
 
 }
