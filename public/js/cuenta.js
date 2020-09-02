@@ -211,6 +211,7 @@ $(document).ready((event) => {
     })
 
     $(document).on("keydown", "#codigo", function(event) {
+
         if (!(
                 event.keyCode == 8 || // backspace
                 event.keyCode == 9 || // tab
@@ -238,6 +239,7 @@ $(document).ready((event) => {
         }
 
     });
+
 
     $(document).on("keyup", "#codigo", function(e) {
         focusOnEnter(

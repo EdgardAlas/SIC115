@@ -267,11 +267,18 @@ class CuentaController extends Controller
             } else if ($size == 1 && strlen($codigo_guardar) == 2) {
                 $padre .= $codigo_hijo[0];
             }
-            
-            if($tam_hijo>4 && $cuentaR>0){
+            //1201R -> 12R 
+            /* if($tam_hijo>4 && $cuentaR>0){
                 $padre.='R';
+            } */
+
+            if($cuentaR>0){
+                $tam_hijo--;
+                if($tam_hijo>4)
+                    $padre.='R';
             }
 
+            
             return $padre;
         }
 
