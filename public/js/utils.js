@@ -33,3 +33,15 @@ const tablaPaginacion = (id) => {
         "pageLength": 5,
     });
 }
+
+const validarCampo = (id, error) => {
+    const campo = $(`#${id}`);
+    if (error)
+        campo.addClass('is-invalid');
+    else
+        campo.removeClass('is-invalid');
+}
+
+const titulo = (titulo) => {
+    document.title = titulo;
+}

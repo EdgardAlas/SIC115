@@ -13,7 +13,7 @@
                 <input type="text" name="codigo" id="codigo" class="form-control text-uppercase">
             </div>
             <div class="col-6" id='validar_padre'>
-                <label for="padre">&nbsp;</label>
+                <label for="padre">Cuenta padre</label>
                 <input type="text" name="padre" id="padre" data-mayor=<?=base64_encode(-1)?> class="form-control" readonly tabindex="-1">
             </div>
         </div>

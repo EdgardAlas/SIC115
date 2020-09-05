@@ -58,11 +58,13 @@ function validarCuentaGuardar() {
     log(cuenta);
     // casos de error
     if (cuenta.codigo.length === 0 || cuenta.padre === btoa(-1)) {
+        validarCampo('codigo', true);
         focus('codigo');
         return false;
     }
 
     if (cuenta.nombre.length === 0) {
+        validarCampo('nombre', true);
         focus('nombre');
         return false;
     }
@@ -97,6 +99,7 @@ function validarCuentaEditar() {
     log(cuenta);
     // casos de error
     if (cuenta.nombre.length === 0) {
+        validarCampo('nombre', true);
         focus('nombre');
         return false;
     }
@@ -181,6 +184,8 @@ function submitFormularioEspecico() {
 /* Inicio */
 $(document).ready((event) => {
 
+    titulo('Cuentas');
+
     /*
      * Eventos
      */
@@ -242,6 +247,7 @@ $(document).ready((event) => {
 
 
     $(document).on("keyup", "#codigo", function(e) {
+        validarCampo('codigo', false);
         focusOnEnter(
             e.keyCode,
             $(this).val(),
@@ -252,6 +258,7 @@ $(document).ready((event) => {
     });
 
     $(document).on("keyup", "#nombre", function(e) {
+        validarCampo('nombre', false);
         if (isEnter(e.keyCode, $(this).val(), 0)) {
             submitFormularioEspecico();
         }

@@ -7,7 +7,9 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        
+                        <form action="" name='form'>
+                            <input type="text" class='form-control' placeholder='texto' id='input'>
+                        </form>
                     </div>
                   </div>
                 </div>
