@@ -1,15 +1,15 @@
 <div class="main-sidebar">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="/">SCI175</a>
+            <a href="/">SCI115</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="/">SCI</a>
         </div>
         <ul class="sidebar-menu">
-            <li class="menu-header">Cuentas</li>
+            <li class="menu-header">Catálogo de Cuentas </li>
             <li>
-                <a class="nav-link" href="/cuenta"><i class="fas fa-stream"></i> <span>Cuentas</span></a>
+                <a class="nav-link" href="/cuenta"><i class="fas fa-stream"></i> <span>Catálogo de Cuentas</span></a>
             </li>
 
             <li class="menu-header">Libros Contables</li>

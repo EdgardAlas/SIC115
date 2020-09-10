@@ -1,7 +1,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Cuentas</h1>
+            <h1>Catálogo de Cuentas</h1>
         </div>
         <div class="row">
             <div class="col-12">
@@ -14,7 +14,7 @@
                                 </button>
                             </div>
                         </div>
-                        <div id='div_tabla_cuentas'>
+                        <div id='div_tabla_cuentas' class='table-responsive'>
 
                         </div>
                     </div>

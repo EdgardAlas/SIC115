@@ -29,7 +29,7 @@
 
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h4>Login</h4>
+                                <h4>Iniciar Sesión</h4>
                             </div>
 
                             <div class="card-body">
@@ -43,11 +43,6 @@
                                     <div class="form-group">
                                         <div class="d-block">
                                             <label for="contrasena" class="control-label">Contraseña</label>
-                                            <div class="float-right">
-                                                <a href="auth-forgot-password.html" class="text-small">
-                                                    Forgot Password?
-                                                </a>
-                                            </div>
                                         </div>
                                         <input id="contrasena" type="password" class="form-control" name="contrasena"
                                             tabindex="2" required>
@@ -60,14 +55,14 @@
                                     <div class="form-group">
                                         <button type="submit" id='login' class="btn btn-primary btn-lg btn-block"
                                             tabindex="4">
-                                            Login
+                                            Acceder
                                         </button>
                                     </div>
                                 </form>
                             </div>
                         </div>
                         <div class="simple-footer">
-                            SIC175 © 2020
+                            SIC115 © 2020
                         </div>
                     </div>
                 </div>

@@ -51,7 +51,6 @@
     <script src="<?=URL_BASE?>/public/assets/js/plugins/scripts.js"></script>
     <script src="<?=URL_BASE?>/public/assets/js/plugins/custom.js"></script>
     <script src="<?=URL_BASE?>/public/js/sidebar.js"></script>
-    <script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.0/dist/bootstrap-validate.js"></script>
 
     <!-- Page Specific JS File -->
     <?= isset($js_especifico) ? $js_especifico : '';?>

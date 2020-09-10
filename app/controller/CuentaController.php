@@ -31,7 +31,7 @@ class CuentaController extends Controller
         $datos = $this->catalogoDeCuentas($empresa);
 
         /* $datos = $this->modelo->seleccionar('*', array(
-            'empresa' => $empresa,
+        'empresa' => $empresa,
         )); */
 
         Flight::render('ajax/cuentas/tabla-cuentas', array(
@@ -119,6 +119,16 @@ class CuentaController extends Controller
         Flight::render('ajax/cuentas/input-encontrar-padre', array(
             'datosBD' => $datos,
         ));
+    }
+
+    public function arbol()
+    {
+
+        $cuentas = $this->catalogoDeCuentas($this->sesion->get('login')['id']);
+
+        Flight::render('arbol', [
+            'datos' => $cuentas,
+        ]);
     }
 
     public function guardar()
@@ -350,8 +360,8 @@ class CuentaController extends Controller
                 'nivel' => $nivel,
                 'padre' => $id,
                 'ORDER' => array(
-                    'codigo' => 'ASC'
-                )
+                    'codigo' => 'ASC',
+                ),
             ]);
 
             foreach ($sub_cuentas as $key => $sub_cuenta) {
