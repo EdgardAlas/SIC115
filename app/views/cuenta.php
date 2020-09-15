@@ -12,6 +12,9 @@
                                 <button type="button" id='btn_acciones_cuenta' class="btn btn-primary">
                                     Agregar Cuenta
                                 </button>
+                                <button type="button" id='btn_acciones_imprimir' class="btn btn-success">
+                                    Imprimir Cuenta
+                                </button>
                             </div>
                         </div>
                         <div id='div_tabla_cuentas' class='table-responsive'>
