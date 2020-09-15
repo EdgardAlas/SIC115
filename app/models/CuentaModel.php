@@ -63,4 +63,14 @@ class CuentaModel extends Model
         }
     }
 
+    public function ejemplo(){
+        $datos = $this->seleccionar(array('nombre'), array(
+            'id' => 9
+        ));
+    
+        
+        return $datos[0];
+        
+    }
+
 }

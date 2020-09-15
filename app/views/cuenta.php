@@ -12,9 +12,9 @@
                                 <button type="button" id='btn_acciones_cuenta' class="btn btn-primary">
                                     Agregar Cuenta
                                 </button>
-                                <button type="button" id='btn_acciones_imprimir' class="btn btn-success">
+                                <a href='<?=URL_BASE?>/cuenta/reporte-catalogo' target = '_blank' id='btn_imprimir' class="btn btn-success" download>
                                     Imprimir Cuenta
-                                </button>
+                                </a>
                             </div>
                         </div>
                         <div id='div_tabla_cuentas' class='table-responsive'>

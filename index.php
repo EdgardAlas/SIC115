@@ -8,13 +8,14 @@ Flight::map('notFound', function () {
     header("HTTP/1.0 404 Not Found");
     echo 'No encontrado';
 });
-
-Flight::map('error', function (Exception $ex) {
-    /* header("HTTP/1.0 500 Internal Server Error");
-    Flight::render('error/500'); */
-    echo $ex->getTraceAsString();
+/* 
+ Flight::map('error', function (Exception $ex) {
+    header("HTTP/1.0 500 Internal Server Error");
     
-});  
+    echo $ex->getTraceAsString();
+    var_dump($ex);
+    
+});   */
 
 Flight::route('/arbol', function(){
     

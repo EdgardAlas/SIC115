@@ -34,6 +34,21 @@ const tablaPaginacion = (id) => {
     });
 }
 
+const tablaPaginacionTodos = (id) => {
+    $(`#${id}`).dataTable({
+        "order": [],
+        "aaSorting": [],
+        "language": {
+            "url": "/public/js/es.json"
+        },
+        "lengthMenu": [
+            [5, 10, 50, -1],
+            [5, 10, 50, "Todos"]
+        ],
+        "pageLength": -1,
+    });
+}
+
 const validarCampo = (id, error) => {
     const campo = $(`#${id}`);
     if (error)

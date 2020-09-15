@@ -24,6 +24,7 @@ class CuentaController extends Controller
     {
         $this->isAjax();
         $this->sesionActivaAjax();
+
         $this->validarMetodoPeticion('GET');
 
         $empresa = $this->sesion->get('login')['id'];
@@ -35,8 +36,9 @@ class CuentaController extends Controller
         )); */
 
         Flight::render('ajax/cuentas/tabla-cuentas', array(
-            'datos' => $datos,
+            'datos' => $datos
         ));
+
     }
 
     public function reporteCatalogo(){
@@ -45,6 +47,7 @@ class CuentaController extends Controller
         $datos = $this->catalogoDeCuentas($empresa);
         Flight::render('pdf/catalogo', array(
             'datos' => $datos,
+            'id' => $empresa
         ));
     }
 
@@ -231,6 +234,17 @@ class CuentaController extends Controller
     {
 
     }
+
+    public function ejemplo(){
+        /* $conexion = new Conexion();
+
+        $modelo = new CuentaModel($conexion); */
+        
+        $dato = ($this->modelo->ejemplo());
+
+        print_r($dato);
+    }
+
 
     /*Metodos privados*/
 

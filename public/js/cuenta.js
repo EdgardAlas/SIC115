@@ -1,9 +1,10 @@
 function cargarTablaCuentas() {
     $('#div_tabla_cuentas').load('/cuenta/tabla-cuentas', (data) => {
-        tablaPaginacion('tabla_cuentas');
+        tablaPaginacionTodos('tabla_cuentas');
         $('[data-toggle="tooltip"]').tooltip();
     });
 }
+
 
 function encontrarR(valor) {
     for (let i = 0; i < valor.length; i++) {
@@ -193,6 +194,12 @@ $(document).ready((event) => {
     $('#btn_acciones_cuenta').focus();
 
     cargarTablaCuentas();
+
+    $(document).on('click', '#btn_imprimir', function() {
+        $("#btn_imprimir").blur();
+        $('#btn_acciones_cuenta').focus();
+
+    });
 
     //abrir modal guardar
     $('#btn_acciones_cuenta').on('click', function() {
