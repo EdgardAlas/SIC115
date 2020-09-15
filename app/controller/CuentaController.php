@@ -39,6 +39,15 @@ class CuentaController extends Controller
         ));
     }
 
+    public function reporteCatalogo(){
+        $this->sesionActiva();
+        $empresa = $this->sesion->get('login')['id'];
+        $datos = $this->catalogoDeCuentas($empresa);
+        Flight::render('pdf/catalogo', array(
+            'datos' => $datos,
+        ));
+    }
+
     public function modalGuardar()
     {
         $this->isAjax();

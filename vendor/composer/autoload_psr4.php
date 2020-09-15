@@ -8,4 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     'Medoo\\' => array($vendorDir . '/catfan/medoo/src'),
     'GUMP\\' => array($vendorDir . '/wixel/gump/src'),
+    'Fpdf\\' => array($vendorDir . '/fpdf/fpdf/src/Fpdf'),
 );

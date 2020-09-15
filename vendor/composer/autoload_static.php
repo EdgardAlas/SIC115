@@ -21,6 +21,10 @@ class ComposerStaticInitc59143407a9d2c6ac1ded81fa05949c9
         array (
             'GUMP\\' => 5,
         ),
+        'F' => 
+        array (
+            'Fpdf\\' => 5,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -31,6 +35,10 @@ class ComposerStaticInitc59143407a9d2c6ac1ded81fa05949c9
         'GUMP\\' => 
         array (
             0 => __DIR__ . '/..' . '/wixel/gump/src',
+        ),
+        'Fpdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fpdf/fpdf/src/Fpdf',
         ),
     );
 
