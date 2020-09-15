@@ -140,7 +140,7 @@
               echo $sesion->get('login')['usuario'];
             ?></div></a>
             <div class="dropdown-menu dropdown-menu-right">
-              <a href="/login/cerrarSesion" class="dropdown-item has-icon text-danger">
+              <a href="/login/cerrar-sesion" class="dropdown-item has-icon text-danger">
                 <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
               </a>
             </div>

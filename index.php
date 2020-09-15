@@ -32,6 +32,18 @@ Flight::route('/(@controlador(/@metodo(/@id)))', function ($controlador, $metodo
         $controlador .= ucfirst(strtolower($parte));
     }
 
+
+    //Metodo
+    $partesMetodo = explode('-', $metodo);
+    $metodo = '';
+    foreach ($partesMetodo as $key => $parte) {
+        if($key!==1){
+            $metodo .= ucfirst(strtolower($parte));
+        }else{
+            $metodo .= (strtolower($parte));
+        }
+    }
+    
     $controlador = $controlador ? $controlador : 'Home';
     $nombreControlador = $controlador.'Controller';
     $nombreArchivoControlador = './app/controller/' . $nombreControlador . '.php';

@@ -1,5 +1,5 @@
 function cargarTablaCuentas() {
-    $('#div_tabla_cuentas').load('/cuenta/tablaCuentas', (data) => {
+    $('#div_tabla_cuentas').load('/cuenta/tabla-cuentas', (data) => {
         tablaPaginacion('tabla_cuentas');
         $('[data-toggle="tooltip"]').tooltip();
     });
@@ -16,7 +16,7 @@ function encontrarR(valor) {
 
 function buscarCuentaPadre() {
     let codigo = $("#codigo").val();
-    $("#validar_padre").load("/cuenta/obtenerDatosCuentaPadre", {
+    $("#validar_padre").load("/cuenta/obtener-datos-cuenta-padre", {
         codigo
     });
 }
@@ -33,15 +33,15 @@ function isEnter(tecla, valor_input, minimo_text_input) {
 }
 
 function cargarModalGuardar() {
-    $('#modal-content-body').load('/cuenta/modalGuardar');
+    $('#modal-content-body').load('/cuenta/modal-guardar');
 }
 
 function cargarModalEditar(id) {
-    $('#modal-content-body').load(`/cuenta/modalEditar/${id}`);
+    $('#modal-content-body').load(`/cuenta/modal-editar/${id}`);
 }
 
 function limpiarCampos() {
-    $('#modal-content-body').load('/cuenta/modalGuardar', function() {
+    $('#modal-content-body').load('/cuenta/modal-guardar', function() {
         focus('codigo');
     });
 }
