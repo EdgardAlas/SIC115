@@ -13,7 +13,7 @@
                                     Agregar Cuenta
                                 </button>
                                 <a href='<?=URL_BASE?>/cuenta/reporte-catalogo' target = '_blank' id='btn_imprimir' class="btn btn-success" download>
-                                    Imprimir Cuenta
+                                    Reporte de cuentas
                                 </a>
                             </div>
                         </div>
