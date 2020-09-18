@@ -235,14 +235,23 @@ class CuentaController extends Controller
 
     }
 
-    public function ejemplo(){
-        /* $conexion = new Conexion();
+    public function inputSeleccionarCuenta(){
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('GET');
 
-        $modelo = new CuentaModel($conexion); */
-        
-        $dato = ($this->modelo->ejemplo());
+        $empresa = $this->sesion->get('login')['id'];
 
-        print_r($dato);
+        $datos = $this->modelo->seleccionar(array(
+            'id', 'nombre', 'codigo', 'saldo'
+        ), array(
+            'empresa' => $empresa,
+            'ultimo_nivel' => 1
+        ));
+
+        Flight::render('ajax/cuentas/input-select-cuenta', array(
+            'datosBD' => $datos
+        ));
     }
 
 

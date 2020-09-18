@@ -19,6 +19,15 @@ const focus = (id) => {
     }
 }
 
+
+function tablaSinPaginacion(id) {
+    $(`#${id}`).DataTable({
+        "paging": false,
+        'searching': false,
+        "language": language
+    });
+}
+
 const tablaPaginacion = (id) => {
     $(`#${id}`).dataTable({
         "order": [],
@@ -46,6 +55,22 @@ const tablaPaginacionTodos = (id) => {
             [5, 10, 50, "Todos"]
         ],
         "pageLength": -1,
+    });
+}
+
+const select = (id) => {
+    $(`#${id}`).select2({
+        language: {
+
+            noResults: function() {
+
+                return "No hay resultado";
+            },
+            searching: function() {
+
+                return "Buscando..";
+            }
+        }
     });
 }
 
