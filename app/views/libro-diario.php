@@ -77,8 +77,8 @@
                             </div>
                             <div class='row'>
                                 <div class="col-12">
-                                    <button type="button" class="btn btn-success w-100" id='btnAgregar'
-                                        name='btnAgregar' data-indice=-1>Agregar</button>
+                                    <button type="button" class="btn btn-success w-100" id='btn_agregar'
+                                        name='btn_agregar' data-indice=-1>Agregar</button>
                                 </div>
                             </div>
                         </div>

@@ -85,3 +85,8 @@ const validarCampo = (id, error) => {
 const titulo = (titulo) => {
     document.title = titulo;
 }
+
+const isEnter = (tecla, valor_input, minimo_text_input) => {
+    return (tecla == 13 && valor_input.length > minimo_text_input);
+
+}

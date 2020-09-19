@@ -28,11 +28,6 @@ function focusOnEnter(tecla, valor_input, minimo_text_input, id_foco) {
     }
 }
 
-function isEnter(tecla, valor_input, minimo_text_input) {
-    return (tecla == 13 && valor_input.length > minimo_text_input);
-
-}
-
 function cargarModalGuardar() {
     $('#modal-content-body').load('/cuenta/modal-guardar');
 }

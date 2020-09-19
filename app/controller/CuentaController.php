@@ -243,7 +243,7 @@ class CuentaController extends Controller
         $empresa = $this->sesion->get('login')['id'];
 
         $datos = $this->modelo->seleccionar(array(
-            'id', 'nombre', 'codigo', 'saldo'
+            'id', 'nombre', 'codigo', 'tipo_saldo'
         ), array(
             'empresa' => $empresa,
             'ultimo_nivel' => 1
