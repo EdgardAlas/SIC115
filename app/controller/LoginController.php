@@ -74,7 +74,7 @@ class LoginController extends Controller
         $data = $data[0];
         $periodoModel = new PeriodoModel(new Conexion());
         $data['user'] = $usuario;
-        $data['periodo'] = $periodoModel->ultimoPeriodo(['id']);
+        $data['periodo'] = $periodoModel->ultimoPeriodo($data['id']);
         $sesion->set('login', $data);
     }
 }

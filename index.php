@@ -17,8 +17,31 @@ Flight::map('notFound', function () {
     
 });  
 
-Flight::route('/arbol', function(){
-    
+Flight::route('/codigo', function(){
+    function codigoSiguiente($codigo, $array = []) {    
+        
+        $existeR = (strpos($codigo, "R"));
+
+        $codigoSinR = str_replace('R','',$codigo);
+
+        array_push($array, $codigo);
+
+        $size = strlen($codigoSinR);
+
+        
+        if($size===1){
+            return $array;
+        }if($size===2){
+            return codigoSiguiente($codigo[0], $array);
+        }else if($existeR>0 && $size-2 > 4){
+            $cuenta = substr($codigoSinR, 0, $size-2).'R';
+            return codigoSiguiente($cuenta,$array);
+        }else if($size>2){
+            $cuenta = substr($codigoSinR, 0, $size-2);
+            return codigoSiguiente($cuenta,$array);
+        }
+    }
+
 });
 
 //MVC creditos: https://steemit.com/php/@kalangaum/easy-php-routing-management

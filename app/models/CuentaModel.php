@@ -49,14 +49,22 @@ class CuentaModel extends Model
 
     public function codigoSiguiente($codigo, $array = []) {    
         
+        $existeR = (strpos($codigo, "R"));
+
         $codigoSinR = str_replace('R','',$codigo);
+
         array_push($array, $codigo);
+
         $size = strlen($codigoSinR);
+
         
         if($size===1){
             return $array;
         }if($size===2){
             return $this->codigoSiguiente($codigo[0], $array);
+        }else if($existeR>0 && $size-2 > 4){
+            $cuenta = substr($codigoSinR, 0, $size-2).'R';
+            return $this->codigoSiguiente($cuenta,$array);
         }else if($size>2){
             $cuenta = substr($codigoSinR, 0, $size-2);
             return $this->codigoSiguiente($cuenta,$array);

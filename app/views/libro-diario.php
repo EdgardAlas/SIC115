@@ -80,12 +80,23 @@
                             <div class='row'>
                                 <div class="col-12">
                                     <button type="button" class="btn btn-success w-100" id='btn_agregar'
-                                        name='btn_agregar' data-indice=-1 data-accion = 'agregar'>Agregar</button>
+                                        name='btn_agregar' data-indice=-1 data-accion='agregar'>Agregar</button>
                                 </div>
                             </div>
                         </div>
                         <div class=" col-12 d-block d-sm-block d-md-none">&nbsp;</div>
                         <div class="col-sm-12 col-md-7 tabl-responsive desbordamiento" id='contender_tabla_detalle'>
+                            <div class='row'>
+                                <div class="col-4">
+                                    <p class='text-center font-weight-bold'>Cargo <span id='total_cargo'>$0.00</span></p>
+                                </div>
+                                <div class="col-4">
+                                    <p class='text-center font-weight-bold'>Abono <span id='total_abono'>$0.00</span></p>
+                                </div>
+                                <div class="col-4">
+                                    <p class='text-center font-weight-bold text-danger'>Dif. <span id='dif'>$0.00</span></p>
+                                </div>
+                            </div>
                             <table class="table table-bordered table-hover" id='tabla_detalle_partida'
                                 style='font-size: 0.725rem;'>
                                 <thead>
@@ -106,7 +117,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id='btnGuardarPartida'>Guardar Partida</button>
+                    <button type="button" class="btn btn-primary" id='btn_guardar_partida'>Guardar Partida</button>
                 </div>
             </form>
         </div>

@@ -135,7 +135,14 @@ function tablaDetallePartida() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: 'hover'
         });
+        imprimirTotales();
     });
+}
+
+function imprimirTotales() {
+    $('#total_cargo').text($('#cargo').val());
+    $('#total_abono').text($('#abono').val());
+    $('#dif').text($('#diferencia').val());
 }
 
 function calcularMonto(monto, saldo, movimiento) {
@@ -220,6 +227,61 @@ function eliminar(indice) {
             tablaDetallePartida();
         }
     })
+}
+
+function validarGuardarPartida() {
+    let diferencia = $('#validar_diferencia').val();
+
+    if (diferencia > 0) {
+        Swal.fire({
+            title: 'Atención',
+            text: "El cargo y el abono no coinciden",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#6777ef',
+            confirmButtonText: 'Ok',
+
+        }).then((result) => {
+            $('#cuenta').select2('focus');
+        })
+        return;
+    }
+
+    let fecha = $('#fecha').val(),
+        descripcion = $('#descripcion').val();
+
+    if (descripcion.length === 0) {
+        validarCampo('descripcion', true);
+        focus('descripcion');
+        return;
+    }
+
+    partida.datos_partida.fecha = fecha;
+    partida.datos_partida.descripcion = descripcion;
+
+    if (partida.detalle_partida.length === 0) {
+        Swal.fire({
+            title: 'Atención',
+            text: "No hay movimientos",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#6777ef',
+            confirmButtonText: 'Ok',
+
+        }).then((result) => {
+            $('#cuenta').select2('focus');
+        })
+        return;
+    }
+
+    guardarPartida();
+
+}
+
+function guardarPartida() {
+    $.post('/libro-diario/guardar', { partida }, function(data) {
+        log(data);
+    });
 }
 
 $(document).ready(() => {
@@ -315,6 +377,11 @@ $(document).ready(() => {
         }
 
         validarCampo('monto', false);
+    });
+
+    $(document).on('click', '#btn_guardar_partida', function() {
+        $('#btn_guardar_partida').blur();
+        validarGuardarPartida();
     });
 
     /*
