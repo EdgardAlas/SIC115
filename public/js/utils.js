@@ -22,6 +22,8 @@ const focus = (id) => {
 
 function tablaSinPaginacion(id) {
     $(`#${id}`).DataTable({
+        "order": [],
+        "aaSorting": [],
         "paging": false,
         'searching': false,
         "language": language

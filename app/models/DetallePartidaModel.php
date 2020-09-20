@@ -18,22 +18,6 @@ class DetallePartidaModel extends Model
         return $this->_validarCampos($datos,$this->validaciones);
     }
 
-    public function generarNumeroPartida($empresa, $periodo)
-    {
-        $numero = $this->conexion->query(
-            'SELECT partida.numero from empresa inner join periodo 
-                on periodo.empesa = empresa.id inner join partida 
-                on partida.periodo = periodo.id 
-                where empresa.id = :empresa 
-                and periodo.id = :periodo order by numero desc limit 1', 
-            [
-                ':empresa' => $empresa,
-                ':periodo' => $periodo
-            ]
-        )->fetchAll();
-
-        $numero = (empty($numero)) ? 1 : $numero[0]['numero'];
-        return $numero+1;
-    }
+    
 
 }

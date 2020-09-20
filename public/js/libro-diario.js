@@ -24,7 +24,7 @@ function cargarInputSelectCuentas() {
 
 function obtenerMonto() {
     let montoInput = $('#monto').val();
-    return montoInput = montoInput.substr(1).replace(/,/g, '');
+    return montoInput = (montoInput.substr(1).replace(/,/g, '')).replace(/\.$/, "");
 }
 
 function generarDetalle() {
@@ -36,6 +36,7 @@ function generarDetalle() {
 
     let detalle = {
         cuenta: $('#cuenta').val(),
+        codigo,
         movimiento: $('#movimiento').val(),
         monto: calcularMonto(obtenerMonto(), saldo, $('#movimiento').val())
     };
@@ -43,7 +44,8 @@ function generarDetalle() {
     let mostrar = {
         codigo,
         movimiento: $('#movimiento').val(),
-        monto: $('#monto').val()
+        monto: $('#monto').val().replace(/\.$/, ""),
+        monto_plano: Math.abs(calcularMonto(obtenerMonto(), saldo, $('#movimiento').val()))
     };
 
 
@@ -93,7 +95,7 @@ function generarDetalleEditado(indice) {
     let mostrar = {
         codigo,
         movimiento: $('#movimiento').val(),
-        monto: $('#monto').val()
+        monto: $('#monto').val().replace(/\.$/, "")
     };
 
 

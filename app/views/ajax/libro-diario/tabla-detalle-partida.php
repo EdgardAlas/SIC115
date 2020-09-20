@@ -45,8 +45,8 @@
         </tr>
         <?php
 
-                $total_cargo += ($detalle['movimiento']==='Cargo') ? Utiles::convertirMonto($detalle['monto']) : 0;
-                $total_abono += ($detalle['movimiento']==='Abono') ? Utiles::convertirMonto($detalle['monto']) : 0;
+                $total_cargo += ($detalle['movimiento']==='Cargo') ? ($detalle['monto_plano']) : 0;
+                $total_abono += ($detalle['movimiento']==='Abono') ? ($detalle['monto_plano']) : 0;
         }
         ?>
     </tbody>

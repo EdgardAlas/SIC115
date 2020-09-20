@@ -31,9 +31,7 @@ class PartidaModel extends Model
                 ':periodo' => $periodo
             ]
         )->fetchAll();
-
-        var_dump($numero);
-
+        
         $numero = (empty($numero)) ? 0 : $numero[0]['numero'];
         return $numero+1;
     }
