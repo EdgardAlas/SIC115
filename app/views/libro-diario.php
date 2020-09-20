@@ -54,12 +54,14 @@
                                 </div>
                             </div>
 
-                            <div class="col"><hr></div>
+                            <div class="col">
+                                <hr>
+                            </div>
 
                             <!--Zona de control de partidas-->
                             <div class='row form-group'>
                                 <div class="col-12" id="contenedor_cuentas">
-                                    
+
                                 </div>
                             </div>
                             <div class='row form-group'>
@@ -78,23 +80,24 @@
                             <div class='row'>
                                 <div class="col-12">
                                     <button type="button" class="btn btn-success w-100" id='btn_agregar'
-                                        name='btn_agregar' data-indice=-1>Agregar</button>
+                                        name='btn_agregar' data-indice=-1 data-accion = 'agregar'>Agregar</button>
                                 </div>
                             </div>
                         </div>
                         <div class=" col-12 d-block d-sm-block d-md-none">&nbsp;</div>
-                        <div class="col-sm-12 col-md-7 tabl-responsive desbordamiento" id='tabladetalle'>
-                            <table class="table table-bordered table-hover" id='tabla' style='font-size: 0.725rem;'>
+                        <div class="col-sm-12 col-md-7 tabl-responsive desbordamiento" id='contender_tabla_detalle'>
+                            <table class="table table-bordered table-hover" id='tabla_detalle_partida'
+                                style='font-size: 0.725rem;'>
                                 <thead>
                                     <tr>
-                                        <th>Código de cuenta</th>
-                                        <th>Cargo</th>
-                                        <th>Abono</th>
-                                        <th>Acción</th>
+                                        <th style='width: 25%;'>Código</th>
+                                        <th style='width: 35%'>Cargo</th>
+                                        <th style='width: 35%'>Abono</th>
+                                        <th style='width: 10%'>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+
                                 </tbody>
                             </table>
                         </div>

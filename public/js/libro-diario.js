@@ -56,7 +56,7 @@ function generarDetalle() {
         return;
     }
 
-    if (detalle.monto.length === 0 || detalle.monto === '0') {
+    if (detalle.monto.length === 0 || detalle.monto === 0 || detalle.monto.length === '') {
         validarCampo('monto', 1);
         focus('monto');
         return;
@@ -70,7 +70,72 @@ function generarDetalle() {
     partida.detalle_partida.push(detalle);
     tabla_detalle.push(mostrar);
 
+    ordenarCargosAbonos();
+    ordenarDetallePartida();
+
     limpiarAgregarDetalle();
+    tablaDetallePartida();
+}
+
+function generarDetalleEditado(indice) {
+
+    let saldo = $("#contenedor_cuentas option:selected").data('saldo'),
+        codigo = $("#contenedor_cuentas option:selected").data('codigo');
+    /* fecha = $('#fecha').val(),
+        descripcion = $('#descripcion').val() */
+
+    let detalle = {
+        cuenta: $('#cuenta').val(),
+        movimiento: $('#movimiento').val(),
+        monto: calcularMonto(obtenerMonto(), saldo, $('#movimiento').val())
+    };
+
+    let mostrar = {
+        codigo,
+        movimiento: $('#movimiento').val(),
+        monto: $('#monto').val()
+    };
+
+
+    /*
+     * Validaciones
+     */
+
+    if (detalle.cuenta.length === 0) {
+        $("#cuenta").select2('focus');
+        return;
+    }
+
+    if (detalle.monto.length === 0 || detalle.monto === 0 || detalle.monto.length === '') {
+        validarCampo('monto', 1);
+        focus('monto');
+        return;
+    }
+
+
+    /* partida.datos_partida.fecha = fecha;
+    partida.datos_partida.descripcion = descripcion; */
+
+
+    partida.detalle_partida[indice] = (detalle);
+    tabla_detalle[indice] = (mostrar);
+
+    ordenarCargosAbonos();
+    ordenarDetallePartida();
+
+    limpiarAgregarDetalle();
+    limpiarEditarDetalle();
+    tablaDetallePartida();
+}
+
+function tablaDetallePartida() {
+    $('#contender_tabla_detalle').load('/libro-diario/tabla-detalle', { tabla_detalle }, function(data) {
+        log(data);
+        tablaSinPaginacion('tabla_detalle_partida');
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: 'hover'
+        });
+    });
 }
 
 function calcularMonto(monto, saldo, movimiento) {
@@ -82,11 +147,79 @@ function calcularMonto(monto, saldo, movimiento) {
     return saldocuenta;
 }
 
+function ordenarDetallePartida() {
+    partida.detalle_partida.sort(function(a, b) {
+        if (a.movimiento > b.movimiento) {
+            return -1;
+        }
+        if (a.movimiento < b.movimiento) {
+            return 1;
+        }
+
+        return 0;
+    });
+}
+
+function ordenarCargosAbonos() {
+    tabla_detalle.sort(function(a, b) {
+        if (a.movimiento > b.movimiento) {
+            return -1;
+        }
+        if (a.movimiento < b.movimiento) {
+            return 1;
+        }
+
+        return 0;
+    });
+}
+
 function limpiarAgregarDetalle() {
     $("#cuenta").select2('focus');
     $('#cuenta').val('').trigger('change');
     $('#movimiento').val('Cargo');
     monto.setRawValue();
+}
+
+function limpiarEditarDetalle() {
+    $('#btn_agregar').text('Agregar');
+    $('#btn_agregar').data('indice', -1);
+    $('#btn_agregar').data('accion', 'agregar');
+}
+
+function camposEditar(index) {
+
+    let editar = partida.detalle_partida[index];
+
+    $('#cuenta').val(editar.cuenta).trigger('change');
+    $('#movimiento').val(editar.movimiento);
+    monto.setRawValue(Math.abs(editar.monto));
+    $('#btn_agregar').text('Editar');
+    $('#btn_agregar').data('indice', index);
+    $('#btn_agregar').data('accion', 'editar');
+    focus('monto');
+    validarCampo('monto', false);
+}
+
+function eliminar(indice) {
+    Swal.fire({
+        title: 'Atención',
+        text: "¿Esta seguro de eliminar este detalle?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#6777ef',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+    }).then((result) => {
+        if (result.value) {
+            partida.detalle_partida.splice(indice, 1);
+            tabla_detalle.splice(indice, 1);
+
+            limpiarAgregarDetalle();
+            limpiarEditarDetalle();
+            tablaDetallePartida();
+        }
+    })
 }
 
 $(document).ready(() => {
@@ -95,7 +228,7 @@ $(document).ready(() => {
 
     cargarInputSelectCuentas();
 
-    tablaSinPaginacion('tabla');
+    tablaSinPaginacion('tabla_detalle_partida');
 
 
     /* Eventos */
@@ -139,7 +272,30 @@ $(document).ready(() => {
 
     $(document).on('click', '#btn_agregar', function() {
         $('#btn_agregar').blur();
-        generarDetalle();
+        let accion = $(this).data('accion');
+        if (accion === 'agregar') {
+            generarDetalle();
+        } else {
+            let index = $(this).data('indice');
+            generarDetalleEditado(index);
+        }
+
+    });
+
+    $(document).on('click', '#btn_editar_cuenta', function() {
+        let index = $(this).data('index');
+        $('#btn_editar_cuenta').blur();
+        camposEditar(index);
+    });
+
+    $(document).on('click', '#btn_eliminar', function() {
+        let index = $(this).data('index');
+        $('#btn_eliminar').blur();
+        eliminar(index);
+    });
+
+    $(document).on('click', '[rel="tooltip"]', function() {
+        $(this).tooltip('hide')
     });
 
     $(document).on('keyup', '#monto', function(e) {
@@ -172,6 +328,30 @@ $(document).ready(() => {
         } else {
             $("#movimiento").val("Cargo");
         }
+    }, {
+        type: "keydown",
+        propagate: true,
+        target: document,
+    });
+
+    shortcut.add("ALT+A", function() {
+        generarDetalle();
+    }, {
+        type: "keydown",
+        propagate: true,
+        target: document,
+    });
+
+    shortcut.add("ALT+M", function() {
+        focus('monto');
+    }, {
+        type: "keydown",
+        propagate: true,
+        target: document,
+    });
+
+    shortcut.add("ALT+C", function() {
+        $('#cuenta').select2('focus');
     }, {
         type: "keydown",
         propagate: true,

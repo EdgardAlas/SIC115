@@ -37,4 +37,21 @@ class LibroDiarioController extends Controller
 
     }
 
+    public function tablaDetalle(){
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('POST');
+        
+
+        if(!isset($_POST['tabla_detalle'])){
+            $_POST['tabla_detalle'] = array();
+        }
+
+        $detalles = $_POST['tabla_detalle'];
+
+        Flight::render('ajax/libro-diario/tabla-detalle-partida', array(
+            'datos' => $_POST['tabla_detalle']
+        ));
+    }
+
 }
