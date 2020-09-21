@@ -32,10 +32,13 @@ class DetallePartidaModel extends Model
             inner join periodo on partida.periodo = periodo.id 
             inner join empresa on periodo.empresa = empresa.id
             inner join cuenta on detalle.cuenta = cuenta.id
-                where periodo.id = :periodo and empresa.id = :empresa
+                where periodo.id = :periodo and empresa.id = :empresa and
+                partida.fecha between :fecha_inicial and :fecha_final
                 ", array(
                     ':periodo' => $condicion['periodo'],
-                    ':empresa' => $condicion['empresa']
+                    ':empresa' => $condicion['empresa'],
+                    ':fecha_inicial' => $condicion['fecha_inicial'],
+                    ':fecha_final' => $condicion['fecha_final']
                 ))->fetchAll();
     }
     

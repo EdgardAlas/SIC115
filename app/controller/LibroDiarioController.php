@@ -92,16 +92,22 @@ class LibroDiarioController extends Controller
     public function tablaLibroDiario(){
         $this->isAjax();
         $this->sesionActivaAjax();
-        $this->validarMetodoPeticion('GET');
+        //$this->validarMetodoPeticion('GET');
 
         $conexion = new Conexion();
         $detalle_partida_model = new DetallePartidaModel($conexion);
 
         $login = $this->sesion->get('login');
 
+        $fecha_inicial = (isset($_POST['fecha_inicial'])) ? $_POST['fecha_inicial'] : date('Y-m-d');
+        $fecha_final = (isset($_POST['fecha_final'])) ? $_POST['fecha_final'] : date('Y-12-31');
+
+
         $condicion = array(
             'empresa' => $login['id'],
-            'periodo' => $login['periodo']
+            'periodo' => $login['periodo'],
+            'fecha_inicial' => $fecha_inicial,
+            'fecha_final' => $fecha_final
         );
 
         $datos = $detalle_partida_model->obtenerLibroDiario($condicion);

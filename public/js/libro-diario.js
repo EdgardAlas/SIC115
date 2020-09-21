@@ -360,6 +360,22 @@ function tablaLibroDiario() {
     $('#contendor_partidas').load('/libro-diario/tabla-libro-diario');
 }
 
+function tablaLibroDiarioFechas() {
+    Swal.fire({
+        title: 'Actualizando...',
+        onBeforeOpen: () => {
+            Swal.showLoading()
+        }
+    })
+
+    let fecha_inicial = $('#fecha_inicial').val(),
+        fecha_final = $('#fecha_final').val();
+
+    $('#contendor_partidas').load('/libro-diario/tabla-libro-diario', { fecha_inicial, fecha_final }, function() {
+        Swal.close();
+    });
+}
+
 $(document).ready(() => {
 
     titulo('Libro Diario');
@@ -464,6 +480,14 @@ $(document).ready(() => {
         $('#btn_guardar_partida').blur();
         validarGuardarPartida();
     });
+
+
+    $(document).on('click', '#btn_actualizar_diario', function() {
+        $('#btn_actualizar_diario').blur();
+
+        tablaLibroDiarioFechas();
+    });
+
 
     /*
      * Combinaciones de teclas
