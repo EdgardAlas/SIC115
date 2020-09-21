@@ -18,6 +18,26 @@ class DetallePartidaModel extends Model
         return $this->_validarCampos($datos,$this->validaciones);
     }
 
+    public function obtenerLibroDiario($condicion = array()){
+        return $this->conexion()->query("
+        SELECT 
+        partida.fecha,
+        partida.numero,
+        partida.descripcion,
+        CONCAT(cuenta.codigo,' - ', cuenta.nombre) cuenta,
+        detalle.movimiento,
+        detalle.monto
+            from detalle_partida detalle 
+            inner join partida on detalle.partida = partida.id
+            inner join periodo on partida.periodo = periodo.id 
+            inner join empresa on periodo.empresa = empresa.id
+            inner join cuenta on detalle.cuenta = cuenta.id
+                where periodo.id = :periodo and empresa.id = :empresa
+                ", array(
+                    ':periodo' => $condicion['periodo'],
+                    ':empresa' => $condicion['empresa']
+                ))->fetchAll();
+    }
     
 
 }

@@ -50,11 +50,10 @@ class LibroDiarioController extends Controller
 
         if ($id_partida !== null) {
             $detalles = isset(
-                $_POST['partida']['detalle_partida']) 
-                    ? $_POST['partida']['detalle_partida'] 
-                    : array();
+                $_POST['partida']['detalle_partida'])
+            ? $_POST['partida']['detalle_partida']
+            : array();
 
-               
             foreach ($detalles as $key => $detalle) {
                 $detalle['partida'] = $id_partida;
                 $detalle['cuenta'] = base64_decode($detalle['cuenta']);
@@ -65,24 +64,72 @@ class LibroDiarioController extends Controller
 
                 $detalle['monto'] = abs($detalle['monto']);
 
+                unset($detalle['codigo']);
+
+                var_dump($detalle);
+
                 $detalle_partida_model->insertar($detalle);
+
                 $cuentas_acumular = $cuenta_model->codigoSiguiente($codigo);
+
                 var_dump($cuentas_acumular);
 
                 foreach ($cuentas_acumular as $key => $cuenta) {
                     $cuenta_model->actualizar(array(
-                        'saldo[+]' => $monto_acumlado
+                        'saldo[+]' => $monto_acumlado,
                     ), array(
                         'codigo' => $cuenta,
-                        'empresa' => $empresa
+                        'empresa' => $empresa,
                     ));
                 }
-                Exepcion::json(['error' => false, 'mensaje'=>'Partida creada con exito']);
             }
+            Exepcion::json(['error' => false, 'mensaje' => 'Partida creada con exito']);
         }
-        Exepcion::json(['error' => true, 'mensaje'=>'Error al crear la partida']);
+        Exepcion::json(['error' => true, 'mensaje' => 'Error al crear la partida']);
 
     }
+
+    public function tablaLibroDiario(){
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('GET');
+
+        $conexion = new Conexion();
+        $detalle_partida_model = new DetallePartidaModel($conexion);
+
+        $login = $this->sesion->get('login');
+
+        $condicion = array(
+            'empresa' => $login['id'],
+            'periodo' => $login['periodo']
+        );
+
+        $datos = $detalle_partida_model->obtenerLibroDiario($condicion);
+
+        Flight::render('ajax/libro-diario/tabla-libro-diario', array(
+            'datos' => $datos
+        ));
+    }
+
+    public function test()
+    {
+        $conexion = new Conexion();
+        $detalle_partida_model = new DetallePartidaModel($conexion);
+        $data = $detalle_partida_model->obtenerLibroDiario();
+        //Exepcion::json($this->eliminarDuplicados($data));
+        echo array_count_values(array_column($data, 'numero'))[5];
+    }
+
+    /*  public function eliminarDuplicados($arreglo){
+    foreach ($arreglo as $key => $value) {
+    foreach ($value as $eliminar => $valor) {
+    if(is_numeric($eliminar)){
+    unset($arreglo[$key][$eliminar]);
+    }
+    }
+    }
+    return $arreglo;
+    } */
 
     public function editar()
     {

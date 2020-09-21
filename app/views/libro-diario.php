@@ -14,16 +14,15 @@
                                 </button>
                             </div>
                         </div>
-                        <div id='datos'>
-
+                        <div id='contendor_partidas' class='table-responsive'>
+                            
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-</div>
-</div>
-</section>
+
+    </section>
 </div>
 
 <!--Modal partidas-->
@@ -88,13 +87,16 @@
                         <div class="col-sm-12 col-md-7 tabl-responsive desbordamiento" id='contender_tabla_detalle'>
                             <div class='row'>
                                 <div class="col-4">
-                                    <p class='text-center font-weight-bold'>Cargo <span id='total_cargo'>$0.00</span></p>
+                                    <p class='text-center font-weight-bold'>Cargo <span id='total_cargo'>$0.00</span>
+                                    </p>
                                 </div>
                                 <div class="col-4">
-                                    <p class='text-center font-weight-bold'>Abono <span id='total_abono'>$0.00</span></p>
+                                    <p class='text-center font-weight-bold'>Abono <span id='total_abono'>$0.00</span>
+                                    </p>
                                 </div>
                                 <div class="col-4">
-                                    <p class='text-center font-weight-bold text-danger'>Dif. <span id='dif'>$0.00</span></p>
+                                    <p class='text-center font-weight-bold text-danger'>Dif. <span id='dif'>$0.00</span>
+                                    </p>
                                 </div>
                             </div>
                             <table class="table table-bordered table-hover" id='tabla_detalle_partida'

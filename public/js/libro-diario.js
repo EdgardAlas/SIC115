@@ -95,7 +95,9 @@ function generarDetalleEditado(indice) {
     let mostrar = {
         codigo,
         movimiento: $('#movimiento').val(),
-        monto: $('#monto').val().replace(/\.$/, "")
+        monto: $('#monto').val().replace(/\.$/, ""),
+        monto_plano: Math.abs(calcularMonto(obtenerMonto(), saldo, $('#movimiento').val()))
+
     };
 
 
@@ -132,7 +134,6 @@ function generarDetalleEditado(indice) {
 
 function tablaDetallePartida() {
     $('#contender_tabla_detalle').load('/libro-diario/tabla-detalle', { tabla_detalle }, function(data) {
-        log(data);
         tablaSinPaginacion('tabla_detalle_partida');
         $('[data-toggle="tooltip"]').tooltip({
             trigger: 'hover'
@@ -300,6 +301,7 @@ function guardarPartida() {
                 }
             })
             $.post('/libro-diario/guardar', { partida }, function(data) {
+                log(data);
                 Swal.close();
                 if (data.error) {
                     Swal.fire({
@@ -324,6 +326,7 @@ function guardarPartida() {
 
                     }).then((result) => {
                         limpiarPartida();
+                        tablaLibroDiario();
                     })
                 }
             });
@@ -353,6 +356,10 @@ function limpiarPartida() {
 
 }
 
+function tablaLibroDiario() {
+    $('#contendor_partidas').load('/libro-diario/tabla-libro-diario');
+}
+
 $(document).ready(() => {
 
     titulo('Libro Diario');
@@ -361,6 +368,7 @@ $(document).ready(() => {
 
     tablaSinPaginacion('tabla_detalle_partida');
 
+    tablaLibroDiario();
 
     /* Eventos */
 
