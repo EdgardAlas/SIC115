@@ -281,9 +281,76 @@ function validarGuardarPartida() {
 }
 
 function guardarPartida() {
-    $.post('/libro-diario/guardar', { partida }, function(data) {
-        log(data);
-    });
+
+    Swal.fire({
+        title: 'Atención',
+        text: "¿Esta seguro de guardar esta partida?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#6777ef',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+    }).then((result) => {
+        if (result.value) {
+            Swal.fire({
+                title: 'Guardando...',
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                }
+            })
+            $.post('/libro-diario/guardar', { partida }, function(data) {
+                Swal.close();
+                if (data.error) {
+                    Swal.fire({
+                        title: 'Atención',
+                        text: data.mensaje,
+                        icon: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: '#6777ef',
+                        confirmButtonText: 'Ok',
+
+                    }).then((result) => {
+                        focus('descripcion');
+                    })
+                } else {
+                    Swal.fire({
+                        title: 'Atención',
+                        text: data.mensaje,
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#6777ef',
+                        confirmButtonText: 'Ok',
+
+                    }).then((result) => {
+                        limpiarPartida();
+                    })
+                }
+            });
+        } else {
+            focus('descripcion');
+        }
+    })
+}
+
+function limpiarPartida() {
+    $('#cuenta').val('').trigger('change');
+    $('#movimiento').val('Cargo');
+    $('#descripcion').val('');
+    monto.setRawValue();
+    validarCampo('monto', false);
+    validarCampo('descripcion', false);
+    partida = {
+        datos_partida: {
+            fecha: undefined,
+            descripcion: undefined
+        },
+        detalle_partida: []
+    };
+    tabla_detalle = [];
+    tablaDetallePartida();
+    focus('descripcion');
+
 }
 
 $(document).ready(() => {
@@ -304,6 +371,10 @@ $(document).ready(() => {
     $("#modal_partida").on("shown.bs.modal", function(e) {
         focusCampo("descripcion");
     });
+
+    $('#modal_partida').on('hidden.bs.modal', function() {
+        limpiarPartida();
+    })
 
     $(document).on('focus', '.select2-selection.select2-selection--single', function(e) {
         $(this).closest(".select2-container").siblings('select:enabled').select2('open');
@@ -421,6 +492,14 @@ $(document).ready(() => {
 
     shortcut.add("ALT+C", function() {
         $('#cuenta').select2('focus');
+    }, {
+        type: "keydown",
+        propagate: true,
+        target: document,
+    });
+
+    shortcut.add("ALT+G", function() {
+        validarGuardarPartida();
     }, {
         type: "keydown",
         propagate: true,

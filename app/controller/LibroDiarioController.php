@@ -77,9 +77,10 @@ class LibroDiarioController extends Controller
                         'empresa' => $empresa
                     ));
                 }
-
+                Exepcion::json(['error' => false, 'mensaje'=>'Partida creada con exito']);
             }
         }
+        Exepcion::json(['error' => true, 'mensaje'=>'Error al crear la partida']);
 
     }
 
