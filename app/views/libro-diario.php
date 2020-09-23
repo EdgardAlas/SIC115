@@ -18,13 +18,13 @@
                             <div class="col-12 col-sm-6 form-group">
                             <label for="fecha_inicial">Fecha Inicial</label>
                                 <input type="date" class='form-control' value='<?= date('Y-01-01')?>' id='fecha_inicial'
-                                    min='<?= date('Y-01-01')?>' max='<?= date('Y-12-31')?>'>
+                                    min='<?= date('Y-01-01')?>' max='<?= date('Y-m-d')?>'>
                             </div>
                             <div class=" col-12 d-block d-sm-block d-md-none">&nbsp;</div>
                             <div class="col-12 col-sm-6 orm-group">
                             <label for="fecha_final">Fecha Final</label>
                                 <input type="date" class='form-control' value='<?= date('Y-m-d')?>' id='fecha_final'
-                                    min='<?= date('Y-01-01')?>' max='<?= date('Y-12-31')?>'>
+                                    min='<?= date('Y-01-01')?>' max='<?= date('Y-m-d')?>'>
                             </div>
                             <div class=" col-12 d-block d-sm-block d-md-none">&nbsp;</div>
 
