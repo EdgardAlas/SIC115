@@ -14,6 +14,7 @@
 
 
     <title> <?= (isset($titulo)) ? $titulo : ''?></title>
+    <link rel="shortcut icon" href="<?=URL_BASE?>/public/assets/img/favicon.png" type="image/x-icon">
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/css/bootstrap.min.css">

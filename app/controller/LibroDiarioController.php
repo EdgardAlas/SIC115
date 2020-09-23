@@ -99,7 +99,7 @@ class LibroDiarioController extends Controller
 
         $login = $this->sesion->get('login');
 
-        $fecha_inicial = (isset($_POST['fecha_inicial'])) ? $_POST['fecha_inicial'] : date('Y-m-d');
+        $fecha_inicial = (isset($_POST['fecha_inicial'])) ? $_POST['fecha_inicial'] : date('Y-01-01');
         $fecha_final = (isset($_POST['fecha_final'])) ? $_POST['fecha_final'] : date('Y-12-31');
 
 

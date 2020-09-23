@@ -55,15 +55,15 @@ $pdf->Cell(40, 6, '', 'T');
 $pdf->Cell(40, 6, '', 'T');
 $pdf->Ln();
 
-$path = "temp/".$id;
+/* $path = "temp/".$id;
 
 if (!file_exists($path)) {
     mkdir($path, 777, true);
-}
+} */
 
-$path .="/catalogo.pdf";
+$path ="catalogo.pdf";
 
-$pdf->Output($path, "F");
+$pdf->Output($path, "D");
 
 header("Content-type: application/pdf");
 header('filename="' . basename($path) . '"');

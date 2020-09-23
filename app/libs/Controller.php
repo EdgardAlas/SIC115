@@ -8,7 +8,7 @@ class Controller
     {
         $this->sesion = new Session();
         $empresa = $this->sesion->get('login')['id'];
-        $this->recursive_rmdir('temp/'.$empresa);
+        //$this->recursive_rmdir('temp/'.$empresa);
     }
 
     protected function viewOne($ruta, $variables = array())
