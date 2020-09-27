@@ -15,24 +15,29 @@
                             </div>
                         </div>
                         <div class='form-group row'>
-                            <div class="col-12 col-sm-6 form-group">
-                            <label for="fecha_inicial">Fecha Inicial</label>
+                            <div class="col-12 col-sm-4 form-group">
+                                <label for="fecha_inicial">Fecha Inicial (*)</label>
                                 <input type="date" class='form-control' value='<?= date('Y-01-01')?>' id='fecha_inicial'
                                     min='<?= date('Y-01-01')?>' max='<?= date('Y-m-d')?>'>
                             </div>
                             <div class=" col-12 d-block d-sm-block d-md-none">&nbsp;</div>
-                            <div class="col-12 col-sm-6 orm-group">
-                            <label for="fecha_final">Fecha Final</label>
+                            <div class="col-12 col-sm-4 form-group">
+                                <label for="fecha_final">Fecha Final (*)</label>
                                 <input type="date" class='form-control' value='<?= date('Y-m-d')?>' id='fecha_final'
                                     min='<?= date('Y-01-01')?>' max='<?= date('Y-m-d')?>'>
                             </div>
                             <div class=" col-12 d-block d-sm-block d-md-none">&nbsp;</div>
+                            <div class="col-12 col-sm-4 form-group">
+                                <label for="numero_partida">Número de partida (Opcional)</label>
+                                <input type="text" class='form-control' id='numero_partida'>
+                            </div>
+                            <!-- <div class=" col-12 d-block d-sm-block d-md-none">&nbsp;</div>
 
                             <div class="col-12  form-group">
                                 <button type="button" id='btn_actualizar_diario' class="btn btn-warning" autofocus>
                                     Actualizar Tabla
                                 </button>
-                            </div>
+                            </div> -->
                         </div>
                         <div id='contendor_partidas' class='table-responsive'>
 
