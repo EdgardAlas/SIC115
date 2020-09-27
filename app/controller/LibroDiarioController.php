@@ -16,7 +16,13 @@ class LibroDiarioController extends Controller
 
     public function index()
     {
+        $test = $this->sesion->get('login');
+        $test['periodo'] = null;
+
+        $this->sesion->set('login', $test);
+
         $this->sesionActiva();
+        $this->validarPeriodo();
 
         $this->view('libro-diario', [
             'js_especifico' => Utiles::printScript('libro-diario'),

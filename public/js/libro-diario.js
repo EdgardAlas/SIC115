@@ -16,6 +16,11 @@ const monto = new Cleave('#monto', {
     prefix: '$'
 });
 
+var numero = new Cleave('#numero_partida', {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand'
+});
+
 function cargarInputSelectCuentas() {
     $('#contenedor_cuentas').load('/cuenta/input-seleccionar-cuenta', function() {
         select('cuenta');
@@ -25,6 +30,11 @@ function cargarInputSelectCuentas() {
 function obtenerMonto() {
     let montoInput = $('#monto').val();
     return montoInput = (montoInput.substr(1).replace(/,/g, '')).replace(/\.$/, "");
+}
+
+function obtenerNumeroPartida() {
+    let montoInput = $('#numero_partida').val();
+    return montoInput = (montoInput.substr(0).replace(/,/g, '')).replace(/\.$/, "");
 }
 
 function generarDetalle() {
@@ -370,7 +380,7 @@ function tablaLibroDiarioFechas() {
 
     let fecha_inicial = $('#fecha_inicial').val(),
         fecha_final = $('#fecha_final').val(),
-        numero = $('#numero_partida').val();
+        numero = obtenerNumeroPartida();
 
     numero = (numero.length > 0) ? numero : 0;
 

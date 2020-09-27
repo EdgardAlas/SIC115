@@ -39,7 +39,7 @@
                                 </button>
                             </div> -->
                         </div>
-                        <div id='contendor_partidas' class='table-responsive'>
+                        <div id='contendor_partidas' class='form-group table-responsive'>
 
                         </div>
                     </div>

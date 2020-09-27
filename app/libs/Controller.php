@@ -85,17 +85,29 @@ class Controller
         }
     }
 
-    function recursive_rmdir($dir) { 
-        if( is_dir($dir) ) { 
-          $objects = array_diff( scandir($dir), array('..', '.') );
-          foreach ($objects as $object) { 
-            $objectPath = $dir."/".$object;
-            if( is_dir($objectPath) )
-              $this->recursive_rmdir($objectPath);
-            else
-              unlink($objectPath); 
-          } 
-          rmdir($dir); 
-        } 
-      }
+    public function recursive_rmdir($dir)
+    {
+        if (is_dir($dir)) {
+            $objects = array_diff(scandir($dir), array('..', '.'));
+            foreach ($objects as $object) {
+                $objectPath = $dir . "/" . $object;
+                if (is_dir($objectPath)) {
+                    $this->recursive_rmdir($objectPath);
+                } else {
+                    unlink($objectPath);
+                }
+
+            }
+            rmdir($dir);
+        }
+    }
+
+    public function validarPeriodo(){
+        $periodo = $this->sesion->get('login')['periodo'];
+        if($periodo===null){
+            $this->view('sin-periodo', []);
+            return;
+        }
+    } 
+
 }

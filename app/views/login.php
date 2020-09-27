@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <title>Iniciar Sesión</title>
+    <link rel="shortcut icon" href="<?=URL_BASE?>/public/assets/img/favicon.png" type="image/x-icon">
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/css/bootstrap.min.css">
