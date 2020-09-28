@@ -361,6 +361,7 @@ function limpiarPartida() {
         detalle_partida: []
     };
     tabla_detalle = [];
+    limpiarEditarDetalle();
     tablaDetallePartida();
     focus('descripcion');
 
