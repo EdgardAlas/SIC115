@@ -11,7 +11,10 @@
             <li>
                 <a class="nav-link" href="/cuenta"><i class="fas fa-stream"></i> <span>Catálogo de Cuentas</span></a>
             </li>
-
+            <li class="menu-header">Periodos </li>
+            <li>
+                <a class="nav-link" href="/periodo"><i class="fas fa-stream"></i> <span>Periodos</span></a>
+            </li>
             <li class="menu-header">Libros Contables</li>
             <li>
                 <a class="nav-link" href="/libro-diario"><i class="fas fa-book"></i> <span>Libro Diario</span></a>
