@@ -5,7 +5,13 @@ $(document).ready(function() {
 function activeItem() {
 
     var url = location.pathname.split('/'); //se separa la direccion para tener solo el nombre del archivo
-    var active = '/' + url[url.length - 1]; //ya que es un arreglo, el nombre del archivo esta en la ultima posicion
+    log(url);
+    var active = '/';
+    if(url.length<3){
+        active = '/' + url[url.length - 1]; //ya que es un arreglo, el nombre del archivo esta en la ultima posicion
+    }else{
+        active = '/' + url[url.length - 2]; //ya que es un arreglo, el nombre del archivo esta en la ultima posicion
+    }
 
     log(active)
     if (active != "restaurar" && active != "crear")

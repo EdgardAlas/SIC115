@@ -50,10 +50,12 @@ class Controller
     protected function sesionActiva()
     {
         $this->isNotAjax();
-
+        
         $sesion = new Session();
 
-        if ($sesion->get('login') === null && Flight::request()->url === '/login') {
+        $url =  trim(Flight::request()->url,'/');
+
+        if ($sesion->get('login') === null && $url === 'login') {
             return '';
         }
 
@@ -62,7 +64,7 @@ class Controller
             exit();
         }
 
-        if ($sesion->get('login') !== null && Flight::request()->url === '/login') {
+        if ($sesion->get('login') !== null && $url === 'login') {
             Flight::redirect('/', 200);
             exit();
         }

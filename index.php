@@ -6,6 +6,7 @@ require './app/config/config.php';
 
 Flight::map('notFound', function () {
     header("HTTP/1.0 404 Not Found");
+    $url =  trim(Flight::request()->url,'/');
     Flight::render('error/404', 404);
 });
 
