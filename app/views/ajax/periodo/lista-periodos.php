@@ -14,8 +14,8 @@
                 <?php
             }else{
                 ?>
-                <p class='text-center'>Periodo activo número <b><?= sizeof($lista_periodos)?></b>.</p>
-                <p class='text-center'>Año: <b><?=date('Y')?></b></p>
+                <h2 class='text-center h5'>Periodo activo número <b><?= sizeof($lista_periodos)?></b>.</h2>
+                <h3 class='text-center h5'>Año: <b><?=date('Y')?></b></h3>
                 <?php
             }
         ?>
@@ -23,7 +23,7 @@
     <div class='table-responsive col-12'>
         <table class='table table-striped table-bordered table-hover' id='tabla-periodos'>
             <thead>
-                <th>Año</th>
+                <th style='width: 70%'>Año</th>
                 <th>Estado</th>
             </thead>
             <tbody>
@@ -32,7 +32,7 @@
                         
                         ?>
                         <tr>
-                            <td><?= $period['anio']?></td>
+                            <td><?= Utiles::fecha(date($period['anio'].'-01-01')).' <b>a</b> '.Utiles::fecha(date($period['anio'].'-12-31'))?></td>
                             <td><?php
                                 if($period['anio']){
                                     ?>
