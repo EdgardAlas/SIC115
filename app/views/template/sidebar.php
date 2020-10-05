@@ -13,7 +13,7 @@
             </li>
             <li class="menu-header">Periodos </li>
             <li>
-                <a class="nav-link" href="/periodo"><i class="fas fa-stream"></i> <span>Periodos</span></a>
+                <a class="nav-link" href="/periodo"><i class="fas fa-calendar-alt"></i> <span>Periodos</span></a>
             </li>
             <li class="menu-header">Libros Contables</li>
             <li>
