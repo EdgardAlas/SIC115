@@ -1,7 +1,16 @@
-function tablaBalanzaComprobacion() {
+function tablaBalanzaComprobacion(carga) {
     const fecha_inicial = $('#fecha_inicial').val();
     const fecha_final = $('#fecha_final').val();
     const nivel = $('#nivel').val();
+
+    if(carga){
+        Swal.fire({
+            title: 'Cargando...',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            }
+        })
+    }
 
     console.log(nivel);
     $('#contenedor-balanza').load('/balanza-comprobacion/tabla-balanza-comprobacion', {
@@ -11,7 +20,11 @@ function tablaBalanzaComprobacion() {
     }, function () {
         totales();
         tablaSinPaginacionBuscar('tabla_balanza');
+        if(carga){
+            Swal.close();
+        }
     });
+
 
 }
 
@@ -24,7 +37,7 @@ function totales() {
 
 function cargarNiveles() {
     $("#contenedor_niveles").load('/cuenta/input-niveles', function () {
-        tablaBalanzaComprobacion();
+        tablaBalanzaComprobacion(true);
     });
 }
 
@@ -37,14 +50,14 @@ $(document).ready(() => {
      */
 
     $(document).on('change', '#fecha_inicial', function(){
-        tablaBalanzaComprobacion();
+        tablaBalanzaComprobacion(false);
     } );
 
     $(document).on('change', '#fecha_final', function(){
-        tablaBalanzaComprobacion();
+        tablaBalanzaComprobacion(false);
     } );
 
     $(document).on('change', '#nivel', function(){
-        tablaBalanzaComprobacion();
+        tablaBalanzaComprobacion(false);
     } );
 });
