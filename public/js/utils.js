@@ -1,3 +1,6 @@
+
+$("body").niceScroll();
+
 const log = (x) => console.log(x);
 
 const focus = (id) => {

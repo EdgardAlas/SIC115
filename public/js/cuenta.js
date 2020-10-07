@@ -1,7 +1,18 @@
-function cargarTablaCuentas() {
+function cargarTablaCuentas(carga = false) {
+    if(carga){
+        Swal.fire({
+            title: 'Cargando...',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            }
+        })
+    }
     $('#div_tabla_cuentas').load('/cuenta/tabla-cuentas', (data) => {
         tablaPaginacionTodos('tabla_cuentas');
         $('[data-toggle="tooltip"]').tooltip();
+        if(carga){
+            Swal.close();
+        }
     });
 }
 
@@ -188,7 +199,7 @@ $(document).ready((event) => {
 
     $('#btn_acciones_cuenta').focus();
 
-    cargarTablaCuentas();
+    cargarTablaCuentas(true);
 
     $(document).on('click', '#btn_imprimir', function() {
         $("#btn_imprimir").blur();

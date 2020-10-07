@@ -367,8 +367,20 @@ function limpiarPartida() {
 
 }
 
-function tablaLibroDiario() {
-    $('#contendor_partidas').load('/libro-diario/tabla-libro-diario');
+function tablaLibroDiario(carga = false) {
+    if(carga){
+        Swal.fire({
+            title: 'Cargando...',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            }
+        })
+    }
+    $('#contendor_partidas').load('/libro-diario/tabla-libro-diario', function(){
+        if(carga){
+            Swal.close();
+        }
+    });
 }
 
 function tablaLibroDiarioFechas() {
@@ -398,7 +410,7 @@ $(document).ready(() => {
 
     tablaSinPaginacion('tabla_detalle_partida');
 
-    tablaLibroDiario();
+    tablaLibroDiario(true);
 
     /* Eventos */
 

@@ -1,4 +1,4 @@
-function tablaBalanzaComprobacion(carga) {
+function tablaBalanzaComprobacion(carga = false) {
     const fecha_inicial = $('#fecha_inicial').val();
     const fecha_final = $('#fecha_final').val();
     const nivel = $('#nivel').val();
