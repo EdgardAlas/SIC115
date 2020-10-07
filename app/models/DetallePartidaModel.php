@@ -70,4 +70,42 @@ class DetallePartidaModel extends Model
         ))->fetchAll();
     }
 
+    public function obtenerDebeHaber($cuentas, $periodo){
+        
+        $fecha_inicial = date('Y-01-01');
+        $fecha_final = date('Y-12-31');
+
+        foreach ($cuentas as $key => $cuenta) {
+            
+            $auxiliar_consulta = $this->conexion()->query("select any_value(detalle_partida.movimiento) movimiento, 
+            sum(monto) monto 
+                from detalle_partida inner join partida on partida.id = detalle_partida.partida 
+                inner join cuenta on cuenta.id = detalle_partida.cuenta 
+            inner join periodo on periodo.id = partida.periodo
+            where cuenta.codigo like :codigo and partida.fecha between :fecha_inicial and :fecha_final 
+            and periodo.id = :periodo and partida.partida_cierre = 0 group by movimiento order by movimiento desc", array(
+                ':fecha_inicial' => $fecha_inicial,
+                ':fecha_final' => $fecha_final,
+                ':periodo' => $periodo,
+                ':codigo' => $cuenta['codigo'].'%'
+            ))->fetchAll();
+
+            foreach ($auxiliar_consulta as $indice => $consulta) {
+                
+                if($consulta['movimiento']==='Cargo'){
+                    $cuentas[$key]['debe'] = Utiles::monto($consulta['monto']);
+                }
+
+                if($consulta['movimiento']==='Abono'){
+                    $cuentas[$key]['haber'] = Utiles::monto($consulta['monto']);
+                }
+
+                
+            }
+        }
+
+
+        return $cuentas;
+    }
+
 }

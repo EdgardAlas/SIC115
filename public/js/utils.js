@@ -30,6 +30,15 @@ function tablaSinPaginacion(id) {
     });
 }
 
+function tablaSinPaginacionBuscar(id) {
+    $(`#${id}`).DataTable({
+        "order": [],
+        "aaSorting": [],
+        "paging": false,
+        "language": language
+    });
+}
+
 const tablaPaginacion = (id) => {
     $(`#${id}`).dataTable({
         "order": [],
