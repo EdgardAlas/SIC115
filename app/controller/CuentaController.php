@@ -254,6 +254,24 @@ class CuentaController extends Controller
         ));
     }
 
+    public function inputNiveles(){
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('GET');
+
+        $empresa = $this->sesion->get('login')['id'];
+
+        $datos = $this->modelo->conexion()->query('SELECT distinct nivel from cuenta inner 
+                    join empresa on empresa.id = cuenta.empresa 
+                        where empresa.id = :empresa', array(
+                            'empresa' => $empresa
+                ))->fetchAll();
+                
+        Flight::render('ajax/cuentas/input-niveles', array(
+            'datosBD' => $datos
+        ));
+    }
+
 
     /*Metodos privados*/
 

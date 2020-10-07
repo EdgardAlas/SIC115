@@ -29,7 +29,7 @@ class BalanzaComprobacionController extends Controller
     {
         $this->isAjax();
         $this->sesionActivaAjax();
-        $this->validarMetodoPeticion('GET');
+        $this->validarMetodoPeticion('POST');
         $conexion = new Conexion();
 
         $cuenta_model = new CuentaModel($conexion);
@@ -37,15 +37,36 @@ class BalanzaComprobacionController extends Controller
         $empresa = $this->sesion->get('login')['id'];
         $periodo = $this->sesion->get('login')['periodo'];
 
+        $condicion = array(
+            'fecha_inicial' => date('Y-01-01'),
+            'fecha_final' => date('Y-12-31'),
+            'nivel' => 1,
+            'periodo' => $periodo
+        );
+        
+
+        if(isset($_POST['fecha_inicial'])){
+            $condicion['fecha_inicial'] = $_POST['fecha_inicial'];
+        }
+
+        if(isset($_POST['fecha_final'])){
+            $condicion['fecha_final'] = $_POST['fecha_final'];
+        }
+
+        if(isset($_POST['nivel'])){
+            $condicion['nivel'] = $_POST['nivel'];
+        }
+
         $cuentas = $cuenta_model->seleccionar(array('nombre','id','codigo', 'saldo', 'tipo_saldo'), array(
             'empresa' => $empresa,
-            'nivel' => 3,
+            'nivel' => $condicion['nivel'],
             'ORDER' => array(
                 'tipo_saldo' => 'DESC'
             )
         ));
 
-        $cuentas = $detalle_partida_model->obtenerDebeHaber($cuentas, $periodo);
+
+        $cuentas = $detalle_partida_model->obtenerDebeHaber($cuentas, $condicion);
 
         Flight::render('ajax/balanza-comprobacion/tabla-balanza-comprobacion', array(
             'cuentas' => $cuentas

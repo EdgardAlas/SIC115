@@ -18,21 +18,30 @@
             $deudor = 0;
             $acreedor = 0;
 
+            $saldo = 0;
+            
             foreach ($datos as $key => $cuenta) {
+                $aux_debe = isset($cuenta['debe']) ? ($cuenta['debe']) : 0;
+                $aux_haber = isset($cuenta['haber']) ? ($cuenta['haber']) : 0;
+                $saldo = ($cuenta['tipo_saldo'] === 'Deudor' ? ($aux_debe - $aux_haber ): ($aux_haber- $aux_debe));
                 ?>
-            <tr>
-                <td><?= $cuenta['nombre']?></td>
-                <td class='text-right'><?= isset($cuenta['debe']) ? $cuenta['debe'] : '-' ?></td>
-                <td class='text-right'><?= isset($cuenta['haber']) ? $cuenta['haber'] : '-' ?></td>
-                <td class='text-right font-weight-bold'><?= $cuenta['tipo_saldo']=== 'Deudor' ? Utiles::monto($cuenta['saldo']) : '-' ?></td>
-                <td class='text-right font-weight-bold'><?= $cuenta['tipo_saldo']=== 'Acreedor' ? Utiles::monto($cuenta['saldo']) : '-' ?></td>
-            </tr>
+        <tr>
+            <td><?= $cuenta['codigo'].' - '.$cuenta['nombre']?></td>
+            <td class='text-right'><?= isset($cuenta['debe']) ? Utiles::monto($cuenta['debe']) : '-' ?></td>
+            <td class='text-right'><?= isset($cuenta['haber']) ? Utiles::monto($cuenta['haber']) : '-' ?></td>
+            <td class='text-right font-weight-bold'>
+            <?= $cuenta['tipo_saldo']== 'Deudor' ?  ($saldo > 0 ? Utiles::monto($saldo) : '-') : '-' ?>
+            </td>
+            <td class='text-right font-weight-bold'>
+                <?= $cuenta['tipo_saldo']== 'Acreedor' ?  ($saldo > 0 ? Utiles::monto($saldo) : '-') : '-' ?>
+            </td>
+        </tr>
         <?php
 
-                $debe += (isset($cuenta['debe']) ? Utiles::convertirMonto($cuenta['debe']) : 0);
-                $haber += (isset($cuenta['debe']) ? Utiles::convertirMonto($cuenta['debe']) : 0);
-                $deudor += ($cuenta['tipo_saldo']==='Deudor' ? $cuenta['saldo'] : 0);
-                $acreedor += ($cuenta['tipo_saldo']==='Acreedor' ? $cuenta['saldo'] : 0);
+                $debe += (isset($cuenta['debe']) ? ($cuenta['debe']) : 0);
+                $haber += (isset($cuenta['haber']) ? ($cuenta['haber']) : 0);
+                $deudor += ($cuenta['tipo_saldo']==='Deudor' ? $saldo : 0);
+                $acreedor += ($cuenta['tipo_saldo']==='Acreedor' ? $saldo : 0);
                 
 
             }
