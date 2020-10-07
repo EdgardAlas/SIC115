@@ -7,7 +7,7 @@ class Controller
     public function __construct()
     {
         $this->sesion = new Session();
-        $empresa = $this->sesion->get('login')['id'];
+        /* $empresa = $this->sesion->get('login')['id']; */
         //$this->recursive_rmdir('temp/'.$empresa);
     }
 

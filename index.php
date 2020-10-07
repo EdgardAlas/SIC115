@@ -14,7 +14,9 @@ Flight::map('notFound', function () {
     header("HTTP/1.0 500 Internal Server Error");
     
     echo $ex->getTraceAsString();
-    var_dump($ex);
+    echo '<br>';
+    echo $ex->getMessage();
+    /* var_dump($ex); */
     
 });  
 
