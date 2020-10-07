@@ -29,11 +29,13 @@
             <td><?= $cuenta['codigo'].' - '.$cuenta['nombre']?></td>
             <td class='text-right'><?= isset($cuenta['debe']) ? Utiles::monto($cuenta['debe']) : '-' ?></td>
             <td class='text-right'><?= isset($cuenta['haber']) ? Utiles::monto($cuenta['haber']) : '-' ?></td>
-            <td class='text-right font-weight-bold'>
-            <?= $cuenta['tipo_saldo']== 'Deudor' ?  ($saldo > 0 ? Utiles::monto($saldo) : '-') : '-' ?>
+            <td class='text-right font-weight-bold <?=   $saldo < 0 ?  'text-danger' :  '' ?>' >
+            <?= $cuenta['tipo_saldo']== 'Deudor' ?  ($saldo != 0 ? Utiles::monto(abs($saldo)) : '-') : '-' ?>
+			
             </td>
-            <td class='text-right font-weight-bold'>
-                <?= $cuenta['tipo_saldo']== 'Acreedor' ?  ($saldo > 0 ? Utiles::monto($saldo) : '-') : '-' ?>
+            <td class='text-right font-weight-bold <?=   $saldo < 0 ?  'text-danger' :  '' ?>' >
+                <?= $cuenta['tipo_saldo']== 'Acreedor' ?  ($saldo != 0 ? Utiles::monto(abs($saldo)) : '-') : '-' ?>
+				
             </td>
         </tr>
         <?php
