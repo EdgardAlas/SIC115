@@ -99,11 +99,11 @@ class LibroDiarioController extends Controller
         $detalle_partida_model = new DetallePartidaModel($conexion);
 
         $login = $this->sesion->get('login');
-
+        
         $fecha_inicial = (isset($_POST['fecha_inicial'])) ? $_POST['fecha_inicial'] : date('Y-01-01');
         $fecha_final = (isset($_POST['fecha_final'])) ? $_POST['fecha_final'] : date('Y-12-31');
         $numero = (isset($_POST['numero'])) ? $_POST['numero'] : 0;
-        
+        $codigo = (isset($_POST['codigo']) ? base64_decode($_POST['codigo']) : null);        
 
         $condicion = array(
             'empresa' => $login['id'],
@@ -112,11 +112,12 @@ class LibroDiarioController extends Controller
             'fecha_final' => $fecha_final,
             'numero' => $numero
         );
-
+        
         $datos = $detalle_partida_model->obtenerLibroDiario($condicion);
 
         Flight::render('ajax/libro-diario/tabla-libro-diario', array(
-            'datos' => $datos
+            'datos' => $datos,
+            'codigo' => $codigo
         ));
     }
 

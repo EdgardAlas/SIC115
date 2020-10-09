@@ -20,7 +20,7 @@
                 <a class="nav-link" href="/libro-diario"><i class="fas fa-book"></i> <span>Libro Diario</span></a>
             </li>
             <li class="nav-item dropdown">
-                <a href="libromayor" class="nav-link"><i class="fas fa-book"></i> <span>Libro Mayor</span></a>
+                <a href="/libro-mayor" class="nav-link"><i class="fas fa-book"></i> <span>Libro Mayor</span></a>
             </li>
             <li class="nav-item dropdown">
                 <a href="/balanza-comprobacion" class="nav-link"><i class="fas fa-book"></i> <span>Balanza de

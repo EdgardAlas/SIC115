@@ -35,9 +35,10 @@
     width: 100% !important;
 }
 
-/* #totales{
-    position: sticky;
-    top: 0;
-    background: #fff;
+.numero_partida{
+    cursor: pointer;
+}
 
-} */
+.numero_partida:hover{
+    color: #6777ef;
+}

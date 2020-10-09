@@ -22,6 +22,11 @@ class Utiles
         //return date("Y-m-d", strtotime($fecha));
     }
 
+    public static function fechaSinFormato($fecha){
+        
+        return date("d-m-Y", strtotime($fecha));
+    }
+
     public static function printScript($script)
     {
         return "<script src = '" . URL_BASE . "/public/js/" . $script . ".js'></script>";

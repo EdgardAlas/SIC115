@@ -29,6 +29,7 @@ class DetallePartidaModel extends Model
                 partida.numero,
                 partida.descripcion,
                 CONCAT(cuenta.codigo,' - ', cuenta.nombre) cuenta,
+                cuenta.codigo,
                 detalle.movimiento,
                 detalle.monto
                     from detalle_partida detalle
@@ -53,6 +54,7 @@ class DetallePartidaModel extends Model
         partida.numero,
         partida.descripcion,
         CONCAT(cuenta.codigo,' - ', cuenta.nombre) cuenta,
+        cuenta.codigo,
         detalle.movimiento,
         detalle.monto
             from detalle_partida detalle
