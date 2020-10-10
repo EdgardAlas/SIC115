@@ -77,7 +77,7 @@ class DetallePartidaModel extends Model
 
         foreach ($cuentas as $key => $cuenta) {
             
-            $auxiliar_consulta = $this->conexion()->query("select any_value(detalle_partida.movimiento) movimiento, 
+            $auxiliar_consulta = $this->conexion()->query("select detalle_partida.movimiento movimiento, 
             sum(monto) monto 
                 from detalle_partida inner join partida on partida.id = detalle_partida.partida 
                 inner join cuenta on cuenta.id = detalle_partida.cuenta 
