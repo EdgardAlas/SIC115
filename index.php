@@ -4,6 +4,8 @@ error_reporting(E_ALL);
 
 require './app/config/config.php';
 
+date_default_timezone_set('America/El_Salvador');
+
 Flight::map('notFound', function () {
     header("HTTP/1.0 404 Not Found");
     $url =  trim(Flight::request()->url,'/');
