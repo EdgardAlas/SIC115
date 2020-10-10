@@ -1,4 +1,4 @@
-<table class='table table-striped table-bordered table-hover '>
+<table class='table table-striped table-bordered table-hover' style='font-size: 0.80rem;' id='tabla-mayor'>
     <thead>
         <tr>
             <th style='width: 15%;'>Fecha</th>
@@ -32,7 +32,7 @@
             ?>
             <tr>
                 <td class="table-light">
-                    <?= Utiles::fechaSinFormato($partida['fecha']) ?>
+                    <?= Utiles::fecha($partida['fecha']) ?>
                 </td>
                 <td class="table-light text-right font-weight-bold">
                     <span class='numero_partida' data-codigo='<?=base64_encode($partida['codigo'])?>' data-partida = <?= $partida['numero']?>>
@@ -47,6 +47,9 @@
                 </td>
                 <td class="table-light text-right">
                     <?= $partida['movimiento'] === 'Abono' ? Utiles::monto($partida['monto']) : '-'?>
+                </td>
+                <td class="table-light">
+                    
                 </td>
             </tr>
             <?php

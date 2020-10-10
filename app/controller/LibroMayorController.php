@@ -60,7 +60,7 @@ class LibroMayorController extends Controller
             'empresa' => $login['id'],
             'nivel' => $nivel,
             'ORDER' => array(
-                'tipo_saldo' => 'DESC'
+                'orden' => 'ASC'
             )
         ));
 

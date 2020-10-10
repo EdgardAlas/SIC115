@@ -58,7 +58,7 @@
             </div>
 
             <div class="modal-body">
-                <div class="row" id='partida_especifica'>
+                <div class="row desbordamiento" id='partida_especifica'>
 
                 </div>
 
