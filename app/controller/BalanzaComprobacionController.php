@@ -61,7 +61,7 @@ class BalanzaComprobacionController extends Controller
             'empresa' => $empresa,
             'nivel' => $condicion['nivel'],
             'ORDER' => array(
-                'tipo_saldo' => 'DESC'
+                'orden' => 'ASC'
             )
         ));
 

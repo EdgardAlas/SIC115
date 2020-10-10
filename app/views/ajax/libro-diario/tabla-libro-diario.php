@@ -1,4 +1,4 @@
-<table class='table table-striped table-bordered table-hover' style='font-size: 0.80rem;'>
+<table class='table table-hover' style='font-size: 0.80rem;'>
     <thead>
         <tr>
             <th style='width: 20%;'>Fecha</th>

@@ -1,4 +1,4 @@
-<table class='table table-striped table-bordered table-hover' style='font-size: 0.80rem;' id='tabla-mayor'>
+<table class='table table-striped table-hover' style='font-size: 0.80rem;' id='tabla-mayor'>
     <thead>
         <tr>
             <th style='width: 15%;'>Fecha</th>
