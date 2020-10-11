@@ -398,6 +398,27 @@ function tablaLibroDiarioFechas() {
     $('#contendor_partidas').load('/libro-diario/tabla-libro-diario', { fecha_inicial, fecha_final, numero }, function() {
         /* Swal.close(); */
     });
+
+    reporteLibroDiario();
+}
+
+
+function reporteLibroDiario() {
+    /* Swal.fire({
+        title: 'Actualizando...',
+        onBeforeOpen: () => {
+            Swal.showLoading()
+        }
+    }) */
+
+    let fecha_inicial = $('#fecha_inicial').val(),
+        fecha_final = $('#fecha_final').val(),
+        numero = $('#numero_partida').val().split(',');
+
+        numero = [...new Set(numero)];
+
+    $('#btn_imprimir').attr('href', `/libro-diario/reporte-libro-diario?fecha_inicial=${fecha_inicial}&fecha_final=${fecha_final}&numero=${numero}`);
+
 }
 
 $(document).ready(() => {
@@ -416,6 +437,7 @@ $(document).ready(() => {
         $('#modal_partida').modal('show');
     });
 
+    
     $("#modal_partida").on("shown.bs.modal", function(e) {
         focusCampo("descripcion");
     });

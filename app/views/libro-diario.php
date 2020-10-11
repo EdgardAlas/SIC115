@@ -12,6 +12,9 @@
                                 <button type="button" id='btn_partida' class="btn btn-primary" autofocus>
                                     Agregar Partida
                                 </button>
+                                <a href='<?=URL_BASE?>/libro-diario/reporte-libro-diario'  id='btn_imprimir' class="btn btn-success">
+                                    Reporte Libro Diario
+                                </a>
                             </div>
                         </div>
                         <div class='form-group row'>

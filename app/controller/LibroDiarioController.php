@@ -121,6 +121,37 @@ class LibroDiarioController extends Controller
         ));
     }
 
+    public function reporteLibroDiario(){
+        $this->sesionActiva();
+        $this->sesionActivaAjax();
+        //$this->validarMetodoPeticion('GET');
+
+        $conexion = new Conexion();
+        $detalle_partida_model = new DetallePartidaModel($conexion);
+
+        $login = $this->sesion->get('login');
+        
+        $fecha_inicial = (isset($_GET['fecha_inicial'])) ? $_GET['fecha_inicial'] : date('Y-01-01');
+        $fecha_final = (isset($_GET['fecha_final'])) ? $_GET['fecha_final'] : date('Y-12-31');
+        $numero = (isset($_GET['numero'])) ? explode(',', $_GET['numero']) : array('');  
+        
+        $condicion = array(
+            'empresa' => $login['id'],
+            'periodo' => $login['periodo'],
+            'fecha_inicial' => $fecha_inicial,
+            'fecha_final' => $fecha_final,
+            'numero' => $numero
+        );
+        
+        $datos = $detalle_partida_model->obtenerLibroDiario($condicion);
+
+        Flight::render('pdf/libro-diario', array(
+            'datos' => $datos,
+            'emp' => $login['nombre']
+        ));
+
+    }
+
     public function test()
     {
         $conexion = new Conexion();

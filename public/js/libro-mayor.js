@@ -2,8 +2,8 @@ function tablaLibroMayorEspecifico(carga){
     const fecha_inicial = $("#fecha_inicial").val();
     const fecha_final = $("#fecha_final").val();
     const nivel = $("#nivel").val();
-    const cuenta = $("#cuenta").val().split(',');  
-    const cuentas = [...Set(cuenta)];
+    const cuentas = $("#cuenta").val().split(',');  
+    const cuenta = [...new Set(cuentas)];
 
 
     if(carga){
@@ -18,7 +18,7 @@ function tablaLibroMayorEspecifico(carga){
     $('#contenedor_mayor').load('/libro-mayor/tabla-libro-mayor',{
         fecha_inicial,
         fecha_final,
-        cuentas,
+        cuenta,
         nivel
     } ,function(data){
         if(carga){
