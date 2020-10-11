@@ -391,6 +391,8 @@ function tablaLibroDiarioFechas() {
         fecha_final = $('#fecha_final').val(),
         numero = $('#numero_partida').val().split(',');
 
+        numero = [...new Set(numero)];
+
     
 
     $('#contendor_partidas').load('/libro-diario/tabla-libro-diario', { fecha_inicial, fecha_final, numero }, function() {
