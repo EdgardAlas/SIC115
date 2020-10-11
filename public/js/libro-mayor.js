@@ -65,7 +65,7 @@ $(document).ready(()=>{
         const numero = $(this).data('partida');
         const codigo = $(this).data('codigo');
         log({numero, codigo});
-        tablaLibroDiarioEspecifico(numero, codigo);
+        tablaLibroDiarioEspecifico([numero], codigo);
         $('#modal_partida').modal('show');
     });
 
