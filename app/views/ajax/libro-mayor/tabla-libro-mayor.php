@@ -1,4 +1,4 @@
-<table class='table table-striped table-hover' style='font-size: 0.80rem;' id='tabla-mayor'>
+<table class='table table-striped table-bordered table-hover' style='font-size: 0.80rem;' id='tabla-mayor'>
     <thead>
         <tr>
             <th style='width: 15%;'>Fecha</th>
@@ -12,7 +12,7 @@
     <tbody>
         <?php
         $partidas_cuentas = isset($datosBD) ? $datosBD : array();
-        
+        $tam_partidas = sizeof($partidas_cuentas);
         $total_cargo = 0;
         $total_abono = 0;
 
@@ -21,7 +21,7 @@
             $total_abono = 0;
         ?>
         <tr>
-            <td colspan=5 class='h-100'>&nbsp;</td>
+            <td colspan=6 class='h-100'>&nbsp;</td>
         </tr>
         <tr>
             <td class="table-primary text-center font-weight-bold" colspan=6>
@@ -81,6 +81,14 @@
 
         <?php
         }
+        if($tam_partidas===0){
+            ?>
+    <tr>
+        <td class="table-light text-center font-weight-bold" colspan=6>Ningún dato disponible en esta tabla</td>
+    </tr>
+    <?php
+        }
+
         ?>
     </tbody>
 </table>

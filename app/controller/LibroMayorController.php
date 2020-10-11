@@ -72,7 +72,7 @@ class LibroMayorController extends Controller
         );
         
 
-        if($_POST['cuenta']!==''){
+        if($_POST['cuenta'][0]!==''){
             $cuentas = $cuenta_model->seleccionar(array('nombre','id','codigo', 'tipo_saldo'), array(
                 'empresa' => $login['id'],
                 'codigo' => $_POST['cuenta']

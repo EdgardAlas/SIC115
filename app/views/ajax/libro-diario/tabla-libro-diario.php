@@ -1,4 +1,4 @@
-<table class='table table-hover' style='font-size: 0.80rem;'>
+<table class='table table-striped table-bordered table-hover' style='font-size: 0.80rem;'>
     <thead>
         <tr>
             <th style='width: 20%;'>Fecha</th>
@@ -16,7 +16,8 @@
             $cantidad_detalle = 1;
 
             foreach ($partidas as $key => $partida) {
-            
+            /* var_dump($partida);
+            echo '<br><br>'; */
                 if($contador_detalle===0){
                     $cantidad_detalle = array_count_values(array_column($partidas, 'numero'))[$partida['numero']];
         ?>
@@ -28,11 +29,11 @@
         </tr>
         <tr>
             <td class="table-light" rowspan=<?= $cantidad_detalle?>><?=Utiles::fecha($partida['fecha'])?></td>
-            <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'table-secondary' : 'table-light') : 'table-light' ?>" <?= ($partida['movimiento']==='Abono') ? "style='padding-left: 8em'" : "" ?>>
+            <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'text-danger' : '') : '' ?> table-light" <?= ($partida['movimiento']==='Abono') ? "style='padding-left: 8em'" : "" ?>>
                 <?= $partida['cuenta']?></td>
-            <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'table-secondary' : 'table-light') : 'table-light' ?> text-right font-weight-bold">
+            <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'text-danger' : '') : '' ?> table-light text-right font-weight-bold">
                 <?= ($partida['movimiento']==='Cargo') ? Utiles::monto($partida['monto']) : '-'?></td>
-            <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'table-secondary' : 'table-light') : 'table-light' ?> text-right font-weight-bold">
+            <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'text-danger' : '') : '' ?> table-light text-right font-weight-bold">
                 <?= ($partida['movimiento']==='Abono') ? Utiles::monto($partida['monto']) : '-'?></td>
         </tr>
         <?php
@@ -42,11 +43,11 @@
                 if($contador_detalle < $cantidad_detalle){
         ?>
         <tr>
-            <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'table-secondary' : 'table-light') : 'table-light' ?>" <?= ($partida['movimiento']==='Abono') ? "style='padding-left: 8em'" : "" ?>>
+            <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'text-danger' : '') : '' ?> table-light" <?= ($partida['movimiento']==='Abono') ? "style='padding-left: 8em'" : "" ?>>
                 <?= $partida['cuenta']?></td>
-            <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'table-secondary' : 'table-light') : 'table-light' ?> text-right font-weight-bold">
+            <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'text-danger' : '') : '' ?> table-light text-right font-weight-bold">
                 <?= ($partida['movimiento']==='Cargo') ? Utiles::monto($partida['monto']) : '-'?></td>
-            <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'table-secondary' : 'table-light') : 'table-light' ?> text-right font-weight-bold">
+            <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'text-danger' : '') : '' ?> table-light text-right font-weight-bold">
                 <?= ($partida['movimiento']==='Abono') ? Utiles::monto($partida['monto']) : '-'?></td>
         </tr>
         <?php

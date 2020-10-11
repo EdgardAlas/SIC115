@@ -102,9 +102,9 @@ class LibroDiarioController extends Controller
         
         $fecha_inicial = (isset($_POST['fecha_inicial'])) ? $_POST['fecha_inicial'] : date('Y-01-01');
         $fecha_final = (isset($_POST['fecha_final'])) ? $_POST['fecha_final'] : date('Y-12-31');
-        $numero = (isset($_POST['numero'])) ? $_POST['numero'] : 0;
+        $numero = (isset($_POST['numero'])) ? $_POST['numero'] : array('');
         $codigo = (isset($_POST['codigo']) ? base64_decode($_POST['codigo']) : null);        
-
+        
         $condicion = array(
             'empresa' => $login['id'],
             'periodo' => $login['periodo'],

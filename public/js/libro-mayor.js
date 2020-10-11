@@ -2,7 +2,8 @@ function tablaLibroMayorEspecifico(carga){
     const fecha_inicial = $("#fecha_inicial").val();
     const fecha_final = $("#fecha_final").val();
     const nivel = $("#nivel").val();
-    const cuenta = $("#cuenta").val();  
+    const cuenta = $("#cuenta").val().split(',');  
+
 
     if(carga){
         Swal.fire({
