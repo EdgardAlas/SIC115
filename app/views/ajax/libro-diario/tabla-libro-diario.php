@@ -29,7 +29,7 @@
         </tr>
         <tr>
             <td class="table-light" rowspan=<?= $cantidad_detalle?>><?=Utiles::fecha($partida['fecha'])?></td>
-            <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'text-danger' : '') : '' ?> table-light" <?= ($partida['movimiento']==='Abono') ? "style='padding-left: 8em'" : "" ?>>
+            <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'text-danger' : '') : '' ?> table-light" <?= ($partida['movimiento']==='Abono') ? "style='padding-left: 8em;'" : "" ?>>
                 <?= $partida['cuenta']?></td>
             <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'text-danger' : '') : '' ?> table-light text-right font-weight-bold">
                 <?= ($partida['movimiento']==='Cargo') ? Utiles::monto($partida['monto']) : '-'?></td>

@@ -42,3 +42,8 @@
 .numero_partida:hover{
     color: #6777ef;
 }
+
+
+td{
+    word-break:break-all
+}
