@@ -118,7 +118,7 @@ class BalanzaComprobacionController extends Controller
 
         Flight::render('pdf/balanza-comprobacion', array(
             'datos' => $cuentas,
-            'empresa' => $this->sesion->get('login')['nombre']
+            'emp' => $this->sesion->get('login')['nombre']
         ));
     }
 }
