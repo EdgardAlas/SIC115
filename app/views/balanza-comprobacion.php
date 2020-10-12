@@ -7,7 +7,16 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <a href='<?=URL_BASE?>/balanza-comprobacion/reporte-balanza-comprobacion' id='btn_imprimir'
+                                    class="btn btn-success">
+                                    Reporte Balanza Comprobacion
+                                </a>
+                            </div>
+                        </div>
                         <div class='form-group row'>
+
                             <div class="col-12 col-sm-12 col-lg-4 form-group">
                                 <label for="fecha_inicial">Fecha Inicial (*)</label>
                                 <input type="date" class='form-control' value='<?= date('Y-01-01')?>' id='fecha_inicial'

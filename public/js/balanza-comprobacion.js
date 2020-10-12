@@ -25,7 +25,7 @@ function tablaBalanzaComprobacion(carga = false) {
         }
     });
 
-
+    reporteBalanza();
 }
 
 function totales() {
@@ -39,6 +39,22 @@ function cargarNiveles() {
     $("#contenedor_niveles").load('/cuenta/input-niveles', function () {
         tablaBalanzaComprobacion(true);
     });
+}
+
+function reporteBalanza() {
+    /* Swal.fire({
+        title: 'Actualizando...',
+        onBeforeOpen: () => {
+            Swal.showLoading()
+        }
+    }) */
+
+    let fecha_inicial = $('#fecha_inicial').val(),
+        fecha_final = $('#fecha_final').val(),
+        nivel = $('#nivel').val();
+
+    $('#btn_imprimir').attr('href', `/balanza-comprobacion/reporte-balanza-comprobacion?fecha_inicial=${fecha_inicial}&fecha_final=${fecha_final}&nivel=${nivel}`);
+
 }
 
 $(document).ready(() => {
