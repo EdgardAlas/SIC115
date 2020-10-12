@@ -189,17 +189,16 @@ foreach ($data as $key => $partida) {
 
     if ($contador_detalle === $cantidad_detalle) {
         $pdf->SetFont('courier', 'B', 9);
-        $pdf->Cell(25, 5, '', 'LRB', 0, 'L');
-        $pdf->Cell(100, 5, $partida['descripcion'], 'LRB', 0, 'C');
-        $pdf->Cell(32.5, 5, '', 'LRB', 0, 'L');
-        $pdf->Cell(32.5, 5, '', 'LRB', 1, 'L');
-        $pdf->SetFont('courier', 'B', 9);
-        $pdf->Cell(25, 5, '', 'LRB', 0, 'L');
-        $pdf->Cell(100, 5, '', 'LRB', 0, 'C');
-        $pdf->Cell(32.5, 5, '', 'LRB', 0, 'L');
-        $pdf->Cell(32.5, 5, '', 'LRB', 1, 'L');
+        $pdf->SetAligns(array('L', 'C', 'R', 'R'));
+        $pdf->Row(array(
+            '',$partida['descripcion'],'',''
+        ));
+        $pdf->Row(array(
+            '','','',''
+        ));
         $contador_detalle = 0;
         $pdf->SetFont('courier', '', 9);
+        $pdf->SetAligns(array('L', 'L', 'R', 'R'));
     }
 }
 
