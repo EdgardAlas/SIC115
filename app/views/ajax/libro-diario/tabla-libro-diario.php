@@ -28,7 +28,7 @@
             <td class="table-primary text-center font-weight-bold" colspan=4>Partida #<?=$partida['numero']?></td>
         </tr>
         <tr>
-            <td class="table-light" rowspan=<?= $cantidad_detalle?>><?=Utiles::fecha($partida['fecha'])?></td>
+            <td class="table-light" rowspan=<?= $cantidad_detalle+1 ?>><?=Utiles::fecha($partida['fecha'])?></td>
             <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'text-danger' : '') : '' ?> table-light" <?= ($partida['movimiento']==='Abono') ? "style='padding-left: 8em;'" : "" ?>>
                 <?= $partida['cuenta']?></td>
             <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'text-danger' : '') : '' ?> table-light text-right font-weight-bold">
@@ -58,7 +58,12 @@
                 if($contador_detalle === $cantidad_detalle){
                     ?>
         <tr>
-            <td class="table-primary text-center font-weight-bold" colspan=4><?= $partida['descripcion']?></td>
+            <td class='table-light text-right font-weight-bold'>Total: </td>
+            <td class='table-light text-right font-weight-bold'>Total debe</td>
+            <td class='table-light text-right font-weight-bold'>Total haber</td>
+        </tr>        
+        <tr>
+            <td class="table-secondary text-center font-weight-bold" colspan=4><?= $partida['descripcion']?></td>
         </tr>
         <?php
                     $contador_detalle = 0;

@@ -47,6 +47,8 @@ Flight::route('/codigo', function(){
         }
     }
 
+    var_dump(codigoSiguiente('11010101'));
+
 });
 
 //MVC creditos: https://steemit.com/php/@kalangaum/easy-php-routing-management

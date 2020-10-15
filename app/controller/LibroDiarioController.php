@@ -49,6 +49,10 @@ class LibroDiarioController extends Controller
 
         $id_partida = $partida_model->insertar($_POST['partida']['datos_partida']);
 
+        $partida_exito = true;
+        $reestablecer_saldos = array();
+        $cuenta_reestablecer = '';
+
         if ($id_partida !== null) {
             $detalles = isset(
                 $_POST['partida']['detalle_partida'])
@@ -67,15 +71,45 @@ class LibroDiarioController extends Controller
 
                 unset($detalle['codigo']);
 
-                var_dump($detalle);
-
                 $detalle_partida_model->insertar($detalle);
 
                 $cuentas_acumular = $cuenta_model->codigoSiguiente($codigo);
 
-                var_dump($cuentas_acumular);
+
+                $saldo_cueta_acumular = 0;
+
+
+                echo 'holakdsjfkljflkdaf<br>';
 
                 foreach ($cuentas_acumular as $key => $cuenta) {
+
+
+                    $cuenta_base = $cuenta_model->seleccionar(
+                        array('nombre', 'saldo'), array(
+                            'codigo' => $cuenta,
+                            'empresa' => $empresa,
+                        )
+                    );
+
+                    $cuenta_base = $cuenta_base[0];
+
+
+                    //validar los saldos 
+                    if($monto_acumlado< $cuenta_base['saldo'] && $cuenta_base['saldo'] < abs($monto_acumlado)){
+                        var_dump('entré aca');
+                        $partida_exito = false;
+                        $cuenta_reestablecer = $cuenta.' - '.$cuenta_base['nombre'];
+                        break;
+                    }
+
+                    //por si falla
+
+                    $reestablecer_saldos[] = array(
+                        'codigo' => $cuenta,
+                        'empresa' => $empresa,
+                        'saldo' => $monto_acumlado < 0 ? (abs($monto_acumlado)) : -$monto_acumlado  
+                    );
+
                     $cuenta_model->actualizar(array(
                         'saldo[+]' => $monto_acumlado,
                     ), array(
@@ -83,7 +117,38 @@ class LibroDiarioController extends Controller
                         'empresa' => $empresa,
                     ));
                 }
+
+                if(!$partida_exito){
+                    break;
+                }
             }
+
+            if(!$partida_exito){
+                var_dump($reestablecer_saldos);
+                foreach ($reestablecer_saldos as $key => $cuentas) {
+                    $cuenta_model->actualizar(
+                        array(
+                            'saldo[+]' => $cuentas['saldo']
+                        ), array(
+                            'codigo' => $cuentas['codigo'],
+                            'empresa' => $cuentas['empresa']
+                        )
+                    );
+                }
+
+                //eliminar los registros que se crearon
+
+                $detalle_partida_model->eliminar(array(
+                    'partida' => $id_partida
+                ));
+
+                $partida_model->eliminar(array(
+                    'id' => $id_partida
+                ));
+
+               Exepcion::json(['error' => true, 'mensaje' => 'Saldo insuficiente en la cuenta '.$cuenta_reestablecer]);    
+            }
+
             Exepcion::json(['error' => false, 'mensaje' => 'Partida creada con exito']);
         }
         Exepcion::json(['error' => true, 'mensaje' => 'Error al crear la partida']);

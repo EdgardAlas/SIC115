@@ -18,7 +18,7 @@ const monto = new Cleave('#monto', {
 
 
 function cargarInputSelectCuentas() {
-    $('#contenedor_cuentas').load('/cuenta/input-seleccionar-cuenta', function() {
+    $('#contenedor_cuentas').load('/cuenta/input-seleccionar-cuenta', function () {
         select('cuenta');
     });
 }
@@ -64,7 +64,7 @@ function generarDetalle() {
         return;
     }
 
-    if (detalle.monto.length === 0 || detalle.monto === 0 || detalle.monto.length === '') {
+    if (detalle.monto.length === 0 || detalle.monto === 0 || detalle.monto.length === '' || detalle.monto == '0') {
         validarCampo('monto', 1);
         focus('monto');
         return;
@@ -94,6 +94,7 @@ function generarDetalleEditado(indice) {
 
     let detalle = {
         cuenta: $('#cuenta').val(),
+        codigo,
         movimiento: $('#movimiento').val(),
         monto: calcularMonto(obtenerMonto(), saldo, $('#movimiento').val())
     };
@@ -103,7 +104,6 @@ function generarDetalleEditado(indice) {
         movimiento: $('#movimiento').val(),
         monto: $('#monto').val().replace(/\.$/, ""),
         monto_plano: Math.abs(calcularMonto(obtenerMonto(), saldo, $('#movimiento').val()))
-
     };
 
 
@@ -116,7 +116,7 @@ function generarDetalleEditado(indice) {
         return;
     }
 
-    if (detalle.monto.length === 0 || detalle.monto === 0 || detalle.monto.length === '') {
+    if (detalle.monto.length === 0 || detalle.monto === 0 || detalle.monto.length === '' || detalle.monto == '0') {
         validarCampo('monto', 1);
         focus('monto');
         return;
@@ -139,7 +139,9 @@ function generarDetalleEditado(indice) {
 }
 
 function tablaDetallePartida() {
-    $('#contender_tabla_detalle').load('/libro-diario/tabla-detalle', { tabla_detalle }, function(data) {
+    $('#contender_tabla_detalle').load('/libro-diario/tabla-detalle', {
+        tabla_detalle
+    }, function (data) {
         tablaSinPaginacion('tabla_detalle_partida');
         $('[data-toggle="tooltip"]').tooltip({
             trigger: 'hover'
@@ -164,7 +166,7 @@ function calcularMonto(monto, saldo, movimiento) {
 }
 
 function ordenarDetallePartida() {
-    partida.detalle_partida.sort(function(a, b) {
+    partida.detalle_partida.sort(function (a, b) {
         if (a.movimiento > b.movimiento) {
             return -1;
         }
@@ -177,7 +179,7 @@ function ordenarDetallePartida() {
 }
 
 function ordenarCargosAbonos() {
-    tabla_detalle.sort(function(a, b) {
+    tabla_detalle.sort(function (a, b) {
         if (a.movimiento > b.movimiento) {
             return -1;
         }
@@ -210,8 +212,10 @@ function camposEditar(index) {
     $('#movimiento').val(editar.movimiento);
     monto.setRawValue(Math.abs(editar.monto));
     $('#btn_agregar').text('Editar');
-    $('#btn_agregar').data('indice', index);
-    $('#btn_agregar').data('accion', 'editar');
+
+    $('#btn_agregar').attr('data-indice', index);
+    $('#btn_agregar').attr('data-accion', 'editar');
+
     focus('monto');
     validarCampo('monto', false);
 }
@@ -299,6 +303,11 @@ function guardarPartida() {
         confirmButtonText: 'Si',
         cancelButtonText: 'No',
     }).then((result) => {
+
+        log(partida.detalle_partida);
+
+        log(tabla_detalle);
+
         if (result.value) {
             Swal.fire({
                 title: 'Guardando...',
@@ -306,7 +315,9 @@ function guardarPartida() {
                     Swal.showLoading()
                 }
             })
-            $.post('/libro-diario/guardar', { partida }, function(data) {
+            $.post('/libro-diario/guardar', {
+                partida
+            }, function (data) {
                 log(data);
                 Swal.close();
                 if (data.error) {
@@ -364,7 +375,7 @@ function limpiarPartida() {
 }
 
 function tablaLibroDiario(carga = false) {
-    if(carga){
+    if (carga) {
         Swal.fire({
             title: 'Cargando...',
             onBeforeOpen: () => {
@@ -372,8 +383,8 @@ function tablaLibroDiario(carga = false) {
             }
         })
     }
-    $('#contendor_partidas').load('/libro-diario/tabla-libro-diario', function(){
-        if(carga){
+    $('#contendor_partidas').load('/libro-diario/tabla-libro-diario', function () {
+        if (carga) {
             Swal.close();
         }
     });
@@ -391,11 +402,15 @@ function tablaLibroDiarioFechas() {
         fecha_final = $('#fecha_final').val(),
         numero = $('#numero_partida').val().split(',');
 
-        numero = [...new Set(numero)];
+    numero = [...new Set(numero)];
 
-    
 
-    $('#contendor_partidas').load('/libro-diario/tabla-libro-diario', { fecha_inicial, fecha_final, numero }, function() {
+
+    $('#contendor_partidas').load('/libro-diario/tabla-libro-diario', {
+        fecha_inicial,
+        fecha_final,
+        numero
+    }, function () {
         /* Swal.close(); */
     });
 
@@ -415,7 +430,7 @@ function reporteLibroDiario() {
         fecha_final = $('#fecha_final').val(),
         numero = $('#numero_partida').val().split(',');
 
-        numero = [...new Set(numero)];
+    numero = [...new Set(numero)];
 
     $('#btn_imprimir').attr('href', `/libro-diario/reporte-libro-diario?fecha_inicial=${fecha_inicial}&fecha_final=${fecha_final}&numero=${numero}`);
 
@@ -433,30 +448,30 @@ $(document).ready(() => {
 
     /* Eventos */
 
-    $(document).on('click', '#btn_partida', function() {
+    $(document).on('click', '#btn_partida', function () {
         $('#modal_partida').modal('show');
     });
 
-    
-    $("#modal_partida").on("shown.bs.modal", function(e) {
+
+    $("#modal_partida").on("shown.bs.modal", function (e) {
         focusCampo("descripcion");
     });
 
-    $('#modal_partida').on('hidden.bs.modal', function() {
+    $('#modal_partida').on('hidden.bs.modal', function () {
         limpiarPartida();
     })
 
-    $(document).on('focus', '.select2-selection.select2-selection--single', function(e) {
+    $(document).on('focus', '.select2-selection.select2-selection--single', function (e) {
         $(this).closest(".select2-container").siblings('select:enabled').select2('open');
     });
 
-    $(document).on('select2:closing', 'select.select2', function(e) {
-        $(e.target).data("select2").$selection.one('focus focusin', function(e) {
+    $(document).on('select2:closing', 'select.select2', function (e) {
+        $(e.target).data("select2").$selection.one('focus focusin', function (e) {
             e.stopPropagation();
         });
     });
 
-    $(document).on('keyup', '#descripcion', function(e) {
+    $(document).on('keyup', '#descripcion', function (e) {
 
         let descripcion = $(this).val();
 
@@ -475,41 +490,52 @@ $(document).ready(() => {
         validarCampo('descripcion', false);
     });
 
-    $(document).on('click', '#btn_agregar', function() {
+    $(document).on('click', '#btn_agregar', function () {
         $('#btn_agregar').blur();
-        let accion = $(this).data('accion');
+        let accion = $(this).attr('data-accion');
+
         if (accion === 'agregar') {
             generarDetalle();
         } else {
-            let index = $(this).data('indice');
+            let index = $(this).attr('data-indice');
+
             generarDetalleEditado(index);
         }
 
     });
 
-    $(document).on('click', '#btn_editar_cuenta', function() {
+    $(document).on('click', '#btn_editar_cuenta', function () {
         let index = $(this).data('index');
         $('#btn_editar_cuenta').blur();
         camposEditar(index);
     });
 
-    $(document).on('click', '#btn_eliminar', function() {
+    $(document).on('click', '#btn_eliminar', function () {
         let index = $(this).data('index');
         $('#btn_eliminar').blur();
         eliminar(index);
     });
 
-    $(document).on('click', '[rel="tooltip"]', function() {
+    $(document).on('click', '[rel="tooltip"]', function () {
         $(this).tooltip('hide')
     });
 
-    $(document).on('keyup', '#monto', function(e) {
+    $(document).on('keyup', '#monto', function (e) {
 
         let monto = $(this).val();
 
         if (isEnter(e.keyCode, monto, 1)) {
 
-            generarDetalle();
+            let accion = $('#btn_agregar').attr('data-accion');
+
+            if (accion === 'agregar') {
+                generarDetalle();
+            } else {
+                let index = $('#btn_agregar').attr('data-indice');
+
+                generarDetalleEditado(index);
+            }
+
             return;
         }
 
@@ -522,7 +548,7 @@ $(document).ready(() => {
         validarCampo('monto', false);
     });
 
-    $(document).on('click', '#btn_guardar_partida', function() {
+    $(document).on('click', '#btn_guardar_partida', function () {
         $('#btn_guardar_partida').blur();
         validarGuardarPartida();
     });
@@ -535,15 +561,15 @@ $(document).ready(() => {
     }); */
 
 
-    $(document).on('keyup', '#numero_partida', function() {
+    $(document).on('keyup', '#numero_partida', function () {
         tablaLibroDiarioFechas();
     });
 
-    $(document).on('change', '#fecha_inicial', function() {
+    $(document).on('change', '#fecha_inicial', function () {
         tablaLibroDiarioFechas();
     });
 
-    $(document).on('change', '#fecha_final', function() {
+    $(document).on('change', '#fecha_final', function () {
         tablaLibroDiarioFechas();
     });
 
@@ -551,7 +577,7 @@ $(document).ready(() => {
      * Combinaciones de teclas
      */
 
-    shortcut.add("ALT+S", function() {
+    shortcut.add("ALT+S", function () {
         var movimiento = $("#movimiento").val();
         if (movimiento === "Cargo") {
             $("#movimiento").val("Abono");
@@ -564,7 +590,7 @@ $(document).ready(() => {
         target: document,
     });
 
-    shortcut.add("ALT+A", function() {
+    shortcut.add("ALT+A", function () {
         generarDetalle();
     }, {
         type: "keydown",
@@ -572,7 +598,7 @@ $(document).ready(() => {
         target: document,
     });
 
-    shortcut.add("ALT+M", function() {
+    shortcut.add("ALT+M", function () {
         focus('monto');
     }, {
         type: "keydown",
@@ -580,7 +606,7 @@ $(document).ready(() => {
         target: document,
     });
 
-    shortcut.add("ALT+C", function() {
+    shortcut.add("ALT+C", function () {
         $('#cuenta').select2('focus');
     }, {
         type: "keydown",
@@ -588,7 +614,7 @@ $(document).ready(() => {
         target: document,
     });
 
-    shortcut.add("ALT+G", function() {
+    shortcut.add("ALT+G", function () {
         validarGuardarPartida();
     }, {
         type: "keydown",
