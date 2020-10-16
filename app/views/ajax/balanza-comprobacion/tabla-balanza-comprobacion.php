@@ -50,10 +50,19 @@
         ?>
 
     </tbody>
+    <tfooter>
+        <tr>
+            <td class='table-light text-right font-weight-bold'>Totales: </td>
+            <td class='table-light text-right font-weight-bold'><?= Utiles::monto($debe)?></td>
+            <td class='table-light text-right font-weight-bold'><?= Utiles::monto($haber)?></td>
+            <td class='table-light text-right font-weight-bold'><?= Utiles::monto($deudor)?></td>
+            <td class='table-light text-right font-weight-bold'><?= Utiles::monto($acreedor)?></td>
+        </tr>
+    </tfooter>
 </table>
 
 
-<input type="hidden" id='total_debe' value="<?= Utiles::monto($debe)?>">
+<!-- <input type="hidden" id='total_debe' value="<?= Utiles::monto($debe)?>">
 <input type="hidden" id='total_haber' value="<?= Utiles::monto($haber)?>">
 <input type="hidden" id='total_deudor' value="<?= Utiles::monto($deudor)?>">
-<input type="hidden" id='total_acreedor' value="<?= Utiles::monto($acreedor)?>">
+<input type="hidden" id='total_acreedor' value="<?= Utiles::monto($acreedor)?>">  -->
