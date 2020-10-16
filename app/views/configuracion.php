@@ -27,11 +27,12 @@
                                     <div class='row form-group'>
                                         <div class='col-6'>
                                             <label for="activo">Cuentas de Activo</label>
-                                            <input type="text" class='form-control' autofocus>
+                                            <input type="text" class='form-control buscar-cuenta' maxlength=1 autofocus>
                                         </div>
-                                        <div class='col-6'>
+                                        <div class='col-6' id='div_activo'>
                                             <label for="activo">Cuenta seleccionada</label>
-                                            <input type="text" class='form-control' readonly tabindex=-1>
+                                            <input type="text" class='form-control configuracion' readonly tabindex=-1
+                                                data-titulo='clasificacion' data-descripcion='activo' data-cuenta='-1'>
                                         </div>
                                     </div>
 
@@ -39,11 +40,12 @@
                                     <div class='row form-group'>
                                         <div class='col-6'>
                                             <label for="activo">Cuentas de Pasivo</label>
-                                            <input type="text" class='form-control'>
+                                            <input type="text" class='form-control buscar-cuenta' maxlength=1>
                                         </div>
-                                        <div class='col-6'>
-                                            <label>Cuenta seleccionada</label>
-                                            <input type="text" class='form-control' readonly tabindex=-1>
+                                        <div class='col-6' id='div_pasivo'>
+                                            <label for="activo">Cuenta seleccionada</label>
+                                            <input type="text" class='form-control configuracion' readonly tabindex=-1
+                                                data-titulo='clasificacion' data-descripcion='pasivo' data-cuenta='-1'>
                                         </div>
                                     </div>
 
@@ -51,11 +53,12 @@
                                     <div class='row form-group'>
                                         <div class='col-6'>
                                             <label for="activo">Cuentas de Patrimonio</label>
-                                            <input type="text" class='form-control'>
+                                            <input type="text" class='form-control buscar-cuenta' maxlength=1>
                                         </div>
-                                        <div class='col-6'>
-                                            <label>Cuenta seleccionada</label>
-                                            <input type="text" class='form-control' readonly tabindex=-1>
+                                        <div class='col-6' id='div_patrimonio'>
+                                            <label for="activo">Cuenta seleccionada</label>
+                                            <input type="text" class='form-control configuracion' readonly tabindex=-1
+                                                data-titulo='clasificacion' data-descripcion='patrimonio' data-cuenta='-1'>
                                         </div>
                                     </div>
 
@@ -63,11 +66,12 @@
                                     <div class='row form-group'>
                                         <div class='col-6'>
                                             <label for="activo">Cuentas de Gastos</label>
-                                            <input type="text" class='form-control'>
+                                            <input type="text" class='form-control buscar-cuenta' maxlength=1>
                                         </div>
-                                        <div class='col-6'>
-                                            <label>Cuenta seleccionada</label>
-                                            <input type="text" class='form-control' readonly tabindex=-1>
+                                        <div class='col-6' id='div_gastos'>
+                                            <label for="activo">Cuenta seleccionada</label>
+                                            <input type="text" class='form-control configuracion' readonly tabindex=-1
+                                                data-titulo='clasificacion' data-descripcion='gastos' data-cuenta='-1'>
                                         </div>
                                     </div>
 
@@ -75,25 +79,28 @@
                                     <div class='row form-group'>
                                         <div class='col-6'>
                                             <label for="activo">Cuentas de Ingresos</label>
-                                            <input type="text" class='form-control'>
+                                            <input type="text" class='form-control buscar-cuenta' maxlength=1>
                                         </div>
-                                        <div class='col-6'>
-                                            <label>Cuenta seleccionada</label>
-                                            <input type="text" class='form-control' readonly tabindex=-1>
+                                        <div class='col-6' id='div_ingresos'>
+                                            <label for="activo">Cuenta seleccionada</label>
+                                            <input type="text" class='form-control configuracion' readonly tabindex=-1
+                                                data-titulo='clasificacion' data-descripcion='ingresos' data-cuenta='-1'>
                                         </div>
                                     </div>
 
                                     <!-- Perdida y ganancias  -->
                                     <div class='row form-group'>
                                         <div class='col-6'>
-                                            <label for="activo">Cuenta de Perdidas y Ganancias</label>
-                                            <input type="text" class='form-control'>
+                                            <label for="activo">Cuentas de Perdidas y Ganancias</label>
+                                            <input type="text" class='form-control buscar-cuenta' maxlength=1>
                                         </div>
-                                        <div class='col-6'>
-                                            <label>Cuenta seleccionada</label>
-                                            <input type="text" class='form-control' readonly tabindex=-1>
+                                        <div class='col-6' id='div_pye'>
+                                            <label for="activo">Cuenta seleccionada</label>
+                                            <input type="text" class='form-control configuracion' readonly tabindex=-1
+                                                data-titulo='clasificacion' data-descripcion='pye' data-cuenta='-1'>
                                         </div>
                                     </div>
+
                                 </form>
                             </div>
                             <div class="tab-pane fade p-3" id="nav-estado-resultados" role="tabpanel"
