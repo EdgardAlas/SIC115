@@ -33,12 +33,6 @@
                                 <label for="nivel">Nivel</label>
                             </div>
                         </div>
-                        <div class='form-group' id='totales'>
-                            <h2 class=' text-center h6'>Total Debe: <b id='debe'>$0.00</b> - Total Haber: <b
-                                    id='haber'>$0.00</b></h2>
-                            <h3 class='text-center h6'>Total Deudor: <b id='deudor'>$0.00</b> - Total Acreedor: <b
-                                    id='acreedor'>$0.00</b></h3>
-                        </div>
 
                         <div id='contenedor-balanza' class='table-responsive'></div>
                     </div>
