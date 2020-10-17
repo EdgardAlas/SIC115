@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     contrasena.addEventListener('keyup', (e) => {
 
         validarCampo('contrasena', false)
-        if (isEnter(e.keyCode, usuario.value, 8))
+        if (isEnter(e.keyCode, contrasena.value, 8))
             validarGuardar();
     })
 
