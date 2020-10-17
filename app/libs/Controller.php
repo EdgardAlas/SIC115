@@ -108,7 +108,7 @@ class Controller
         $periodo = $this->sesion->get('login')['periodo'];
         if($periodo===null){
             $this->view('sin-periodo', []);
-            return;
+            exit();
         }
     } 
 

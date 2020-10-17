@@ -1,45 +1,74 @@
 function validarEmpresa(nombre) {
+    const input_empresa = document.querySelector('#nombre')
+
     $.get(`/login/validar-empresa/${nombre}`, function (data) {
 
         if (data.error) {
             validarCampo('nombre', true)
+            input_empresa.dataset.ok = 0
+        } else {
+            input_empresa.dataset.ok = 1
+        }
+
+        if (nombre.length === 0) {
+            input_empresa.dataset.ok = 0
         }
     })
+
+
 }
 
 function validarUsuario(usuario) {
+    const input_usuario = document.querySelector('#usuario')
+
+
+
     $.get(`/login/validar-usuario/${usuario}`, function (data) {
 
         if (data.error) {
             validarCampo('usuario', true)
+            input_usuario.dataset.ok = 0
+        } else {
+            input_usuario.dataset.ok = 1
+        }
+
+        if (usuario.length === 0) {
+            input_usuario.dataset.ok = 0
         }
     })
+
+
 }
 
 function validarGuardar() {
+    const input_nombre = document.querySelector('#nombre'),
+        input_usuario = document.querySelector('#usuario'),
+        input_contrasena = document.querySelector('#contrasena')
     const datos = {
-        nombre: document.querySelector('#nombre').value,
-        usuario: document.querySelector('#usuario').value,
-        contrasena: document.querySelector('#contrasena').value
+        nombre: input_nombre.value,
+        usuario: input_usuario.value,
+        contrasena: input_contrasena.value
 
     }
 
-    if (datos.nombre.length < 8) {
+    if (datos.nombre.length < 8 || input_nombre.dataset.ok == 0) {
         validarCampo('nombre', true)
-
+        focus('nombre')
         return
     }
 
-    if (datos.usuario.length < 8) {
+    if (datos.usuario.length < 8 || input_usuario.dataset.ok == 0) {
         validarCampo('usuario', true)
+        focus('usuario')
         return
     }
 
     if (datos.contrasena.length < 8) {
         validarCampo('contrasena', true)
-
+        focus('contrasena')
         return
     }
+
 
 
 
@@ -57,7 +86,7 @@ function guardar(datos) {
                 icon: 'success',
                 showCancelButton: false,
                 confirmButtonColor: '#6777ef',
-                confirmButtonText: 'Si',
+                confirmButtonText: 'Ok',
             }).then((result) => {
                 location.href = data.redireccion
             })
@@ -97,9 +126,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     contrasena.addEventListener('keyup', (e) => {
 
-        
+        validarCampo('contrasena', false)
         if (isEnter(e.keyCode, usuario.value, 8))
-        validarGuardar();
+            validarGuardar();
     })
 
     btn_registrar.addEventListener('click', (e) => {

@@ -33,13 +33,13 @@
 
                                     <div class="form-group">
                                         <label for="nombre">Nombre de la Empresa</label>
-                                        <input id="nombre" type="text" class="form-control" name="nombre" required autofocus>
+                                        <input id="nombre" type="text" class="form-control" name="nombre" required autofocus data-ok=0>
                                     </div>
 
                                     <div class="row">
                                         <div class="form-group col-6">
                                             <label for="usuario" class="d-block">Usuario</label>
-                                            <input id="usuario" type="usuario" class="form-control" name="usuario" required>
+                                            <input id="usuario" type="usuario" class="form-control" name="usuario" required data-ok=0>
                                         </div>
                                         <div class="form-group col-6">
                                             <label for="contrasena" class="d-block">Contraseña</label>
