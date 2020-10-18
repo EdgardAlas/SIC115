@@ -32,7 +32,8 @@
                                     <div class='col-6' id='div_activo'>
                                         <label for="activo">Cuenta seleccionada</label>
                                         <input type="text" class='form-control configuracion' readonly tabindex=-1
-                                            data-titulo='clasificacion' data-descripcion='activo' data-cuenta='-1'>
+                                            data-titulo='clasificacion' data-descripcion='activo' data-cuenta='-1'
+                                            data-obligatorio=1>
                                     </div>
                                 </div>
 
@@ -45,7 +46,8 @@
                                     <div class='col-6' id='div_pasivo'>
                                         <label for="activo">Cuenta seleccionada</label>
                                         <input type="text" class='form-control configuracion' readonly tabindex=-1
-                                            data-titulo='clasificacion' data-descripcion='pasivo' data-cuenta='-1'>
+                                            data-titulo='clasificacion' data-descripcion='pasivo' data-cuenta='-1'
+                                            data-obligatorio=1>
                                     </div>
                                 </div>
 
@@ -58,7 +60,8 @@
                                     <div class='col-6' id='div_patrimonio'>
                                         <label for="activo">Cuenta seleccionada</label>
                                         <input type="text" class='form-control configuracion' readonly tabindex=-1
-                                            data-titulo='clasificacion' data-descripcion='patrimonio' data-cuenta='-1'>
+                                            data-titulo='clasificacion' data-descripcion='patrimonio' data-cuenta='-1'
+                                            data-obligatorio=1>
                                     </div>
                                 </div>
 
@@ -71,7 +74,8 @@
                                     <div class='col-6' id='div_gastos'>
                                         <label for="activo">Cuenta seleccionada</label>
                                         <input type="text" class='form-control configuracion' readonly tabindex=-1
-                                            data-titulo='clasificacion' data-descripcion='gastos' data-cuenta='-1'>
+                                            data-titulo='clasificacion' data-descripcion='gastos' data-cuenta='-1'
+                                            data-obligatorio=1>
                                     </div>
                                 </div>
 
@@ -84,7 +88,8 @@
                                     <div class='col-6' id='div_ingresos'>
                                         <label for="activo">Cuenta seleccionada</label>
                                         <input type="text" class='form-control configuracion' readonly tabindex=-1
-                                            data-titulo='clasificacion' data-descripcion='ingresos' data-cuenta='-1'>
+                                            data-titulo='clasificacion' data-descripcion='ingresos' data-cuenta='-1'
+                                            data-obligatorio=1>
                                     </div>
                                 </div>
 
@@ -97,7 +102,8 @@
                                     <div class='col-6' id='div_pye'>
                                         <label for="activo">Cuenta seleccionada</label>
                                         <input type="text" class='form-control configuracion' readonly tabindex=-1
-                                            data-titulo='clasificacion' data-descripcion='pye' data-cuenta='-1'>
+                                            data-titulo='clasificacion' data-descripcion='pye' data-cuenta='-1'
+                                            data-obligatorio=1>
                                     </div>
                                 </div>
 
@@ -269,7 +275,7 @@
                                         <label for="activo">Cuenta seleccionada</label>
                                         <input type="text" class='form-control configuracion' readonly tabindex=-1
                                             data-titulo='estado_resultados' data-descripcion='reserva_legal'
-                                            data-cuenta='-1'>
+                                            data-cuenta='-1' data-obligatorio=1>
                                     </div>
                                 </div>
 
@@ -283,7 +289,7 @@
                                         <label for="activo">Cuenta seleccionada</label>
                                         <input type="text" class='form-control configuracion' readonly tabindex=-1
                                             data-titulo='estado_resultados' data-descripcion='impuesto_renta'
-                                            data-cuenta='-1'>
+                                            data-cuenta='-1' data-obligatorio=1>
                                     </div>
                                 </div>
 
@@ -296,8 +302,8 @@
                                     <div class='col-6' id='div_utilidad'>
                                         <label for="activo">Cuenta seleccionada</label>
                                         <input type="text" class='form-control configuracion' readonly tabindex=-1
-                                            data-titulo='estado_resultados' data-descripcion='utilidad'
-                                            data-cuenta='-1'>
+                                            data-titulo='estado_resultados' data-descripcion='utilidad' data-cuenta='-1'
+                                            data-obligatorio=1>
                                     </div>
                                 </div>
 
@@ -310,7 +316,8 @@
                                     <div class='col-6' id='div_perdida'>
                                         <label for="activo">Cuenta seleccionada</label>
                                         <input type="text" class='form-control configuracion' readonly tabindex=-1
-                                            data-titulo='estado_resultados' data-descripcion='perdida' data-cuenta='-1'>
+                                            data-titulo='estado_resultados' data-descripcion='perdida' data-cuenta='-1'
+                                            data-obligatorio=1>
                                     </div>
                                 </div>
 
