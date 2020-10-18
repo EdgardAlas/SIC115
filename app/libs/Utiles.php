@@ -43,4 +43,15 @@ class Utiles
         }
         return $arreglo;
     }
+
+    public static  function buscar($valor, $columna, $arreglo){
+        $encontrado = array();
+
+        $key = array_search($valor , array_column($arreglo, $columna));
+        
+        if($key!==false)
+            $encontrado = $arreglo[$key];
+
+        return $encontrado;
+    }
 }

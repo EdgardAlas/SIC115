@@ -1,3 +1,17 @@
+function cargarConfiguraciones(){
+      Swal.fire({
+          title: 'Cargando...',
+          onBeforeOpen: () => {
+              Swal.showLoading()
+          }
+      })
+  
+
+   $('#nav-tabContent').load('/configuracion/configuraciones', function(){
+      Swal.close();
+   })
+}
+
 function buscarConfiguracion(id, data) {
    $(`#${id}`).load('/cuenta/buscar-cuenta-configuracion', {
       data
@@ -49,6 +63,8 @@ function configuraciones() {
 
 $(document).ready(() => {
    titulo('Configuración');
+
+   cargarConfiguraciones();
 
    $(document).on('keyup', '.buscar-cuenta', function () {
 
