@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 10, 2020 at 01:22 AM
+-- Generation Time: Oct 18, 2020 at 08:30 PM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.19
 
@@ -30,11 +30,27 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `configuracion` (
   `id` int(11) NOT NULL,
-  `tipo` text COLLATE utf8_spanish_ci NOT NULL,
-  `titulo_configuracion` text COLLATE utf8_spanish_ci NOT NULL,
+  `titulo` text COLLATE utf8_spanish_ci NOT NULL,
+  `descripcion` text COLLATE utf8_spanish_ci NOT NULL,
   `periodo` int(11) NOT NULL,
   `cuenta` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Dumping data for table `configuracion`
+--
+
+INSERT INTO `configuracion` (`id`, `titulo`, `descripcion`, `periodo`, `cuenta`) VALUES
+(82, 'clasificacion', 'activo', 1, 9),
+(83, 'clasificacion', 'pasivo', 1, 67),
+(84, 'clasificacion', 'patrimonio', 1, 117),
+(85, 'clasificacion', 'gastos', 1, 126),
+(86, 'clasificacion', 'ingresos', 1, 186),
+(87, 'clasificacion', 'pye', 1, 196),
+(88, 'estado_resultados', 'reserva_legal', 1, 9),
+(89, 'estado_resultados', 'impuesto_renta', 1, 67),
+(90, 'estado_resultados', 'utilidad', 1, 117),
+(91, 'estado_resultados', 'perdida', 1, 126);
 
 -- --------------------------------------------------------
 
@@ -462,7 +478,10 @@ CREATE TABLE `empresa` (
 
 INSERT INTO `empresa` (`id`, `nombre`, `usuario`, `contrasena`) VALUES
 (1, 'Empresa X', 'user12345', '12345678'),
-(2, 'beer', 'admin123', 'admin123');
+(2, 'beer', 'admin123', 'admin123'),
+(3, 'Empresa X', '123123123', '1231232313'),
+(4, 'JUE LULUE SA DE CV', '13123123', '123456789'),
+(5, 'fsadf123', 'dfadfadf', 'adsfdf123');
 
 -- --------------------------------------------------------
 
@@ -582,7 +601,7 @@ ALTER TABLE `periodo`
 -- AUTO_INCREMENT for table `configuracion`
 --
 ALTER TABLE `configuracion`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- AUTO_INCREMENT for table `cuenta`
@@ -594,7 +613,7 @@ ALTER TABLE `cuenta`
 -- AUTO_INCREMENT for table `empresa`
 --
 ALTER TABLE `empresa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `partida`

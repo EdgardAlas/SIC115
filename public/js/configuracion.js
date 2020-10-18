@@ -37,7 +37,7 @@ function guardar(configuraciones = []) {
 function configuraciones() {
    const input_configuraciones = $('.configuracion');
    const configuraciones = [];
-
+   let permitir_guardar = true;
    input_configuraciones.each((i, config) => {
       if (config.dataset.obligatorio == 1 && config.dataset.cuenta == -1) {
          let falta_cuenta = config.parentElement.previousElementSibling.children;
@@ -55,6 +55,7 @@ function configuraciones() {
          })
 
          //romper el ciclo
+         permitir_guardar = false;
          return false;
       }
 
@@ -67,25 +68,24 @@ function configuraciones() {
       if (config.dataset.obligatorio == null && config.dataset.cuenta == -1) {
          configuraciones.pop();
       }
-
-
-
    })
 
-   Swal.fire({
-      title: 'Atención',
-      text: "¿Esta seguro de guardar esta configuración?",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#6777ef',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Si',
-      cancelButtonText: 'No',
-   }).then((result) => {
-      if (result.value) {
-         guardar(configuraciones);
-      }
-   })
+   if (permitir_guardar) {
+      Swal.fire({
+         title: 'Atención',
+         text: "¿Esta seguro de guardar esta configuración?",
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#6777ef',
+         cancelButtonColor: '#d33',
+         confirmButtonText: 'Si',
+         cancelButtonText: 'No',
+      }).then((result) => {
+         if (result.value) {
+            guardar(configuraciones);
+         }
+      })
+   }
 
 
 
