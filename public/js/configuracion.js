@@ -2,6 +2,19 @@ function buscarConfiguracion(id, data){
    $(`#${id}`).load('/cuenta/buscar-cuenta-configuracion', {data} )
 }
 
+function configuraciones(){
+   const configuraciones = $('.configuracion');
+   /* configuraciones.array.forEach(element => {
+      log(configuraciones.dataset.descripcion)
+   }); */
+
+   configuraciones.each((i, x)=>{
+      log(x.dataset.descripcion)
+   })
+
+   
+}
+
 
 $(document).ready(() => {
    titulo('Configuración');
@@ -22,4 +35,9 @@ $(document).ready(() => {
 
       buscarConfiguracion(id_div_actualizar, data);
    });
+
+   $(document).on('click', '#btn_guardar', function(){
+      configuraciones();
+   });
+
 });
