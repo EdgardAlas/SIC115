@@ -22,6 +22,34 @@ class ConfiguracionController extends Controller
 
     public function guardar()
     {
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('POST');
+
+        $periodo = $this->sesion->get('login')['periodo'];
+        
+        //eliminar la configuracion antigua
+        $this->modelo->eliminar(array(
+            'periodo' => $periodo
+        ));
+
+        $configuraciones = isset($_POST['configuraciones']) ? $_POST['configuraciones'] :array();
+
+        foreach ($configuraciones as $key => $configuracion) {
+            $configuraciones[$key]['periodo'] = $periodo;
+            $configuraciones[$key]['cuenta'] = base64_decode($configuracion['cuenta']);
+        }
+
+
+        $resultado_guardar = $this->modelo->insertar($configuraciones);
+
+        if($resultado_guardar!==null){
+            Exepcion::json(['error' => false, 'mensaje' => 'Configuración guardada', 'icono' => 'success']);   
+        }
+
+        Exepcion::json(['error' => true, 'mensaje' => 'Error al guardar configuración', 'icono' => 'warning', 'e' => $this->modelo->error()]);   
+
+        /* Exepcion::json($configuraciones); */
 
     }
 
