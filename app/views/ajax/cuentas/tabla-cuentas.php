@@ -2,7 +2,8 @@
     <thead>
         <tr>
             <th style='width: 20%;'>Código</th>
-            <th style='width: 30%'>Nombre</th>
+            <th style='width: 25%'>Nombre</th>
+            <th style='width: 5%'>Nivel</th>
             <th style='width: 20%'>Tipo de saldo</th>
             <th style='width: 10%'>Acciones</th>
         </tr>
@@ -16,6 +17,7 @@
                     <tr>
                         <td>".$cuenta['codigo']."</td>
                         <td>".$cuenta['nombre']."</td>
+                        <td class='". ($cuenta['nivel']==1 ? 'font-weight-bold' : '') ."'>".$cuenta['nivel']."</td>
                         <td>".$cuenta['tipo_saldo']."</td>
                         <td><button type='button' id ='btn_editar_cuenta' class='btn btn-warning' 
                         data-toggle='tooltip' data-placement='top'
