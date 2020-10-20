@@ -43,12 +43,12 @@ function validarUsuario(usuario) {
 function validarGuardar() {
     const input_nombre = document.querySelector('#nombre'),
         input_usuario = document.querySelector('#usuario'),
-        input_contrasena = document.querySelector('#contrasena')
+        input_contrasena = document.querySelector('#contrasena'),
+        input_contrasenav = document.querySelector('#contrasenav')
     const datos = {
         nombre: input_nombre.value,
         usuario: input_usuario.value,
-        contrasena: input_contrasena.value
-
+        contrasena: input_contrasena.value,
     }
 
     if (datos.nombre.length < 8 || input_nombre.dataset.ok == 0) {
@@ -69,8 +69,11 @@ function validarGuardar() {
         return
     }
 
-
-
+    if (datos.contrasena != input_contrasenav.value) {
+        validarCampo('contrasenav', true)
+        focus('contrasenav')
+        return
+    }
 
     guardar(datos)
 
@@ -99,6 +102,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     const nombre = document.querySelector('#nombre')
     const usuario = document.querySelector('#usuario')
     const contrasena = document.querySelector('#contrasena')
+    const contrasenav = document.querySelector('#contrasenav')
     const btn_registrar = document.querySelector('#registrar')
 
 
@@ -128,7 +132,15 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
         validarCampo('contrasena', false)
         if (isEnter(e.keyCode, contrasena.value, 8))
-            validarGuardar();
+        focus('contrasenav')
+    })
+
+    contrasenav.addEventListener('keyup', (e) => {
+
+        validarCampo('contrasenav', false)
+        if (isEnter(e.keyCode, contrasenav.value, 8)){
+                validarGuardar();
+        }   
     })
 
     btn_registrar.addEventListener('click', (e) => {
