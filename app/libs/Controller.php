@@ -55,7 +55,7 @@ class Controller
 
         $url =  trim(Flight::request()->url,'/');
 
-        if ($sesion->get('login') === null && $url === 'login') {
+        if ($sesion->get('login') === null && ($url === 'login') || ($url === 'login/registrar')) {
             return '';
         }
 
@@ -64,7 +64,7 @@ class Controller
             exit();
         }
 
-        if ($sesion->get('login') !== null && $url === 'login') {
+        if ($sesion->get('login') !== null && ($url === 'login') || ($url === 'login/registrar')) {
             Flight::redirect('/', 200);
             exit();
         }
@@ -108,7 +108,7 @@ class Controller
         $periodo = $this->sesion->get('login')['periodo'];
         if($periodo===null){
             $this->view('sin-periodo', []);
-            return;
+            exit();
         }
     } 
 

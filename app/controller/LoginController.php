@@ -48,8 +48,71 @@ class LoginController extends Controller
         Flight::redirect('/login', 200);
     }
 
-    public function guardar()
-    {
+    public function registrar(){
+        $this->sesionActiva();
+        Flight::render('registrar', array());
+    }
+
+    public function validarEmpresa($empresa){
+        $this->isAjax();
+
+        $existe = $this->modelo->existe(array(
+            'nombre' => $empresa
+        ));
+
+        $resultado  = array();
+
+        if($existe){
+            $resultado = array(
+                'error' => true
+            );
+        }else{
+            $resultado = array(
+                'error' => false
+            );
+        }
+
+        Exepcion::json($resultado);
+    } 
+
+    public function validarUsuario($usuario){
+        $this->isAjax();
+
+        $existe = $this->modelo->existe(array(
+            'usuario' => $usuario
+        ));
+
+        $resultado  = array();
+
+        if($existe){
+            $resultado = array(
+                'error' => true
+            );
+        }else{
+            $resultado = array(
+                'error' => false
+            );
+        }
+
+        Exepcion::json($resultado);
+    } 
+
+    public function guardar(){
+        $this->isAjax();
+        
+        $this->validarMetodoPeticion('POST');
+        //lo que guardarias seria$_post pos ya xdxdxdxdxdxd :v aca hace falta un monton mas, en eta parte del backend asi como en cuenta
+        $resultado_guardar = $this->modelo->insertar($_POST);
+
+        if ($resultado_guardar !== null) {
+            $this->crearSesion($_POST['usuario']);
+            Exepcion::json(['mensaje' => 'Usuario creado con exito', 'redireccion' => '/']);
+        }
+
+        Exepcion::json(array(
+            'error' => true,
+            'redireccion' => null
+        ));
 
     }
 
@@ -60,7 +123,7 @@ class LoginController extends Controller
 
     public function eliminar()
     {
-
+        
     }
 
     //metodos privados

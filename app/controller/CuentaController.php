@@ -457,3 +457,4 @@ class CuentaController extends Controller
 
     }
 }
+

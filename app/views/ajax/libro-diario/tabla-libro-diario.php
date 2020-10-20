@@ -14,6 +14,8 @@
             $tam_partidas = sizeof($partidas);
             $contador_detalle = 0;
             $cantidad_detalle = 1;
+            $columna1=0;
+            $columna2=0;
 
             foreach ($partidas as $key => $partida) {
             /* var_dump($partida);
@@ -37,6 +39,9 @@
                 <?= ($partida['movimiento']==='Abono') ? Utiles::monto($partida['monto']) : '-'?></td>
         </tr>
         <?php
+            $columna1=$columna1+$partida['monto'];
+        ?>
+        <?php
         $contador_detalle++;
                     continue;
                 }
@@ -51,6 +56,11 @@
                 <?= ($partida['movimiento']==='Abono') ? Utiles::monto($partida['monto']) : '-'?></td>
         </tr>
         <?php
+        if($partida['movimiento']==='Cargo'){
+            $columna1=$columna1+$partida['monto'];
+                }else{$columna2=$columna2+$partida['monto'];}
+        ?>
+        <?php
         
                     $contador_detalle++;
                 }
@@ -59,14 +69,15 @@
                     ?>
         <tr>
             <td class='table-light text-right font-weight-bold'>Total: </td>
-            <td class='table-light text-right font-weight-bold'>Total debe</td>
-            <td class='table-light text-right font-weight-bold'>Total haber</td>
+            <td class='table-light text-right font-weight-bold'><?=Utiles::monto($columna1)?></td>
+            <td class='table-light text-right font-weight-bold'><?=Utiles::monto($columna2)?></td>
         </tr>        
         <tr>
             <td class="table-secondary text-center font-weight-bold" colspan=4><?= $partida['descripcion']?></td>
         </tr>
         <?php
                     $contador_detalle = 0;
+                    $columna1=0;$columna2=0;
                 }
             }
 
