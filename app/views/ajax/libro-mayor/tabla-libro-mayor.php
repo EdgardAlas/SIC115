@@ -19,6 +19,7 @@
         foreach ($partidas_cuentas as $i_cuenta => $cuenta) {
             $total_cargo = 0;
             $total_abono = 0;
+            if(!empty($cuenta['partidas'])){
         ?>
         <tr>
             <td colspan=6 class='h-100'>&nbsp;</td>
@@ -80,6 +81,7 @@
         </tr>
 
         <?php
+            }
         }
         if($tam_partidas===0){
             ?>
