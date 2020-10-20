@@ -1,12 +1,12 @@
-function tablaLibroMayorEspecifico(carga){
+function tablaLibroMayorEspecifico(carga) {
     const fecha_inicial = $("#fecha_inicial").val();
     const fecha_final = $("#fecha_final").val();
     const nivel = $("#nivel").val();
-    const cuentas = $("#cuenta").val().split(',');  
+    const cuentas = $("#cuenta").val().split(',');
     const cuenta = [...new Set(cuentas)];
 
 
-    if(carga){
+    if (carga) {
         Swal.fire({
             title: 'Cargando...',
             onBeforeOpen: () => {
@@ -15,16 +15,18 @@ function tablaLibroMayorEspecifico(carga){
         })
     }
 
-    $('#contenedor_mayor').load('/libro-mayor/tabla-libro-mayor',{
+    $('#contenedor_mayor').load('/libro-mayor/tabla-libro-mayor', {
         fecha_inicial,
         fecha_final,
         cuenta,
         nivel
-    } ,function(data){
-        if(carga){
+    }, function (data) {
+        if (carga) {
             Swal.close();
         }
     });
+
+    reporteLibroMayor();
 }
 
 function cargarNiveles() {
@@ -33,9 +35,9 @@ function cargarNiveles() {
     });
 }
 
-function tablaLibroMayor(){
+function tablaLibroMayor() {
 
-    $('#contenedor_mayor').load('/libro-mayor/tabla-libro-mayor', function(){
+    $('#contenedor_mayor').load('/libro-mayor/tabla-libro-mayor', function () {
 
     });
 }
@@ -51,38 +53,59 @@ function tablaLibroDiarioEspecifico(numero, codigo) {
     let fecha_inicial = $('#fecha_inicial').val(),
         fecha_final = $('#fecha_final').val();
 
-    $('#partida_especifica').load('/libro-diario/tabla-libro-diario', { fecha_inicial, fecha_final, numero, codigo }, function() {
+    $('#partida_especifica').load('/libro-diario/tabla-libro-diario', {
+        fecha_inicial,
+        fecha_final,
+        numero,
+        codigo
+    }, function () {
         /* Swal.close(); */
     });
 }
 
-$(document).ready(()=>{
+function reporteLibroMayor() {
+
+    let fecha_inicial = $('#fecha_inicial').val(),
+        fecha_final = $('#fecha_final').val(),
+        nivel = $('#nivel').val(),
+        cuenta = $('#cuenta').val().split(',');
+
+    cuenta = [...new Set(cuenta)];
+
+    $('#btn_imprimir').attr('href', `/libro-mayor/reporte-libro-mayor?fecha_inicial=${fecha_inicial}&fecha_final=${fecha_final}&nivel=${nivel}&cuenta=${cuenta}`);
+
+}
+
+$(document).ready(() => {
     titulo('Libro Mayor');
     cargarNiveles();
-    
 
-    $(document).on('click', '.numero_partida', function() {
+
+    $(document).on('click', '.numero_partida', function () {
 
         const numero = $(this).data('partida');
         const codigo = $(this).data('codigo');
-        log({numero, codigo});
+        log({
+            numero,
+            codigo
+        });
         tablaLibroDiarioEspecifico([numero], codigo);
         $('#modal_partida').modal('show');
     });
 
-    $(document).on('change', '#fecha_inicial', function(){
+    $(document).on('change', '#fecha_inicial', function () {
         tablaLibroMayorEspecifico();
-    } );
+    });
 
-    $(document).on('change', '#fecha_final', function(){
+    $(document).on('change', '#fecha_final', function () {
         tablaLibroMayorEspecifico();
-    } );
+    });
 
-    $(document).on('change', '#nivel', function(){
+    $(document).on('change', '#nivel', function () {
         tablaLibroMayorEspecifico();
-    } );
+    });
 
-    $(document).on('keyup', '#cuenta', function(){
+    $(document).on('keyup', '#cuenta', function () {
         tablaLibroMayorEspecifico();
-    } );
+    });
 });

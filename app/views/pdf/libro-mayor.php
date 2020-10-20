@@ -1,6 +1,6 @@
 <?php
 
-$data = isset($datos) ? $datos : array();
+$data = isset($datosBD) ? $datosBD : array();
 $empresa = isset($emp) ? $emp : 'Sistema Contable';
 
 use Fpdf\Fpdf;
@@ -8,9 +8,12 @@ use Fpdf\Fpdf;
 class PDF extends FPDF
 {
 
+    public $widths;
+    public $aligns;
     public $empresa;
 
-    public function __construct($empresa) {
+    public function __construct($empresa)
+    {
         parent::__construct();
         $this->empresa = $empresa;
     }
@@ -23,7 +26,7 @@ class PDF extends FPDF
         $this->Cell(30, 10, $this->empresa, 0, 1, 'C');
         $this->SetFont('Arial', '', 12);
         $this->Cell(80);
-        $this->Cell(30, 10, utf8_decode('Libro Diario'), 0, 0, 'C');
+        $this->Cell(30, 10, utf8_decode('Libro Mayor'), 0, 0, 'C');
         $this->Ln(15);
         $this->SetFillColor(21, 151, 168);
         $this->SetTextColor(255);
@@ -32,9 +35,9 @@ class PDF extends FPDF
         $this->SetFont('Arial', 'B', 11);
         $this->SetFont('Arial', 'B', 11);
         $this->Cell(25, 5, 'Fecha', 1, 0, 'C', 1);
-        $this->Cell(100, 5, 'Cuenta', 1, 0, 'C', 1);
-        $this->Cell(32.5, 5, 'Debe', 1, 0, 'C', 1);
-        $this->Cell(32.5, 5, 'Haber', 1, 1, 'C', 1);
+        $this->Cell(100, 5, 'Descripción', 1, 0, 'C', 1);
+        $this->Cell(32.5, 5, 'Cargo', 1, 0, 'C', 1);
+        $this->Cell(32.5, 5, 'Abono', 1, 1, 'C', 1);
     }
 
     public function Footer()
@@ -44,6 +47,109 @@ class PDF extends FPDF
         $this->Cell(0, 10, utf8_decode('Página ') . $this->PageNo() . ' / {nb}', 0, 0, 'C');
     }
 
+    public function SetWidths($w)
+    {
+        //Set the array of column widths
+        $this->widths = $w;
+    }
+
+    public function SetAligns($a)
+    {
+        //Set the array of column alignments
+        $this->aligns = $a;
+    }
+
+    public function Row($data)
+    {
+        //Calculate the height of the row
+        $nb = 0;
+        for ($i = 0; $i < count($data); $i++) {
+            $nb = max($nb, $this->NbLines($this->widths[$i], $data[$i]));
+        }
+
+        $h = 5 * $nb;
+        //Issue a page break first if needed
+        $this->CheckPageBreak($h);
+        //Draw the cells of the row
+        for ($i = 0; $i < count($data); $i++) {
+            $w = $this->widths[$i];
+            $a = isset($this->aligns[$i]) ? $this->aligns[$i] : 'L';
+            //Save the current position
+            $x = $this->GetX();
+            $y = $this->GetY();
+            //Draw the border
+            $this->Rect($x, $y, $w, $h);
+            //Print the text
+            $this->MultiCell($w, 5, $data[$i], 0, $a);
+            //Put the position to the right of the cell
+            $this->SetXY($x + $w, $y);
+        }
+        //Go to the next line
+        $this->Ln($h);
+    }
+
+    public function CheckPageBreak($h)
+    {
+        //If the height h would cause an overflow, add a new page immediately
+        if ($this->GetY() + $h > $this->PageBreakTrigger) {
+            $this->AddPage($this->CurOrientation);
+        }
+    }
+
+    public function NbLines($w, $txt)
+    {
+        //Computes the number of lines a MultiCell of width w will take
+        $cw = &$this->CurrentFont['cw'];
+        if ($w == 0) {
+            $w = $this->w - $this->rMargin - $this->x;
+        }
+
+        $wmax = ($w - 2 * $this->cMargin) * 1000 / $this->FontSize;
+        $s = str_replace("\r", '', $txt);
+        $nb = strlen($s);
+        if ($nb > 0 and $s[$nb - 1] == "\n") {
+            $nb--;
+        }
+
+        $sep = -1;
+        $i = 0;
+        $j = 0;
+        $l = 0;
+        $nl = 1;
+        while ($i < $nb) {
+            $c = $s[$i];
+            if ($c == "\n") {
+                $i++;
+                $sep = -1;
+                $j = $i;
+                $l = 0;
+                $nl++;
+                continue;
+            }
+            if ($c == ' ') {
+                $sep = $i;
+            }
+
+            $l += $cw[$c];
+            if ($l > $wmax) {
+                if ($sep == -1) {
+                    if ($i == $j) {
+                        $i++;
+                    }
+                } else {
+                    $i = $sep + 1;
+                }
+
+                $sep = -1;
+                $j = $i;
+                $l = 0;
+                $nl++;
+            } else {
+                $i++;
+            }
+        }
+        return $nl;
+    }
 }
 
 $pdf = new PDF($empresa);
@@ -56,49 +162,40 @@ $pdf->SetTextColor(0);
 $pdf->SetFont('');
 
 $contador_detalle = 0;
-$cantidad_detalle= 1;
+$cantidad_detalle = 1;
+
+$pdf->SetWidths(array(25, 100, 32.5, 32.5));
+$pdf->SetAligns(array('L', 'L', 'R', 'R'));
+
 
 foreach ($data as $key => $partida) {
-
-    if($contador_detalle===0){
-        $cantidad_detalle = array_count_values(array_column($data, 'numero'))[$partida['numero']];
-    }
-
-    $pdf->Cell(25, 5, $contador_detalle==0 ? Utiles::fechaSinFormato($partida['fecha']) : '', 'LRB', 0, 'L');
-    $pdf->Cell(100, 5, $partida['movimiento']==='Cargo' ? $partida['cuenta'] : '    '.$partida['cuenta'], 'LRB', 0, 'L');
-    $pdf->Cell(32.5, 5, ($partida['movimiento'] === 'Cargo' ? Utiles::monto($partida['monto']) : ''), 'LRB', 0, 'R');
-    $pdf->Cell(32.5, 5, ($partida['movimiento'] === 'Abono' ? Utiles::monto($partida['monto']) : ''), 'LRB', 1, 'R');
-
-    if($contador_detalle<$cantidad_detalle){
-        $contador_detalle++;
-    }
-
-    if($contador_detalle===$cantidad_detalle){
+    $total_cargo = 0;
+    $total_abono = 0;
+    if(sizeof($partida['partidas'])!==0){
         $pdf->SetFont('courier', 'B', 9);
-        $pdf->Cell(25, 5, '', 'LRB', 0, 'L');
-        $pdf->Cell(100, 5, $partida['descripcion'], 'LRB', 0, 'C');
-        $pdf->Cell(32.5, 5, '', 'LRB', 0, 'L');
-        $pdf->Cell(32.5, 5, '', 'LRB', 1, 'L');
-        $pdf->SetFont('courier', 'B', 9);
-        $pdf->Cell(25, 5, '', 'LRB', 0, 'L');
-        $pdf->Cell(100, 5, '', 'LRB', 0, 'C');
-        $pdf->Cell(32.5, 5, '', 'LRB', 0, 'L');
-        $pdf->Cell(32.5, 5, '', 'LRB', 1, 'L');
-        $contador_detalle = 0;
+
+        $pdf->Row(array(
+            '', $partida['codigo'] . ' - ' . utf8_decode($partida['nombre']), '', ''
+        ));
+
         $pdf->SetFont('courier', '', 9);
+        foreach ($partida['partidas'] as $key_movimiento => $movimientos) {
+            $pdf->Row(array(
+                Utiles::fechaSinFormato($movimientos['fecha']), $movimientos['descripcion'],
+                $movimientos['movimiento'] === 'Cargo' ? Utiles::monto($movimientos['monto']) : '-',
+                $movimientos['movimiento'] === 'Abono' ? Utiles::monto($movimientos['monto']) : '-'
+            ));
+            $total_cargo += $movimientos['movimiento'] === 'Cargo' ? $movimientos['monto'] : 0;
+            $total_abono += $movimientos['movimiento'] === 'Abono' ? $movimientos['monto'] : 0;
+        }
+        $pdf->SetFont('courier', 'B', 9);
+        $pdf->Row(array(
+            '', '', Utiles::monto($total_cargo), Utiles::monto($total_abono)
+        ));
     }
 }
-$pdf->Cell(70, 6, '', 'T');
-$pdf->Cell(40, 6, '', 'T');
-$pdf->Cell(40, 6, '', 'T');
-$pdf->Cell(40, 6, '', 'T');
+
 $pdf->Ln();
-
-/* $path = "temp/".$id;
-
-if (!file_exists($path)) {
-mkdir($path, 777, true);
-} */
 
 $path = "libro-mayor.pdf";
 
