@@ -35,7 +35,7 @@ class PDF extends FPDF
         $this->SetFont('Arial', 'B', 11);
         $this->SetFont('Arial', 'B', 11);
         $this->Cell(25, 5, 'Fecha', 1, 0, 'C', 1);
-        $this->Cell(100, 5, 'Descripción', 1, 0, 'C', 1);
+        $this->Cell(100, 5, iconv('UTF-8', 'cp1252', 'Descripción'), 1, 0, 'C', 1);
         $this->Cell(32.5, 5, 'Cargo', 1, 0, 'C', 1);
         $this->Cell(32.5, 5, 'Abono', 1, 1, 'C', 1);
     }
@@ -171,11 +171,11 @@ $pdf->SetAligns(array('L', 'L', 'R', 'R'));
 foreach ($data as $key => $partida) {
     $total_cargo = 0;
     $total_abono = 0;
-    if(sizeof($partida['partidas'])!==0){
+    if (sizeof($partida['partidas']) !== 0) {
         $pdf->SetFont('courier', 'B', 9);
 
         $pdf->Row(array(
-            '', $partida['codigo'] . ' - ' . utf8_decode($partida['nombre']), '', ''
+            '', $partida['codigo'] . ' - ' . iconv('UTF-8', 'cp1252', $partida['nombre']), '', ''
         ));
 
         $pdf->SetFont('courier', '', 9);
@@ -192,6 +192,14 @@ foreach ($data as $key => $partida) {
         $pdf->Row(array(
             '', '', Utiles::monto($total_cargo), Utiles::monto($total_abono)
         ));
+ 
+        
+        $pdf->Row(array(
+            '', '',
+            $partida['tipo_saldo'] === 'Deudor' ? Utiles::monto($total_cargo - $total_abono) : '-',
+            $partida['tipo_saldo'] === 'Acreedor' ? Utiles::monto($total_cargo - $total_abono) : '-'
+        ));
+        $pdf->Row(array('','','',''));
     }
 }
 
