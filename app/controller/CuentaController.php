@@ -36,18 +36,19 @@ class CuentaController extends Controller
         )); */
 
         Flight::render('ajax/cuentas/tabla-cuentas', array(
-            'datos' => $datos
+            'datos' => $datos,
         ));
 
     }
 
-    public function reporteCatalogo(){
+    public function reporteCatalogo()
+    {
         $this->sesionActiva();
         $empresa = $this->sesion->get('login')['id'];
         $datos = $this->catalogoDeCuentas($empresa);
         Flight::render('pdf/catalogo', array(
             'datos' => $datos,
-            'id' => $empresa
+            'id' => $empresa,
         ));
     }
 
@@ -235,7 +236,8 @@ class CuentaController extends Controller
 
     }
 
-    public function inputSeleccionarCuenta(){
+    public function inputSeleccionarCuenta()
+    {
         $this->isAjax();
         $this->sesionActivaAjax();
         $this->validarMetodoPeticion('GET');
@@ -243,35 +245,68 @@ class CuentaController extends Controller
         $empresa = $this->sesion->get('login')['id'];
 
         $datos = $this->modelo->seleccionar(array(
-            'id', 'nombre', 'codigo', 'tipo_saldo'
+            'id', 'nombre', 'codigo', 'tipo_saldo',
         ), array(
             'empresa' => $empresa,
-            'ultimo_nivel' => 1
+            'ultimo_nivel' => 1,
         ));
 
         Flight::render('ajax/cuentas/input-select-cuenta', array(
-            'datosBD' => $datos
+            'datosBD' => $datos,
         ));
     }
 
-    public function inputNiveles(){
+    public function inputNiveles()
+    {
         $this->isAjax();
         $this->sesionActivaAjax();
         $this->validarMetodoPeticion('GET');
 
         $empresa = $this->sesion->get('login')['id'];
 
-        $datos = $this->modelo->conexion()->query('SELECT distinct nivel from cuenta inner 
-                    join empresa on empresa.id = cuenta.empresa 
+        $datos = $this->modelo->conexion()->query('SELECT distinct nivel from cuenta inner
+                    join empresa on empresa.id = cuenta.empresa
                         where empresa.id = :empresa', array(
-                            'empresa' => $empresa
-                ))->fetchAll();
-                
+            'empresa' => $empresa,
+        ))->fetchAll();
+
         Flight::render('ajax/cuentas/input-niveles', array(
-            'datosBD' => $datos
+            'datosBD' => $datos,
         ));
     }
 
+    public function buscarCuentaConfiguracion()
+    {
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('POST');
+
+        $data = isset($_POST['data']) ? $_POST['data'] : array();
+
+        $empresa = $this->sesion->get('login')['id'];
+
+        $cuenta = $this->modelo->seleccionar(array(
+            'id', 'nombre',
+        ), array(
+            'empresa' => $empresa,
+            'codigo' => $data['codigo'],
+        ));
+
+        if (empty($cuenta)) {
+            $data['cuenta'] = -1;
+            $data['nombre_cuenta'] = '';
+        } else {
+            $cuenta = $cuenta[0];
+
+            $data['cuenta'] = base64_encode($cuenta['id']);
+            $data['nombre_cuenta'] = $cuenta['nombre'];
+        }
+
+        Flight::render('ajax/configuracion/configuracion-individual', array(
+            'data' => $data,
+        ));
+
+    }
 
     /*Metodos privados*/
 
@@ -422,3 +457,4 @@ class CuentaController extends Controller
 
     }
 }
+

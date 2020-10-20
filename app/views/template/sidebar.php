@@ -1,3 +1,4 @@
+
 <div class="main-sidebar">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
@@ -39,7 +40,7 @@
 
             <li class="menu-header">Configuración</li>
             <li>
-                <a class="nav-link" href="configuracion"><i class="fas fa-cogs"></i> <span>Configurar Cuentas</span></a>
+                <a class="nav-link" href="/configuracion"><i class="fas fa-cogs"></i> <span>Configurar Cuentas</span></a>
             </li>
             <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-database"></i> <span>Backup</span></a>

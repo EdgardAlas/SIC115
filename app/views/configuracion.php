@@ -1,3 +1,4 @@
+
 <div class="main-content">
     <section class="section">
         <div class="section-header">
@@ -18,87 +19,18 @@
                             </div>
                         </nav>
                         <div class="tab-content border" id="nav-tabContent">
-                            <div class="tab-pane fade show active p-3" id="nav-clasificacion" role="tabpanel"
-                                aria-labelledby="nav-clasificacion">
-                                <h2 class='h3'>Clasficicación de cuentas</h2>
-                                <form id='form-clasificacion'>
+                            
+                        </div>
 
-                                    <!-- activo -->
-                                    <div class='row form-group'>
-                                        <div class='col-6'>
-                                            <label for="activo">Cuentas de Activo</label>
-                                            <input type="text" class='form-control' autofocus>
-                                        </div>
-                                        <div class='col-6'>
-                                            <label for="activo">Cuenta seleccionada</label>
-                                            <input type="text" class='form-control' readonly tabindex=-1>
-                                        </div>
-                                    </div>
+                        <div class='w-100'>
+                            <span>&nbsp;</span>
+                        </div>
 
-                                    <!-- pasivo  -->
-                                    <div class='row form-group'>
-                                        <div class='col-6'>
-                                            <label for="activo">Cuentas de Pasivo</label>
-                                            <input type="text" class='form-control'>
-                                        </div>
-                                        <div class='col-6'>
-                                            <label>Cuenta seleccionada</label>
-                                            <input type="text" class='form-control' readonly tabindex=-1>
-                                        </div>
-                                    </div>
-
-                                    <!-- Patrimonio  -->
-                                    <div class='row form-group'>
-                                        <div class='col-6'>
-                                            <label for="activo">Cuentas de Patrimonio</label>
-                                            <input type="text" class='form-control'>
-                                        </div>
-                                        <div class='col-6'>
-                                            <label>Cuenta seleccionada</label>
-                                            <input type="text" class='form-control' readonly tabindex=-1>
-                                        </div>
-                                    </div>
-
-                                    <!-- Gastos  -->
-                                    <div class='row form-group'>
-                                        <div class='col-6'>
-                                            <label for="activo">Cuentas de Gastos</label>
-                                            <input type="text" class='form-control'>
-                                        </div>
-                                        <div class='col-6'>
-                                            <label>Cuenta seleccionada</label>
-                                            <input type="text" class='form-control' readonly tabindex=-1>
-                                        </div>
-                                    </div>
-
-                                    <!-- Ingresos  -->
-                                    <div class='row form-group'>
-                                        <div class='col-6'>
-                                            <label for="activo">Cuentas de Ingresos</label>
-                                            <input type="text" class='form-control'>
-                                        </div>
-                                        <div class='col-6'>
-                                            <label>Cuenta seleccionada</label>
-                                            <input type="text" class='form-control' readonly tabindex=-1>
-                                        </div>
-                                    </div>
-
-                                    <!-- Perdida y ganancias  -->
-                                    <div class='row form-group'>
-                                        <div class='col-6'>
-                                            <label for="activo">Cuenta de Perdidas y Ganancias</label>
-                                            <input type="text" class='form-control'>
-                                        </div>
-                                        <div class='col-6'>
-                                            <label>Cuenta seleccionada</label>
-                                            <input type="text" class='form-control' readonly tabindex=-1>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="tab-pane fade p-3" id="nav-estado-resultados" role="tabpanel"
-                                aria-labelledby="nav-estado-resultados">
-                                2
+                        <div class='row'>
+                            <div class="col-12 text-center">
+                                <button type='button' class='btn btn-primary' id='btn_guardar'>
+                                    Guardar
+                                </button>
                             </div>
                         </div>
                     </div>
