@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>403 &mdash; SIC175</title>
+    <title>500 &mdash; SIC175</title>
     <link rel="shortcut icon" href="<?=URL_BASE?>/public/assets/img/favicon.png" type="image/x-icon">
 
     <!-- General CSS Files -->
@@ -24,9 +24,9 @@
             <div class="container mt-5">
                 <div class="page-error">
                     <div class="page-inner">
-                        <h1>404</h1>
+                        <h1>500</h1>
                         <div class="page-description">
-                        Error Interno
+                        Ocurrio un error interno con la petición
                         </div>
                         <div class="page-search">
                             <div class="mt-3">

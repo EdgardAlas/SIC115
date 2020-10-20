@@ -8,7 +8,7 @@ date_default_timezone_set('America/El_Salvador');
 
 Flight::map('notFound', function () {
     header("HTTP/1.0 404 Not Found");
-    $url =  trim(Flight::request()->url,'/');
+    /* $url =  trim(Flight::request()->url,'/'); */
     Flight::render('error/404', 404);
 });
 
@@ -18,38 +18,12 @@ Flight::map('notFound', function () {
     /* echo $ex->getTraceAsString();
     echo '<br>';
     echo $ex->getMessage(); */
-    var_dump($ex);
+    /* var_dump($ex); */
+    header("HTTP/1.0 500 Internal Error");
+    /* $url =  trim(Flight::request()->url,'/'); */
+    Flight::render('error/500', 500);
     
-});  
-
-Flight::route('/codigo', function(){
-    function codigoSiguiente($codigo, $array = []) {    
-        
-        $existeR = (strpos($codigo, "R"));
-
-        $codigoSinR = str_replace('R','',$codigo);
-
-        array_push($array, $codigo);
-
-        $size = strlen($codigoSinR);
-
-        
-        if($size===1){
-            return $array;
-        }if($size===2){
-            return codigoSiguiente($codigo[0], $array);
-        }else if($existeR>0 && $size-2 > 4){
-            $cuenta = substr($codigoSinR, 0, $size-2).'R';
-            return codigoSiguiente($cuenta,$array);
-        }else if($size>2){
-            $cuenta = substr($codigoSinR, 0, $size-2);
-            return codigoSiguiente($cuenta,$array);
-        }
-    }
-
-    var_dump(codigoSiguiente('11010101'));
-
-});
+}); 
 
 //MVC creditos: https://steemit.com/php/@kalangaum/easy-php-routing-management
 
