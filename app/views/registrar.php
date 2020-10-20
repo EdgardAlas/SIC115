@@ -5,15 +5,15 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <title>Registrarte</title>
-    <link rel="shortcut icon" href="<?= URL_BASE ?>/public/assets/img/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="<?=URL_BASE?>/public/assets/img/favicon.png" type="image/x-icon">
     <!-- General CSS Files -->
-    <link rel="stylesheet" href="<?= URL_BASE ?>/public/assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="<?= URL_BASE ?>/public/assets/css/all.css">
+    <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/css/all.css">
 
     <!-- Template CSS -->
-    <link rel="stylesheet" href="<?= URL_BASE ?>/public/assets/css/style.css">
-    <link rel="stylesheet" href="<?= URL_BASE ?>/public/assets/css/custom.css" />
-    <link rel="stylesheet" href="<?= URL_BASE ?>/public/assets/css/components.css">
+    <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/css/style.css">
+    <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/css/custom.css" />
+    <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/css/components.css">
 </head>
 
 <body>
@@ -29,24 +29,30 @@
                             </div>
 
                             <div class="card-body">
-                            <form method="POST" action="#" class="needs-validation" novalidate="" name='form_registrar'>
+                                <form method="POST" action="#" class="needs-validation" novalidate="" name='form_registrar'>
 
                                     <div class="form-group">
-                                        <label for="nombre">Nombre de la Empresa</label>
-                                        <input id="nombre" type="text" class="form-control" name="nombre" required autofocus data-ok=0>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="form-group col-6">
-                                            <label for="usuario" class="d-block">Usuario</label>
-                                            <input id="usuario" type="usuario" class="form-control" name="usuario" required data-ok=0>
+                                        <div class="row">
+                                            <div class="form-group col-6">
+                                                <label for="nombre">Nombre de la Empresa</label>
+                                                <input id="nombre" type="text" class="form-control" name="nombre" required autofocus data-ok=0>
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label for="usuario" class="d-block">Usuario</label>
+                                                <input id="usuario" type="usuario" class="form-control" name="usuario" required data-ok=0>
+                                            </div>
                                         </div>
-                                        <div class="form-group col-6">
-                                            <label for="contrasena" class="d-block">Contraseña</label>
-                                            <input id="contrasena" type="password" class="form-control" name="contrasena" required>
+                                        <div class="row">
+                                            <div class="form-group col-6">
+                                                <label for="contrasena" class="d-block">Contraseña</label>
+                                                <input id="contrasena" type="password" class="form-control" name="contrasena" required>
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label for="contrasenav" class="d-block">Confirmar Contraseña</label>
+                                                <input id="contrasenav" type="password" class="form-control" name="contrasenav" required>
+                                            </div>
                                         </div>
                                     </div>
-
                                     <div class="form-group">
                                         <button type="button" id="registrar" class="btn btn-primary btn-lg btn-block">
                                             Registrarte
@@ -65,24 +71,24 @@
     </div>
 
     <!-- General JS Scripts -->
-    <script src="<?= URL_BASE ?>/public/assets/js/plugins/jquery-3.4.1.min.js"></script>
-    <script src="<?= URL_BASE ?>/public/assets/js/plugins/popper.min.js"></script>
-    <script src="<?= URL_BASE ?>/public/assets/js/plugins/bootstrap.min.js"></script>
-    <script src="<?= URL_BASE ?>/public/assets/js/plugins/jquery.nicescroll.min.js"></script>
-    <script src="<?= URL_BASE ?>/public/assets/js/plugins/moment.min.js"></script>
-    <script src="<?= URL_BASE ?>/public/assets/js/plugins/stisla.js"></script>
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/jquery-3.4.1.min.js"></script>
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/popper.min.js"></script>
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/bootstrap.min.js"></script>
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/jquery.nicescroll.min.js"></script>
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/moment.min.js"></script>
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/stisla.js"></script>
 
     <!-- JS Libraies -->
-    <script src="<?= URL_BASE ?>/public/assets/js/plugins/sweetalert2.js"></script>
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/sweetalert2.js"></script>
 
     <!-- Template JS File -->
-    <script src="<?= URL_BASE ?>/public/assets/js/plugins/scripts.js"></script>
-    <script src="<?= URL_BASE ?>/public/assets/js/plugins/custom.js"></script>
-    <script src="<?= URL_BASE ?>/public/assets/js/sidebar/sidebar.js"></script>
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/scripts.js"></script>
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/custom.js"></script>
+    <script src="<?=URL_BASE?>/public/assets/js/sidebar/sidebar.js"></script>
 
     <!-- Page Specific JS File -->
-    <script src="<?= URL_BASE ?>/public/js/utils.js"></script>
-    <script src="<?= URL_BASE ?>/public/js/registrar.js"></script>
+    <script src="<?=URL_BASE?>/public/js/utils.js"></script>
+    <script src="<?=URL_BASE?>/public/js/registrar.js"></script>
 </body>
 
 </html>
