@@ -13,6 +13,15 @@ class BalanceGeneralController extends Controller
 
     public function index()
     {
+        $his->formaCuenta();
+    }
+
+    public function formaCuenta(){
+        $this->sesionActiva();
+        $this->view('balance-general', ['js_especifico' => Utiles::printScript('balance-general'),]);
+    }
+
+    public function formaReporte(){
         $this->sesionActiva();
         $this->view('balance-general', ['js_especifico' => Utiles::printScript('balance-general'),]);
     }
