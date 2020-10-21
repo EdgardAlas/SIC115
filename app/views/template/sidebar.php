@@ -30,7 +30,7 @@
 
             <li class="menu-header">Estados Financieros</li>
             <li>
-                <a class="nav-link" href="balancegeneral"><i class="fas fa-file-invoice-dollar"></i> <span>Balance
+                <a class="nav-link" href="/balance-general"><i class="fas fa-file-invoice-dollar"></i> <span>Balance
                         General</span></a>
             </li>
             <li class="nav-item dropdown">
