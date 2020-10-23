@@ -25,6 +25,12 @@ Flight::map('notFound', function () {
     
 }); 
 
+Flight::route('/codigo', function(){
+    
+
+    var_dump(strpos('1107', 'R'));
+});
+
 //MVC creditos: https://steemit.com/php/@kalangaum/easy-php-routing-management
 
 Flight::route('/(@controlador(/@metodo(/@id)))', function ($controlador, $metodo, $id) {

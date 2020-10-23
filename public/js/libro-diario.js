@@ -44,14 +44,14 @@ function generarDetalle() {
         cuenta: $('#cuenta').val(),
         codigo,
         movimiento: $('#movimiento').val(),
-        monto: calcularMonto(obtenerMonto(), saldo, $('#movimiento').val())
+        monto: calcularMonto(obtenerMonto(), saldo, $('#movimiento').val(), (codigo))
     };
 
     let mostrar = {
         codigo,
         movimiento: $('#movimiento').val(),
         monto: $('#monto').val().replace(/\.$/, ""),
-        monto_plano: Math.abs(calcularMonto(obtenerMonto(), saldo, $('#movimiento').val()))
+        monto_plano: Math.abs(calcularMonto(obtenerMonto(), saldo, $('#movimiento').val(), (codigo)))
     };
 
 
@@ -96,14 +96,14 @@ function generarDetalleEditado(indice) {
         cuenta: $('#cuenta').val(),
         codigo,
         movimiento: $('#movimiento').val(),
-        monto: calcularMonto(obtenerMonto(), saldo, $('#movimiento').val())
+        monto: calcularMonto(obtenerMonto(), saldo, $('#movimiento').val(), (codigo))
     };
 
     let mostrar = {
         codigo,
         movimiento: $('#movimiento').val(),
         monto: $('#monto').val().replace(/\.$/, ""),
-        monto_plano: Math.abs(calcularMonto(obtenerMonto(), saldo, $('#movimiento').val()))
+        monto_plano: Math.abs(calcularMonto(obtenerMonto(), saldo, $('#movimiento').val(), (codigo)))
     };
 
 
@@ -156,10 +156,12 @@ function imprimirTotales() {
     $('#dif').text($('#diferencia').val());
 }
 
-function calcularMonto(monto, saldo, movimiento) {
+function calcularMonto(monto, saldo, movimiento, codigo) {
     let saldocuenta = monto;
-    if ((saldo === 'Deudor' && movimiento === 'Abono') ||
-        (saldo === 'Acreedor' && movimiento === 'Cargo')) {
+    if ((saldo==='Deudor' && codigo[codigo.length-1]=='R' && movimiento === 'Cargo') ||
+        (saldo==='Acreedor' && codigo[codigo.length-1]=='R' && movimiento === 'Abono') ||
+        (saldo === 'Deudor' && codigo[codigo.length-1] !='R' && movimiento === 'Abono') ||
+        (saldo === 'Acreedor' && codigo[codigo.length-1] !='R' && movimiento === 'Cargo')) {
         saldocuenta = -saldocuenta;
     }
     return saldocuenta;
@@ -286,6 +288,8 @@ function validarGuardarPartida() {
         })
         return;
     }
+
+    log(partida.detalle_partida)
 
     guardarPartida();
 
