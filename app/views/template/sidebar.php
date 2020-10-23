@@ -31,8 +31,8 @@
             <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-invoice-dollar"></i> <span>Balance General</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="/balance-general/forma-cuenta"><i class="fas fa-file-invoice-dollar"></i>Forma de cuenta</a></li>
-                    <li><a class="nav-link" href="/balance-general/forma-reporte"><i class="fas fa-file-invoice-dollar"></i>Forma de Reporte</a>
+                    <li><a class="nav-link" href="/balance-general/forma/cuenta"><i class="fas fa-file-invoice-dollar"></i>Forma de cuenta</a></li>
+                    <li><a class="nav-link" href="/balance-general/forma/reporte"><i class="fas fa-file-invoice-dollar"></i>Forma de Reporte</a>
                     </li>
                 </ul>
             </li>
