@@ -17,12 +17,12 @@
                         <div class='form-group row'>
                             <div class="col-12 col-sm-12 col-lg-3 form-group">
                                 <label for="fecha_inicial">Fecha Inicial (*)</label>
-                                <input type="date" class='form-control' value='<?= date('Y-01-01') ?>' id='fecha_inicial' min='<?= date('Y-01-01') ?>' max='<?= date('Y-m-d') ?>'>
+                                <input type="date" class='form-control' value='<?= date((isset($anio) ? $anio : 'Y').'-01-01') ?>' id='fecha_inicial' min='<?= date('Y-01-01') ?>' max='<?= date('Y-m-d') ?>'>
                             </div>
 
                             <div class="col-12 col-sm-12 col-lg-3 form-group">
                                 <label for="fecha_final">Fecha Final (*)</label>
-                                <input type="date" class='form-control' value='<?= date('Y-m-d') ?>' id='fecha_final' min='<?= date('Y-01-01') ?>' max='<?= date('Y-m-d') ?>'>
+                                <input type="date" class='form-control' value='<?= date((isset($anio) ? $anio : 'Y').'-m-d') ?>' id='fecha_final' min='<?= date('Y-01-01') ?>' max='<?= date('Y-m-d') ?>'>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-3 form-group" id='contenedor_niveles'>
                                 <label for="nivel">Nivel</label>

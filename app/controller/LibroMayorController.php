@@ -50,11 +50,11 @@ class LibroMayorController extends Controller
 
         $fecha_inicial = (isset($_POST['fecha_inicial'])) 
                             ? $_POST['fecha_inicial'] 
-                                : date('Y-01-01');
+                                : date($login['anio'].'-01-01');
 
         $fecha_final = (isset($_POST['fecha_final'])) 
                             ? $_POST['fecha_final'] 
-                                : date('Y-12-31');
+                                : date($login['anio'].'-12-31');
 
         $cuentas = $cuenta_model->seleccionar(array('nombre','id','codigo', 'tipo_saldo'), array(
             'empresa' => $login['id'],
@@ -104,11 +104,11 @@ class LibroMayorController extends Controller
 
         $fecha_inicial = (isset($_GET['fecha_inicial'])) 
                             ? $_GET['fecha_inicial'] 
-                                : date('Y-01-01');
+                                : date($login['anio'].'-01-01');
                                 
         $fecha_final = (isset($_GET['fecha_final'])) 
                             ? $_GET['fecha_final'] 
-                                : date('Y-12-31');
+                                : date($login['anio'].'-12-31');
                                 
                                 
         $cuentas = $cuenta_model->seleccionar(array('nombre','id','codigo', 'tipo_saldo'), array(

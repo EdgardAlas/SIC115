@@ -30,7 +30,7 @@
             <td class="table-primary text-center font-weight-bold" colspan=4>Partida #<?=$partida['numero']?></td>
         </tr>
         <tr>
-            <td class="table-light" rowspan=<?= $cantidad_detalle+1 ?>><?=Utiles::fecha($partida['fecha'])?></td>
+            <td class="table-light align-top p-3" rowspan=<?= $cantidad_detalle+1 ?>><?=Utiles::fechaSinFormato($partida['fecha'])?></td>
             <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'text-danger' : '') : '' ?> table-light" <?= ($partida['movimiento']==='Abono') ? "style='padding-left: 8em;'" : "" ?>>
                 <?= $partida['cuenta']?></td>
             <td class="<?=$codigo_cuenta!==null ? ($codigo_cuenta===$partida['codigo'] ? 'text-danger' : '') : '' ?> table-light text-right font-weight-bold">

@@ -18,7 +18,7 @@
             }else{
                 ?>
         <h2 class='text-center h5'>Periodo activo número <b><?= sizeof($lista_periodos)?></b>.</h2>
-        <h3 class='text-center h5'>Año: <b><?=date('Y')?></b></h3>
+        <h3 class='text-center h5'>Año: <b><?=$periodo_activo['anio']?></b></h3>
         <?php
             }
         ?>

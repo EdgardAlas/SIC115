@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 25, 2020 at 03:49 AM
+-- Generation Time: Oct 25, 2020 at 05:14 PM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.19
 
@@ -306,18 +306,18 @@ INSERT INTO `cuenta` (`id`, `codigo`, `nombre`, `tipo_saldo`, `saldo`, `nivel`, 
 (236, '420239', 'Amortizaciones', 'Deudor', 0, 4, 4, 1, 1, 174),
 (237, '420240', 'Ornatos', 'Deudor', 0, 4, 4, 1, 1, 174),
 (238, '420241', 'Otros', 'Deudor', 0, 4, 4, 1, 1, 174),
-(239, '1', 'Activo', 'Deudor', 19957750, 1, 1, 0, 2, NULL),
-(240, '2', 'Pasivo', 'Acreedor', 5030000, 1, 2, 0, 2, NULL),
+(239, '1', 'Activo', 'Deudor', 19973183.56, 1, 1, 0, 2, NULL),
+(240, '2', 'Pasivo', 'Acreedor', 5027533.7, 1, 2, 0, 2, NULL),
 (241, '3', 'Capital', 'Acreedor', 14166500, 1, 3, 0, 2, NULL),
-(242, '11', 'Corriente', 'Deudor', 10310250, 2, 1, 0, 2, 239),
-(243, '12', 'No Corriente', 'Deudor', 9647500, 2, 1, 0, 2, 239),
-(244, '21', 'Corriente', 'Acreedor', 4314000, 2, 2, 0, 2, 240),
+(242, '11', 'Corriente', 'Deudor', 10317383.56, 2, 1, 0, 2, 239),
+(243, '12', 'No Corriente', 'Deudor', 9655800, 2, 1, 0, 2, 239),
+(244, '21', 'Corriente', 'Acreedor', 4311533.7, 2, 2, 0, 2, 240),
 (245, '22', 'No Corriente', 'Acreedor', 716000, 2, 2, 0, 2, 240),
 (246, '31', 'Capital Contable', 'Acreedor', 14166500, 2, 3, 0, 2, 241),
-(247, '1101', 'Caja', 'Deudor', 25000, 3, 1, 1, 2, 242),
-(248, '1102', 'Banco', 'Deudor', 2038405, 3, 1, 1, 2, 242),
-(249, '1103', 'Cuentas por Cobrar', 'Deudor', 1589500, 3, 1, 1, 2, 242),
-(250, '1104', 'Deudores Diversos', 'Deudor', 65000, 3, 1, 1, 2, 242),
+(247, '1101', 'Caja', 'Deudor', 21100, 3, 1, 1, 2, 242),
+(248, '1102', 'Banco', 'Deudor', 2121961.8499999996, 3, 1, 1, 2, 242),
+(249, '1103', 'Cuentas por Cobrar', 'Deudor', 1498896.31, 3, 1, 1, 2, 242),
+(250, '1104', 'Deudores Diversos', 'Deudor', 68900, 3, 1, 1, 2, 242),
 (251, '1105', 'Inventario', 'Deudor', 6550000, 3, 1, 1, 2, 242),
 (252, '1201', 'Primas de seguro', 'Deudor', 62000, 3, 1, 1, 2, 243),
 (253, '1202', 'Inversiones Permanentes', 'Deudor', 580000, 3, 1, 1, 2, 243),
@@ -328,7 +328,7 @@ INSERT INTO `cuenta` (`id`, `codigo`, `nombre`, `tipo_saldo`, `saldo`, `nivel`, 
 (258, '1207', 'Edificios', 'Deudor', 4500000, 3, 1, 1, 2, 243),
 (259, '1208', 'Equipo de Oficina', 'Deudor', 985000, 3, 1, 1, 2, 243),
 (260, '1209', 'Depositos en Garantia', 'Deudor', 10500, 3, 1, 1, 2, 243),
-(261, '2101', 'Proveedores', 'Acreedor', 3059500, 3, 2, 1, 2, 244),
+(261, '2101', 'Proveedores', 'Acreedor', 3045012.27, 3, 2, 1, 2, 244),
 (262, '2102', 'Renta Cobradas por Anticipado', 'Acreedor', 105000, 3, 2, 1, 2, 244),
 (263, '2103', 'Intereses Cobrados por Anticiado', 'Acreedor', 150000, 3, 2, 1, 2, 244),
 (264, '2104', 'Acreedores Diversos', 'Acreedor', 850000, 3, 2, 1, 2, 244),
@@ -336,28 +336,28 @@ INSERT INTO `cuenta` (`id`, `codigo`, `nombre`, `tipo_saldo`, `saldo`, `nivel`, 
 (266, '2202', 'Gastos Acumulados por Pagar', 'Acreedor', 42000, 3, 2, 1, 2, 245),
 (267, '2203', 'Documentos por Pagar Largo Plazo', 'Acreedor', 475000, 3, 2, 1, 2, 245),
 (268, '3101', 'Capital Social', 'Acreedor', 14166500, 3, 3, 1, 2, 246),
-(270, '2105', 'Documentos por Pagar', 'Acreedor', 0, 3, 2, 1, 2, 244),
-(271, '1210', 'Patentes', 'Deudor', 0, 3, 1, 1, 2, 243),
-(272, '1106', 'IVA Credito Fiscal', 'Deudor', 49595, 3, 1, 1, 2, 242),
-(273, '2106', 'IVA Debito Fiscal', 'Acreedor', 149500, 3, 2, 1, 2, 244),
-(274, '1107R', 'Provicion para Cuentas Incobrables', 'Acreedor', 7250, 3, 1, 1, 2, 242),
-(275, '4', 'Cuentas de Resultado Acreedoras', 'Acreedor', 1150150, 1, 4, 0, 2, NULL),
-(276, '41', 'Ingresos de Operacion', 'Acreedor', 1150000, 2, 4, 0, 2, 275),
-(277, '4101', 'Ventas', 'Acreedor', 1150000, 3, 4, 1, 2, 276),
-(278, '5', 'Cuentas de Resultado Deudoras', 'Deudor', 388900, 1, 5, 0, 2, NULL),
-(279, '51', 'Costos Operacion', 'Deudor', 381500, 2, 5, 0, 2, 278),
-(280, '5101', 'Compras', 'Deudor', 375000, 3, 5, 1, 2, 279),
-(281, '42', 'Otros Productos', 'Acreedor', 150, 2, 4, 0, 2, 275),
-(282, '4201', 'Intereses Cobrados', 'Acreedor', 150, 3, 4, 1, 2, 281),
-(283, '4102', 'Rebajas y Devoluciones sobre Compras', 'Acreedor', 0, 3, 4, 1, 2, 276),
-(284, '5102', 'Rebajas y Devoluciones sobre Ventas', 'Deudor', 0, 3, 5, 1, 2, 279),
+(270, '2105', 'Documentos por Pagar', 'Acreedor', 1750, 3, 2, 1, 2, 244),
+(271, '1210', 'Patentes', 'Deudor', 8300, 3, 1, 1, 2, 243),
+(272, '1106', 'IVA Credito Fiscal', 'Deudor', 58425.399999999994, 3, 1, 1, 2, 242),
+(273, '2106', 'IVA Debito Fiscal', 'Acreedor', 159771.43, 3, 2, 1, 2, 244),
+(274, '1107R', 'Provicion para Cuentas Incobrables', 'Acreedor', 1900, 3, 1, 1, 2, 242),
+(275, '4', 'Cuentas de Resultado Acreedoras', 'Acreedor', 1262954.86, 1, 4, 0, 2, NULL),
+(276, '41', 'Ingresos de Operacion', 'Acreedor', 1254779.86, 2, 4, 0, 2, 275),
+(277, '4101', 'Ventas', 'Acreedor', 1239624, 3, 4, 1, 2, 276),
+(278, '5', 'Cuentas de Resultado Deudoras', 'Deudor', 483805, 1, 5, 0, 2, NULL),
+(279, '51', 'Costos Operacion', 'Deudor', 433438, 2, 5, 0, 2, 278),
+(280, '5101', 'Compras', 'Deudor', 416325, 3, 5, 1, 2, 279),
+(281, '42', 'Otros Productos', 'Acreedor', 8175, 2, 4, 0, 2, 275),
+(282, '4201', 'Intereses Cobrados', 'Acreedor', 8175, 3, 4, 1, 2, 281),
+(283, '4102', 'Rebajas y Devoluciones sobre Compras', 'Acreedor', 15155.86, 3, 4, 1, 2, 276),
+(284, '5102', 'Rebajas y Devoluciones sobre Ventas', 'Deudor', 10613, 3, 5, 1, 2, 279),
 (285, '5103', 'Gastos sobre Compras', 'Deudor', 6500, 3, 5, 1, 2, 279),
-(286, '52', 'Gastos de Operaciones', 'Deudor', 7400, 2, 5, 0, 2, 278),
-(287, '5201', 'Gastos de Administarcion', 'Deudor', 0, 3, 5, 1, 2, 286),
-(288, '5202', 'Gastos de Venta', 'Deudor', 7250, 3, 5, 1, 2, 286),
-(289, '5203', 'Gastos de Financieros', 'Deudor', 150, 3, 5, 1, 2, 286),
-(290, '53', 'Otros Gastos', 'Deudor', 0, 2, 5, 0, 2, 278),
-(291, '5301', 'Otros Gastos', 'Deudor', 0, 3, 5, 1, 2, 290);
+(286, '52', 'Gastos de Operaciones', 'Deudor', 42457, 2, 5, 0, 2, 278),
+(287, '5201', 'Gastos de Administarcion', 'Deudor', 11067, 3, 5, 1, 2, 286),
+(288, '5202', 'Gastos de Venta', 'Deudor', 29565, 3, 5, 1, 2, 286),
+(289, '5203', 'Gastos de Financieros', 'Deudor', 1825, 3, 5, 1, 2, 286),
+(290, '53', 'Otros Gastos', 'Deudor', 7910, 2, 5, 0, 2, 278),
+(291, '5301', 'Otros Gastos', 'Deudor', 7910, 3, 5, 1, 2, 290);
 
 -- --------------------------------------------------------
 
@@ -371,6 +371,93 @@ CREATE TABLE `detalle_partida` (
   `movimiento` varchar(6) COLLATE utf8_spanish_ci NOT NULL COMMENT 'cargo ó abono',
   `monto` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Dumping data for table `detalle_partida`
+--
+
+INSERT INTO `detalle_partida` (`cuenta`, `partida`, `movimiento`, `monto`) VALUES
+(247, 10, 'Cargo', 25000),
+(248, 10, 'Cargo', 2300000),
+(251, 10, 'Cargo', 6550000),
+(255, 10, 'Cargo', 175000),
+(249, 10, 'Cargo', 290000),
+(252, 10, 'Cargo', 62000),
+(250, 10, 'Cargo', 65000),
+(260, 10, 'Cargo', 10500),
+(256, 10, 'Cargo', 2800000),
+(258, 10, 'Cargo', 4500000),
+(259, 10, 'Cargo', 985000),
+(254, 10, 'Cargo', 340000),
+(253, 10, 'Cargo', 580000),
+(257, 10, 'Cargo', 195000),
+(267, 10, 'Abono', 475000),
+(262, 10, 'Abono', 105000),
+(263, 10, 'Abono', 150000),
+(266, 10, 'Abono', 42000),
+(261, 10, 'Abono', 2890000),
+(264, 10, 'Abono', 850000),
+(265, 10, 'Abono', 199000),
+(268, 10, 'Abono', 14166500),
+(249, 11, 'Cargo', 1299500),
+(277, 11, 'Abono', 1150000),
+(273, 11, 'Abono', 149500),
+(280, 12, 'Cargo', 375000),
+(272, 12, 'Cargo', 48750),
+(248, 12, 'Abono', 254250),
+(261, 12, 'Abono', 169500),
+(285, 13, 'Cargo', 6500),
+(272, 13, 'Cargo', 845),
+(248, 13, 'Abono', 7345),
+(288, 14, 'Cargo', 7250),
+(274, 14, 'Abono', 7250),
+(284, 15, 'Cargo', 7800),
+(273, 15, 'Cargo', 1014),
+(249, 15, 'Abono', 8814),
+(261, 16, 'Cargo', 9842.3),
+(283, 16, 'Abono', 8710),
+(272, 16, 'Abono', 1132.3),
+(280, 17, 'Cargo', 41325),
+(272, 17, 'Cargo', 5372.25),
+(261, 17, 'Abono', 46697.25),
+(261, 18, 'Cargo', 46697.25),
+(248, 18, 'Abono', 44058.86),
+(283, 18, 'Abono', 2334.86),
+(272, 18, 'Abono', 303.53),
+(291, 19, 'Cargo', 7910),
+(277, 19, 'Abono', 7000),
+(273, 19, 'Abono', 910),
+(261, 20, 'Cargo', 4645.43),
+(283, 20, 'Abono', 4111),
+(272, 20, 'Abono', 534.43),
+(271, 21, 'Cargo', 8300),
+(272, 21, 'Cargo', 1079),
+(248, 21, 'Abono', 9379),
+(274, 22, 'Cargo', 5350),
+(249, 22, 'Abono', 5350),
+(248, 23, 'Cargo', 93365.12),
+(277, 23, 'Abono', 82624),
+(273, 23, 'Abono', 10741.12),
+(284, 24, 'Cargo', 2813),
+(273, 24, 'Cargo', 365.69),
+(249, 24, 'Abono', 3178.69),
+(248, 25, 'Cargo', 73261),
+(249, 25, 'Abono', 73261),
+(288, 26, 'Cargo', 22315),
+(272, 26, 'Cargo', 2900.95),
+(248, 26, 'Abono', 25215.95),
+(287, 27, 'Cargo', 9317),
+(272, 27, 'Cargo', 1211.21),
+(248, 27, 'Abono', 10528.21),
+(289, 28, 'Cargo', 1825),
+(272, 28, 'Cargo', 237.25),
+(248, 28, 'Abono', 2062.25),
+(248, 29, 'Cargo', 8175),
+(282, 29, 'Abono', 8175),
+(287, 30, 'Cargo', 1750),
+(270, 30, 'Abono', 1750),
+(250, 31, 'Cargo', 3900),
+(247, 31, 'Abono', 3900);
 
 -- --------------------------------------------------------
 
@@ -411,6 +498,34 @@ CREATE TABLE `partida` (
   `partida_cierre` tinyint(4) DEFAULT '0',
   `periodo` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Dumping data for table `partida`
+--
+
+INSERT INTO `partida` (`id`, `numero`, `descripcion`, `fecha`, `partida_cierre`, `periodo`) VALUES
+(10, 1, 'Inicio de operaciones', '2020-10-24 00:00:00', 0, 21),
+(11, 2, 'venta de mercaderÃ­a', '2020-10-24 00:00:00', 0, 21),
+(12, 3, 'Compra de mercaderÃ­a, 60% contado y el resto con letra de cambio', '2020-10-24 00:00:00', 0, 21),
+(13, 4, 'gastos de enviÃ³ de mercancÃ­a comprada', '2020-10-24 00:00:00', 0, 21),
+(14, 5, 'ProvisiÃ³n estimada para cuentas incobrables', '2020-10-24 00:00:00', 0, 21),
+(15, 6, 'DevoluciÃ³n sobre venta', '2020-10-24 00:00:00', 0, 21),
+(16, 7, 'DevoluciÃ³n sobre compra', '2020-10-24 00:00:00', 0, 21),
+(17, 8, 'Compra de mercaderÃ­a al crÃ©dito', '2020-10-24 00:00:00', 0, 21),
+(18, 9, 'Pago a proveedores con rebaja por condiciÃ³n 5/10 neto 60', '2020-10-24 00:00:00', 0, 21),
+(19, 10, 'Perdida de venta debido a  asalto', '2020-10-24 00:00:00', 0, 21),
+(20, 11, 'Descuento de Proveedores', '2020-10-24 00:00:00', 0, 21),
+(21, 12, 'Compra de patente amortizable para 5 aÃ±os', '2020-10-24 00:00:00', 0, 21),
+(22, 13, 'Se determina valor de cuentas incobrables', '2020-10-24 00:00:00', 0, 21),
+(23, 14, 'Venta de mercaderÃ­a al contado', '2020-10-24 00:00:00', 0, 21),
+(24, 15, 'DevoluciÃ³n sobre venta', '2020-10-24 00:00:00', 0, 21),
+(25, 16, 'Pago de un cliente por venta realizada', '2020-10-24 00:00:00', 0, 21),
+(26, 17, 'Pago de cuÃ±as publicitarias', '2020-10-24 00:00:00', 0, 21),
+(27, 18, 'Pago de viÃ¡ticos a personal administrativo', '2020-10-24 00:00:00', 0, 21),
+(28, 19, 'Pago de comisiÃ³n', '2020-10-24 00:00:00', 0, 21),
+(29, 20, 'Cobro de intereses', '2020-10-24 00:00:00', 0, 21),
+(30, 21, 'ProvisiÃ³n de recibos de luz, agua y telÃ©fono', '2020-10-24 00:00:00', 0, 21),
+(31, 22, 'Retiro de caja para gastos personales', '2020-10-24 00:00:00', 0, 21);
 
 -- --------------------------------------------------------
 
@@ -505,7 +620,7 @@ ALTER TABLE `empresa`
 -- AUTO_INCREMENT for table `partida`
 --
 ALTER TABLE `partida`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `periodo`

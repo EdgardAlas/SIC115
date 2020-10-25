@@ -22,7 +22,8 @@ class LibroDiarioController extends Controller
         $this->view('libro-diario', [
             'js_especifico' => Utiles::printScript('libro-diario'),
         ], [
-            'estado' => $this->sesion->get('login')['estado']
+            'estado' => $this->sesion->get('login')['estado'],
+            'anio' => $this->sesion->get('login')['anio']
         ]);
     }
 
@@ -171,8 +172,8 @@ class LibroDiarioController extends Controller
 
         $login = $this->sesion->get('login');
 
-        $fecha_inicial = (isset($_POST['fecha_inicial'])) ? $_POST['fecha_inicial'] : date('Y-01-01');
-        $fecha_final = (isset($_POST['fecha_final'])) ? $_POST['fecha_final'] : date('Y-12-31');
+        $fecha_inicial = (isset($_POST['fecha_inicial'])) ? $_POST['fecha_inicial'] : date($login['anio'].'-01-01');
+        $fecha_final = (isset($_POST['fecha_final'])) ? $_POST['fecha_final'] : date($login['anio'].'-12-31');
         $numero = (isset($_POST['numero'])) ? $_POST['numero'] : array('');
         $codigo = (isset($_POST['codigo']) ? base64_decode($_POST['codigo']) : null);
 
@@ -203,8 +204,8 @@ class LibroDiarioController extends Controller
 
         $login = $this->sesion->get('login');
 
-        $fecha_inicial = (isset($_GET['fecha_inicial'])) ? $_GET['fecha_inicial'] : date('Y-01-01');
-        $fecha_final = (isset($_GET['fecha_final'])) ? $_GET['fecha_final'] : date('Y-12-31');
+        $fecha_inicial = (isset($_GET['fecha_inicial'])) ? $_GET['fecha_inicial'] : date($login['anio'].'-01-01');
+        $fecha_final = (isset($_GET['fecha_final'])) ? $_GET['fecha_final'] : date($login['anio'].'-12-31');
         $numero = (isset($_GET['numero'])) ? explode(',', $_GET['numero']) : array('');
 
         $condicion = array(
