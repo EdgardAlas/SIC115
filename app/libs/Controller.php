@@ -16,11 +16,11 @@ class Controller
         Flight::render($ruta, $variables);
     }
 
-    protected function view($main = '', $variables = array())
+    protected function view($main = '', $variables = array(), $variables_main = array())
     {
         Flight::render('template/navbar', array(), 'navbar');
         Flight::render('template/sidebar', array(), 'sidebar');
-        ($main !== '') ? Flight::render($main, array(), 'main') : '';
+        ($main !== '') ? Flight::render($main, $variables_main, 'main') : '';
         Flight::render('template/footer', array(), 'footer');
         Flight::render('template/layout', $variables);
     }

@@ -1,4 +1,3 @@
-
 <div class="main-sidebar">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
@@ -29,9 +28,13 @@
             </li>
 
             <li class="menu-header">Estados Financieros</li>
-            <li>
-                <a class="nav-link" href="balancegeneral"><i class="fas fa-file-invoice-dollar"></i> <span>Balance
-                        General</span></a>
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-invoice-dollar"></i> <span>Balance General</span></a>
+                <ul class="dropdown-menu">
+                    <li><a class="nav-link" href="/balance-general/forma/cuenta"><i class="fas fa-file-invoice-dollar"></i>Forma de cuenta</a></li>
+                    <li><a class="nav-link" href="/balance-general/forma/reporte"><i class="fas fa-file-invoice-dollar"></i>Forma de Reporte</a>
+                    </li>
+                </ul>
             </li>
             <li class="nav-item dropdown">
                 <a href="estadoresultados" class="nav-link"><i class="fas fa-file-invoice-dollar"></i><span>Estado de
@@ -40,7 +43,8 @@
 
             <li class="menu-header">Configuración</li>
             <li>
-                <a class="nav-link" href="/configuracion"><i class="fas fa-cogs"></i> <span>Configurar Cuentas</span></a>
+                <a class="nav-link" href="/configuracion"><i class="fas fa-cogs"></i> <span>Configurar
+                        Cuentas</span></a>
             </li>
             <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-database"></i> <span>Backup</span></a>

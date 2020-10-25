@@ -75,17 +75,12 @@ class LibroDiarioController extends Controller
 
                 $cuentas_acumular = $cuenta_model->codigoSiguiente($codigo);
 
-
                 $saldo_cueta_acumular = 0;
-
-
-                echo 'holakdsjfkljflkdaf<br>';
 
                 foreach ($cuentas_acumular as $key => $cuenta) {
 
-
                     $cuenta_base = $cuenta_model->seleccionar(
-                        array('nombre', 'saldo'), array(
+                        array('nombre', 'saldo', 'tipo_saldo'), array(
                             'codigo' => $cuenta,
                             'empresa' => $empresa,
                         )
@@ -93,12 +88,16 @@ class LibroDiarioController extends Controller
 
                     $cuenta_base = $cuenta_base[0];
 
+                    $es_R = strpos($cuenta, 'R');
 
-                    //validar los saldos 
-                    if($monto_acumlado< $cuenta_base['saldo'] && $cuenta_base['saldo'] < abs($monto_acumlado)){
-                        var_dump('entré aca');
+                    if ($es_R > 0) {
+                        $monto_acumlado = $monto_acumlado < 0 ? (abs($monto_acumlado)) : -$monto_acumlado;
+                    }
+
+                    //validar los saldos
+                    if ($monto_acumlado < $cuenta_base['saldo'] && $cuenta_base['saldo'] < abs($monto_acumlado)) {
                         $partida_exito = false;
-                        $cuenta_reestablecer = $cuenta.' - '.$cuenta_base['nombre'];
+                        $cuenta_reestablecer = $cuenta . ' - ' . $cuenta_base['nombre'];
                         break;
                     }
 
@@ -107,7 +106,7 @@ class LibroDiarioController extends Controller
                     $reestablecer_saldos[] = array(
                         'codigo' => $cuenta,
                         'empresa' => $empresa,
-                        'saldo' => $monto_acumlado < 0 ? (abs($monto_acumlado)) : -$monto_acumlado  
+                        'saldo' => $monto_acumlado < 0 ? (abs($monto_acumlado)) : -$monto_acumlado,
                     );
 
                     $cuenta_model->actualizar(array(
@@ -116,22 +115,26 @@ class LibroDiarioController extends Controller
                         'codigo' => $cuenta,
                         'empresa' => $empresa,
                     ));
+
+                    if ($es_R > 0) {
+                        $monto_acumlado = $monto_acumlado < 0 ? (abs($monto_acumlado)) : -$monto_acumlado;
+                    }
                 }
 
-                if(!$partida_exito){
+                if (!$partida_exito) {
                     break;
                 }
             }
 
-            if(!$partida_exito){
-                var_dump($reestablecer_saldos);
+            if (!$partida_exito) {
+
                 foreach ($reestablecer_saldos as $key => $cuentas) {
                     $cuenta_model->actualizar(
                         array(
-                            'saldo[+]' => $cuentas['saldo']
+                            'saldo[+]' => $cuentas['saldo'],
                         ), array(
                             'codigo' => $cuentas['codigo'],
-                            'empresa' => $cuentas['empresa']
+                            'empresa' => $cuentas['empresa'],
                         )
                     );
                 }
@@ -139,14 +142,14 @@ class LibroDiarioController extends Controller
                 //eliminar los registros que se crearon
 
                 $detalle_partida_model->eliminar(array(
-                    'partida' => $id_partida
+                    'partida' => $id_partida,
                 ));
 
                 $partida_model->eliminar(array(
-                    'id' => $id_partida
+                    'id' => $id_partida,
                 ));
 
-               Exepcion::json(['error' => true, 'mensaje' => 'Saldo insuficiente en la cuenta '.$cuenta_reestablecer]);    
+                Exepcion::json(['error' => true, 'mensaje' => 'Saldo insuficiente en la cuenta ' . $cuenta_reestablecer]);
             }
 
             Exepcion::json(['error' => false, 'mensaje' => 'Partida creada con exito']);
@@ -155,7 +158,8 @@ class LibroDiarioController extends Controller
 
     }
 
-    public function tablaLibroDiario(){
+    public function tablaLibroDiario()
+    {
         $this->isAjax();
         $this->sesionActivaAjax();
         //$this->validarMetodoPeticion('GET');
@@ -164,29 +168,30 @@ class LibroDiarioController extends Controller
         $detalle_partida_model = new DetallePartidaModel($conexion);
 
         $login = $this->sesion->get('login');
-        
+
         $fecha_inicial = (isset($_POST['fecha_inicial'])) ? $_POST['fecha_inicial'] : date('Y-01-01');
         $fecha_final = (isset($_POST['fecha_final'])) ? $_POST['fecha_final'] : date('Y-12-31');
         $numero = (isset($_POST['numero'])) ? $_POST['numero'] : array('');
-        $codigo = (isset($_POST['codigo']) ? base64_decode($_POST['codigo']) : null);        
-        
+        $codigo = (isset($_POST['codigo']) ? base64_decode($_POST['codigo']) : null);
+
         $condicion = array(
             'empresa' => $login['id'],
             'periodo' => $login['periodo'],
             'fecha_inicial' => $fecha_inicial,
             'fecha_final' => $fecha_final,
-            'numero' => $numero
+            'numero' => $numero,
         );
-        
+
         $datos = $detalle_partida_model->obtenerLibroDiario($condicion);
 
         Flight::render('ajax/libro-diario/tabla-libro-diario', array(
             'datos' => $datos,
-            'codigo' => $codigo
+            'codigo' => $codigo,
         ));
     }
 
-    public function reporteLibroDiario(){
+    public function reporteLibroDiario()
+    {
         $this->sesionActiva();
         $this->sesionActivaAjax();
         //$this->validarMetodoPeticion('GET');
@@ -195,24 +200,24 @@ class LibroDiarioController extends Controller
         $detalle_partida_model = new DetallePartidaModel($conexion);
 
         $login = $this->sesion->get('login');
-        
+
         $fecha_inicial = (isset($_GET['fecha_inicial'])) ? $_GET['fecha_inicial'] : date('Y-01-01');
         $fecha_final = (isset($_GET['fecha_final'])) ? $_GET['fecha_final'] : date('Y-12-31');
-        $numero = (isset($_GET['numero'])) ? explode(',', $_GET['numero']) : array('');  
-        
+        $numero = (isset($_GET['numero'])) ? explode(',', $_GET['numero']) : array('');
+
         $condicion = array(
             'empresa' => $login['id'],
             'periodo' => $login['periodo'],
             'fecha_inicial' => $fecha_inicial,
             'fecha_final' => $fecha_final,
-            'numero' => $numero
+            'numero' => $numero,
         );
-        
+
         $datos = $detalle_partida_model->obtenerLibroDiario($condicion);
 
         Flight::render('pdf/libro-diario', array(
             'datos' => $datos,
-            'emp' => $login['nombre']
+            'emp' => $login['nombre'],
         ));
 
     }

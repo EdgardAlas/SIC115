@@ -12,14 +12,16 @@
     <tbody>
         <?php
         $partidas_cuentas = isset($datosBD) ? $datosBD : array();
-        $tam_partidas = sizeof($partidas_cuentas);
+        $cantidad_mayor = 0;
+        
         $total_cargo = 0;
         $total_abono = 0;
 
         foreach ($partidas_cuentas as $i_cuenta => $cuenta) {
             $total_cargo = 0;
             $total_abono = 0;
-            if(!empty($cuenta['partidas'])){
+            if(sizeof($cuenta['partidas'])!=0){
+                $cantidad_mayor++;
         ?>
         <tr>
             <td colspan=6 class='h-100'>&nbsp;</td>
@@ -83,7 +85,7 @@
         <?php
             }
         }
-        if($tam_partidas===0){
+        if($cantidad_mayor===0){
             ?>
     <tr>
         <td class="table-light text-center font-weight-bold" colspan=6>Ningún dato disponible en esta tabla</td>
