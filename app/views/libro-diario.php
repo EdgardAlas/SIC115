@@ -9,10 +9,17 @@
                     <div class="card-body">
                         <div class="form-group row">
                             <div class="col-12">
+                                <?php
+                                    if($estado!=='CIERRE'){
+                                        ?>
                                 <button type="button" id='btn_partida' class="btn btn-primary" autofocus>
                                     Agregar Partida
                                 </button>
-                                <a href='<?=URL_BASE?>/libro-diario/reporte-libro-diario'  id='btn_imprimir' class="btn btn-success">
+                                <?php
+                                    }
+                                ?>
+                                <a href='<?=URL_BASE?>/libro-diario/reporte-libro-diario' id='btn_imprimir'
+                                    class="btn btn-success">
                                     Reporte Libro Diario
                                 </a>
                             </div>
@@ -23,13 +30,13 @@
                                 <input type="date" class='form-control' value='<?= date('Y-01-01')?>' id='fecha_inicial'
                                     min='<?= date('Y-01-01')?>' max='<?= date('Y-m-d')?>'>
                             </div>
-                            
+
                             <div class="col-12 col-sm-12 col-lg-4 form-group">
                                 <label for="fecha_final">Fecha Final (*)</label>
                                 <input type="date" class='form-control' value='<?= date('Y-m-d')?>' id='fecha_final'
                                     min='<?= date('Y-01-01')?>' max='<?= date('Y-m-d')?>'>
                             </div>
-                            
+
                             <div class="col-12 col-sm-12 col-lg-4 form-group">
                                 <label for="numero_partida">Número de partida (Opcional)</label>
                                 <input type="text" class='form-control' id='numero_partida'>
@@ -52,6 +59,7 @@
 
     </section>
 </div>
+
 
 <!--Modal partidas-->
 <div class="modal fade" id="modal_partida" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -106,8 +114,14 @@
                             </div>
                             <div class='row'>
                                 <div class="col-12">
+                                <?php
+                        if($estado!=='CIERRE'){
+                            ?>
                                     <button type="button" class="btn btn-success w-100" id='btn_agregar'
                                         name='btn_agregar' data-indice=-1 data-accion='agregar'>Agregar</button>
+                            <?php
+                        }
+                    ?>
                                 </div>
                             </div>
                         </div>
@@ -147,7 +161,13 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <?php
+                        if($estado!=='CIERRE'){
+                            ?>
                     <button type="button" class="btn btn-primary" id='btn_guardar_partida'>Guardar Partida</button>
+                            <?php
+                        }
+                    ?>
                 </div>
             </form>
         </div>

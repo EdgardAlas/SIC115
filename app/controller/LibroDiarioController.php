@@ -21,6 +21,8 @@ class LibroDiarioController extends Controller
 
         $this->view('libro-diario', [
             'js_especifico' => Utiles::printScript('libro-diario'),
+        ], [
+            'estado' => $this->sesion->get('login')['estado']
         ]);
     }
 

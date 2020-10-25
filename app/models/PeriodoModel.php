@@ -25,5 +25,29 @@ class PeriodoModel extends Model
         return $periodo;
     }
 
+    public function estadoPeriodo($periodo, $empresa)
+    {
+        $estado = $this->conexion->get($this->tabla, 'estado', array(
+            'id' => $periodo,
+            'empresa' => $empresa,
+            'ORDER' => array(
+                'estado' => 'DESC'
+            )
+        ));
+        return $estado;
+    }
+
+    public function ultimoAnio($empresa)
+    {
+        $periodo = $this->conexion->get($this->tabla, 'anio', array(
+            'empresa' => $empresa,
+            'ORDER' => array(
+                'anio' => 'DESC'
+            )
+        ));
+        
+        return $periodo;
+    }
+
     
 }
