@@ -1,5 +1,5 @@
-function listaPeriodos(carga = false){
-    if(carga){
+function listaPeriodos(carga = false) {
+    if (carga) {
         Swal.fire({
             title: 'Cargando...',
             onBeforeOpen: () => {
@@ -7,16 +7,68 @@ function listaPeriodos(carga = false){
             }
         })
     }
-    $('#contenedor-periodo').load('/periodo/lista-periodos', function(){
+    $('#contenedor-periodo').load('/periodo/lista-periodos', function () {
         tablaPaginacion('tabla-periodos');
-        if(carga){
+        if (carga) {
             Swal.close();
         }
     });
 }
 
-$(document).ready(()=>{
+function iniciarPeriodo() {
+
+    Swal.fire({
+        title: 'Atención',
+        text: "¿Esta seguro de iniciar un nuevo periodo?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#6777ef',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+    }).then((result) => {
+        if (result.value) {
+            $.post('/periodo/iniciar-periodo', {}, function (data) {
+                console.log(data)
+                if (!data.error) {
+                    $('#modal_iniciar_periodo').modal('hide');
+                    listaPeriodos(false);
+                }
+
+                Swal.fire({
+                    title: 'Atención',
+                    text: data.mensaje,
+                    icon: data.icono,
+                    showCancelButton: false,
+                    confirmButtonColor: '#6777ef',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok',
+                })
+
+
+            });
+        }
+    })
+
+
+}
+
+function cargarModalIniciarPerido() {
+    $('#modal-content-body').load('/periodo/modal-iniciar-periodo', function (data) {
+        $('#modal_iniciar_periodo').modal('show');
+    });
+}
+
+$(document).ready(() => {
     titulo('Periodos');
 
     listaPeriodos(true);
+
+    $(document).on('click', '#btn_iniciar_periodo', function () {
+        cargarModalIniciarPerido();
+    })
+
+    $(document).on('click', '#btn_generar_periodo', function () {
+        iniciarPeriodo();
+    })
 });
