@@ -35,7 +35,8 @@ class LibroMayorController extends Controller
 
     }
 
-    public function tablaLibroMayor(){
+    public function tablaLibroMayor()
+    {
         $this->isAjax();
         $this->sesionActivaAjax();
 
@@ -48,15 +49,15 @@ class LibroMayorController extends Controller
 
         $nivel = isset($_POST['nivel']) ? $_POST['nivel'] : 3;
 
-        $fecha_inicial = (isset($_POST['fecha_inicial'])) 
-                            ? $_POST['fecha_inicial'] 
-                                : date($login['anio'].'-01-01');
+        $fecha_inicial = (isset($_POST['fecha_inicial']))
+            ? $_POST['fecha_inicial']
+            : date($login['anio'] . '-01-01');
 
-        $fecha_final = (isset($_POST['fecha_final'])) 
-                            ? $_POST['fecha_final'] 
-                                : date($login['anio'].'-12-31');
+        $fecha_final = (isset($_POST['fecha_final']))
+            ? $_POST['fecha_final']
+            : date($login['anio'] . '-12-31');
 
-        $cuentas = $cuenta_model->seleccionar(array('nombre','id','codigo', 'tipo_saldo'), array(
+        $cuentas = $cuenta_model->seleccionar(array('nombre', 'id', 'codigo', 'tipo_saldo'), array(
             'empresa' => $login['id'],
             'nivel' => $nivel,
             'ORDER' => array(
@@ -70,10 +71,10 @@ class LibroMayorController extends Controller
             'fecha_inicial' => $fecha_inicial,
             'fecha_final' => $fecha_final
         );
-        
 
-        if($_POST['cuenta'][0]!==''){
-            $cuentas = $cuenta_model->seleccionar(array('nombre','id','codigo', 'tipo_saldo'), array(
+
+        if ($_POST['cuenta'][0] !== '') {
+            $cuentas = $cuenta_model->seleccionar(array('nombre', 'id', 'codigo', 'tipo_saldo'), array(
                 'empresa' => $login['id'],
                 'codigo' => $_POST['cuenta']
             ));
@@ -89,63 +90,64 @@ class LibroMayorController extends Controller
 
     }
 
-    public function reporteLibroMayor(){
-        
+    public function reporteLibroMayor()
+    {
+
         $this->sesionActiva();
-        
+
         $conexion = new Conexion();
         $cuenta_model = new CuentaModel($conexion);
         $partida_model = new PartidaModel($conexion);
 
-        
+
         $login = $this->sesion->get('login');
 
         $nivel = isset($_GET['nivel']) ? $_GET['nivel'] : 3;
 
-        $fecha_inicial = (isset($_GET['fecha_inicial'])) 
-                            ? $_GET['fecha_inicial'] 
-                                : date($login['anio'].'-01-01');
-                                
-        $fecha_final = (isset($_GET['fecha_final'])) 
-                            ? $_GET['fecha_final'] 
-                                : date($login['anio'].'-12-31');
-                                
-                                
-        $cuentas = $cuenta_model->seleccionar(array('nombre','id','codigo', 'tipo_saldo'), array(
+        $fecha_inicial = (isset($_GET['fecha_inicial']))
+            ? $_GET['fecha_inicial']
+            : date($login['anio'] . '-01-01');
+
+        $fecha_final = (isset($_GET['fecha_final']))
+            ? $_GET['fecha_final']
+            : date($login['anio'] . '-12-31');
+
+
+        $cuentas = $cuenta_model->seleccionar(array('nombre', 'id', 'codigo', 'tipo_saldo'), array(
             'empresa' => $login['id'],
             'nivel' => $nivel,
             'ORDER' => array(
                 'orden' => 'ASC'
             )
         ));
-        
+
         $condicion = array(
             'empresa' => $login['id'],
             'periodo' => $login['periodo'],
             'fecha_inicial' => $fecha_inicial,
             'fecha_final' => $fecha_final,
-            
-        );
-        
 
-        if(isset($_GET['cuenta'])){
-            if($_GET['cuenta']!==''){
-                $cuentas = $cuenta_model->seleccionar(array('nombre','id','codigo', 'tipo_saldo'), array(
+        );
+
+
+        if (isset($_GET['cuenta'])) {
+            if ($_GET['cuenta'] !== '') {
+                $cuentas = $cuenta_model->seleccionar(array('nombre', 'id', 'codigo', 'tipo_saldo'), array(
                     'empresa' => $login['id'],
                     'codigo' => $_GET['cuenta']
                 ));
             }
         }
 
-        
+
         $partidas = $partida_model->obtenerPartidas($cuentas, $condicion);
-        
+
 
         Flight::render('pdf/libro-mayor', array(
             'datosBD' => $partidas,
             'emp' => $login['nombre']
         ));
-        
-    } 
+
+    }
 
 }

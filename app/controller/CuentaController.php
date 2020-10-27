@@ -153,7 +153,7 @@ class CuentaController extends Controller
         $resultado_validaciones = [];
 
         if (!isset($_POST['cuenta'])) {
-            Exepcion::json(['error' => true]);
+            Excepcion::json(['error' => true]);
         }
 
         $cuenta_guardar = $_POST['cuenta'];
@@ -161,7 +161,7 @@ class CuentaController extends Controller
         $resultado_validaciones = $this->modelo->validarCampos($cuenta_guardar);
 
         if ($resultado_validaciones['error'] === true) {
-            Exepcion::json($resultado_validaciones);
+            Excepcion::json($resultado_validaciones);
         }
 
         $cuenta_guardar = $this->ordenarDatosCuentaGuardar($cuenta_guardar);
@@ -177,12 +177,12 @@ class CuentaController extends Controller
                 ));
             }
 
-            Exepcion::json(['error' => false,
+            Excepcion::json(['error' => false,
                 'mensaje' => 'Cuenta Guardada',
             ]);
         }
 
-        Exepcion::json(['error' => true]);
+        Excepcion::json(['error' => true]);
     }
 
     public function editar()
@@ -194,14 +194,14 @@ class CuentaController extends Controller
         $empresa = $this->sesion->get('login')['id'];
 
         if (!isset($_POST['cuenta'])) {
-            Exepcion::json(['error' => true, 'mensaje' => 'Hubo un error interno']);
+            Excepcion::json(['error' => true, 'mensaje' => 'Hubo un error interno']);
         }
 
         $cuenta_editar = $_POST['cuenta'];
 
         if ($cuenta_editar['id'] === '' || $cuenta_editar['nombre'] === ''
             || $cuenta_editar['tipo_saldo'] === '') {
-            Exepcion::json(['error' => true, 'mensaje' => 'Hubo un error interno']);
+            Excepcion::json(['error' => true, 'mensaje' => 'Hubo un error interno']);
         }
 
         $id = base64_decode($cuenta_editar['id']);
@@ -213,18 +213,18 @@ class CuentaController extends Controller
         ));
 
         if ($resultado !== 0) {
-            Exepcion::json(['error' => false,
+            Excepcion::json(['error' => false,
                 'mensaje' => 'Cuenta Editada',
             ]);
         } else {
             if ($this->modelo->error()[2] !== null) {
-                Exepcion::json(['error' => true,
+                Excepcion::json(['error' => true,
                     'mensaje' => 'Error al editar en la cuenta',
                 ]);
             } else {
 
             }
-            Exepcion::json(['error' => false,
+            Excepcion::json(['error' => false,
                 'mensaje' => 'Cuenta Editada',
             ]);
 

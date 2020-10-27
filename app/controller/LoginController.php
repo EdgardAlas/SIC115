@@ -22,13 +22,13 @@ class LoginController extends Controller
     {
         $resultado_validaciones = [];
         if (!isset($_POST['login'])) {
-            Exepcion::json(['error' => true, 'tipo' => 'error_sesion']);
+            Excepcion::json(['error' => true, 'tipo' => 'error_sesion']);
         }
 
         $resultado_validaciones = $this->modelo->validarCampos($_POST['login']);
 
         if ($resultado_validaciones['error'] === true) {
-            Exepcion::json($resultado_validaciones);
+            Excepcion::json($resultado_validaciones);
         }
 
         $datos = $resultado_validaciones['datos'];
@@ -37,79 +37,84 @@ class LoginController extends Controller
 
         if ($resultado) {
             $this->crearSesion($datos['usuario']);
-            Exepcion::json(['error' => false, 'url' => '/']);
+            Excepcion::json(['error' => false, 'url' => '/']);
         }
-        Exepcion::json(['error' => true, 'tipo' => 'no_encontrado']);
+        Excepcion::json(['error' => true, 'tipo' => 'no_encontrado']);
     }
 
-    public function cerrarSesion(){
+    public function cerrarSesion()
+    {
         $sesion = new Session();
         $sesion->destroy();
         Flight::redirect('/login', 200);
     }
 
-    public function registrar(){
+    public function registrar()
+    {
         $this->sesionActiva();
         Flight::render('registrar', array());
     }
 
-    public function validarEmpresa($empresa){
+    public function validarEmpresa($empresa)
+    {
         $this->isAjax();
 
         $existe = $this->modelo->existe(array(
             'nombre' => $empresa
         ));
 
-        $resultado  = array();
+        $resultado = array();
 
-        if($existe){
+        if ($existe) {
             $resultado = array(
                 'error' => true
             );
-        }else{
+        } else {
             $resultado = array(
                 'error' => false
             );
         }
 
-        Exepcion::json($resultado);
-    } 
+        Excepcion::json($resultado);
+    }
 
-    public function validarUsuario($usuario){
+    public function validarUsuario($usuario)
+    {
         $this->isAjax();
 
         $existe = $this->modelo->existe(array(
             'usuario' => $usuario
         ));
 
-        $resultado  = array();
+        $resultado = array();
 
-        if($existe){
+        if ($existe) {
             $resultado = array(
                 'error' => true
             );
-        }else{
+        } else {
             $resultado = array(
                 'error' => false
             );
         }
 
-        Exepcion::json($resultado);
-    } 
+        Excepcion::json($resultado);
+    }
 
-    public function guardar(){
+    public function guardar()
+    {
         $this->isAjax();
-        
+
         $this->validarMetodoPeticion('POST');
         //lo que guardarias seria$_post pos ya xdxdxdxdxdxd :v aca hace falta un monton mas, en eta parte del backend asi como en cuenta
         $resultado_guardar = $this->modelo->insertar($_POST);
 
         if ($resultado_guardar !== null) {
             $this->crearSesion($_POST['usuario']);
-            Exepcion::json(['mensaje' => 'Usuario creado con exito', 'redireccion' => '/']);
+            Excepcion::json(['mensaje' => 'Usuario creado con exito', 'redireccion' => '/']);
         }
 
-        Exepcion::json(array(
+        Excepcion::json(array(
             'error' => true,
             'redireccion' => null
         ));
@@ -123,7 +128,7 @@ class LoginController extends Controller
 
     public function eliminar()
     {
-        
+
     }
 
     //metodos privados

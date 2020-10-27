@@ -27,13 +27,13 @@ class ConfiguracionController extends Controller
         $this->validarMetodoPeticion('POST');
 
         $periodo = $this->sesion->get('login')['periodo'];
-        
+
         //eliminar la configuracion antigua
         $this->modelo->eliminar(array(
             'periodo' => $periodo
         ));
 
-        $configuraciones = isset($_POST['configuraciones']) ? $_POST['configuraciones'] :array();
+        $configuraciones = isset($_POST['configuraciones']) ? $_POST['configuraciones'] : array();
 
         foreach ($configuraciones as $key => $configuracion) {
             $configuraciones[$key]['periodo'] = $periodo;
@@ -43,11 +43,16 @@ class ConfiguracionController extends Controller
 
         $resultado_guardar = $this->modelo->insertar($configuraciones);
 
-        if($resultado_guardar!==null){
-            Exepcion::json(['error' => false, 'mensaje' => 'Configuración guardada', 'icono' => 'success']);   
+        if ($resultado_guardar !== null) {
+            Excepcion::json(['error' => false, 'mensaje' => 'Configuración guardada', 'icono' => 'success']);
         }
 
-        Exepcion::json(['error' => true, 'mensaje' => 'Error al guardar configuración', 'icono' => 'warning', 'e' => $this->modelo->error()]);   
+        Excepcion::json([
+            'error' => true,
+            'mensaje' => 'Error al guardar configuración',
+            'icono' => 'warning',
+            'e' => $this->modelo->error()
+        ]);
 
         /* Exepcion::json($configuraciones); */
 
@@ -63,7 +68,8 @@ class ConfiguracionController extends Controller
 
     }
 
-    public function configuraciones(){
+    public function configuraciones()
+    {
         $this->isAjax();
         $this->sesionActivaAjax();
         $this->validarMetodoPeticion('GET');
@@ -79,7 +85,7 @@ class ConfiguracionController extends Controller
             'cuenta.empresa' => $empresa,
             'configuracion.periodo' => $periodo
         ));
-        
+
 
         Flight::render('ajax/configuracion/configuraciones', array(
             'datos' => $datos

@@ -30,21 +30,21 @@ class Controller
     protected function validarPeticion($request, $metodo)
     {
         if ($request !== $metodo) {
-            Exepcion::generarExcepcion('Peticion no permitida');
+            Excepcion::generarExcepcion('Peticion no permitida');
         }
     }
 
     protected function isAjax()
     {
         if (!flight::request()->ajax) {
-            Exepcion::generarExcepcion('No es una peticion ajax');
+            Excepcion::generarExcepcion('No es una peticion ajax');
         }
     }
 
     protected function isNotAjax()
     {
         if (flight::request()->ajax) {
-            Exepcion::generarExcepcion('Es peticion ajax');
+            Excepcion::generarExcepcion('Es peticion ajax');
         }
     }
 
@@ -76,7 +76,7 @@ class Controller
     protected function validarMetodoPeticion($metodo)
     {
         if (Flight::request()->method !== $metodo) {
-            Exepcion::generarExcepcion('Error en la peticion');
+            Excepcion::generarExcepcion('Error en la peticion');
         }
     }
 
@@ -84,7 +84,7 @@ class Controller
     {
         $sesion = new Session();
         if ($sesion->get('login') === null) {
-            Exepcion::generarExcepcion('No ha iniciado sesion');
+            Excepcion::generarExcepcion('No ha iniciado sesion');
         }
     }
 

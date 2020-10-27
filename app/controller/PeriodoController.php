@@ -34,7 +34,8 @@ class PeriodoController extends Controller
 
     }
 
-    public function listaPeriodos(){
+    public function listaPeriodos()
+    {
 
         $this->isAjax();
         $this->sesionActivaAjax();
@@ -42,7 +43,7 @@ class PeriodoController extends Controller
 
         $sesion = $this->sesion->get('login');
 
-        
+
         $periodo = $sesion['periodo'];
         $empresa = $sesion['id'];
         $anio = $sesion['anio'];
@@ -55,7 +56,7 @@ class PeriodoController extends Controller
             'estado' => $estado
         );
 
-        $lista_periodos = $this->modelo->seleccionar(['estado','anio'], array(
+        $lista_periodos = $this->modelo->seleccionar(['estado', 'anio'], array(
             'empresa' => $empresa
         ));
 
@@ -65,14 +66,15 @@ class PeriodoController extends Controller
         ));
     }
 
-    public function iniciarPeriodo(){
+    public function iniciarPeriodo()
+    {
         $this->isAjax();
         $this->sesionActivaAjax();
         $this->validarMetodoPeticion('POST');
 
         $sesion = $this->sesion->get('login');
 
-        $anio = ($sesion['anio'] === null) ? date('Y') : $sesion['anio']+1;         
+        $anio = ($sesion['anio'] === null) ? date('Y') : $sesion['anio'] + 1;
 
         $periodo = array(
             'empresa' => $sesion['id'],
@@ -81,16 +83,17 @@ class PeriodoController extends Controller
 
         $resultado = $this->modelo->insertar($periodo);
 
-        if($resultado!==null){
+        if ($resultado !== null) {
             $this->crearSesion($sesion['usuario']);
-            Exepcion::json(['error' => false, 'mensaje' => 'Periodo creado con exito', 'icono' => 'success']);
+            Excepcion::json(['error' => false, 'mensaje' => 'Periodo creado con exito', 'icono' => 'success']);
         }
 
-        Exepcion::json(['error' => true, 'mensaje' => 'Error al iniciar el periodo', 'icono' => 'warning']);
+        Excepcion::json(['error' => true, 'mensaje' => 'Error al iniciar el periodo', 'icono' => 'warning']);
 
     }
 
-    public function modalIniciarPeriodo(){
+    public function modalIniciarPeriodo()
+    {
         $this->isAjax();
         $this->sesionActivaAjax();
         $this->validarMetodoPeticion('GET');
@@ -112,7 +115,7 @@ class PeriodoController extends Controller
         $data = $empresaModel->seleccionar(array('id', 'nombre', 'usuario'), array('usuario' => $usuario));
 
         $data = $data[0];
-        
+
         $data['periodo'] = $periodoModel->ultimoPeriodo($data['id']);
         $data['anio'] = $periodoModel->ultimoAnio($data['id']);
         $data['estado'] = $periodoModel->estadoPeriodo($data['periodo'], $data['id']);

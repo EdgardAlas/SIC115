@@ -23,12 +23,6 @@ Flight::map('notFound', function () {
     /* $url =  trim(Flight::request()->url,'/'); */
     Flight::render('error/500', 500);
     
-}); 
-
-Flight::route('/codigo', function(){
-    
-
-    var_dump(strpos('1107', 'R'));
 });
 
 //MVC creditos: https://steemit.com/php/@kalangaum/easy-php-routing-management
@@ -66,7 +60,7 @@ Flight::route('/(@controlador(/@metodo(/@id)))', function ($controlador, $metodo
 
     //se verifica si existe la clase del controlador
     if (!class_exists($nombreControlador)) {
-        Exepcion::noEncontrado();
+        Excepcion::noEncontrado();
     }
 
     //se crea una instancia del controlador
@@ -78,7 +72,7 @@ Flight::route('/(@controlador(/@metodo(/@id)))', function ($controlador, $metodo
     } else {
 
         if (!method_exists($objControlador, $metodo)) {
-            Exepcion::noEncontrado();
+            Excepcion::noEncontrado();
         }
         try {
             $objControlador->$metodo($id);

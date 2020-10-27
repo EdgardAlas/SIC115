@@ -21,17 +21,21 @@ class BalanceGeneralController extends Controller
     {
         $this->sesionActiva();
         if(strlen($forma)==0){
-            Exepcion::noEncontrado();
+            Excepcion::noEncontrado();
         }
         $forma = strtolower($forma);
 
         $formas = array('cuenta', 'reporte');
 
         if(!in_array($forma, $formas)){
-            Exepcion::noEncontrado();
+            Excepcion::noEncontrado();
         }
 
-        $this->view('balance-general', ['js_especifico' => Utiles::printScript('balance-general-'.$forma)], ['forma' => 'Forma de ' . ucfirst($forma)]);
+        $this->view('balance-general', [
+            'js_especifico' => Utiles::printScript('balance-general-'.$forma)
+        ], [
+            'forma' => 'Forma de ' . ucfirst($forma)
+        ]);
     }
 
     public function balanceFormaReporte()

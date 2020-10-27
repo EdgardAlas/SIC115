@@ -40,7 +40,7 @@ class LibroDiarioController extends Controller
         $detalle_partida_model = new DetallePartidaModel($conexion);
 
         if (!isset($_POST['partida'])) {
-            Exepcion::generarExcepcion('No hay datos para guardar');
+            Excepcion::generarExcepcion('No hay datos para guardar');
         }
 
         $empresa = $this->sesion->get('login')['id'];
@@ -59,8 +59,8 @@ class LibroDiarioController extends Controller
         if ($id_partida !== null) {
             $detalles = isset(
                 $_POST['partida']['detalle_partida'])
-            ? $_POST['partida']['detalle_partida']
-            : array();
+                ? $_POST['partida']['detalle_partida']
+                : array();
 
             foreach ($detalles as $key => $detalle) {
                 $detalle['partida'] = $id_partida;
@@ -152,12 +152,15 @@ class LibroDiarioController extends Controller
                     'id' => $id_partida,
                 ));
 
-                Exepcion::json(['error' => true, 'mensaje' => 'Saldo insuficiente en la cuenta ' . $cuenta_reestablecer]);
+                Excepcion::json([
+                    'error' => true,
+                    'mensaje' => 'Saldo insuficiente en la cuenta ' . $cuenta_reestablecer
+                ]);
             }
 
-            Exepcion::json(['error' => false, 'mensaje' => 'Partida creada con exito']);
+            Excepcion::json(['error' => false, 'mensaje' => 'Partida creada con exito']);
         }
-        Exepcion::json(['error' => true, 'mensaje' => 'Error al crear la partida']);
+        Excepcion::json(['error' => true, 'mensaje' => 'Error al crear la partida']);
 
     }
 
@@ -172,10 +175,21 @@ class LibroDiarioController extends Controller
 
         $login = $this->sesion->get('login');
 
-        $fecha_inicial = (isset($_POST['fecha_inicial'])) ? $_POST['fecha_inicial'] : date($login['anio'].'-01-01');
-        $fecha_final = (isset($_POST['fecha_final'])) ? $_POST['fecha_final'] : date($login['anio'].'-12-31');
-        $numero = (isset($_POST['numero'])) ? $_POST['numero'] : array('');
-        $codigo = (isset($_POST['codigo']) ? base64_decode($_POST['codigo']) : null);
+        $fecha_inicial = (isset($_POST['fecha_inicial']))
+            ? $_POST['fecha_inicial']
+            : date($login['anio'] . '-01-01');
+
+        $fecha_final = (isset($_POST['fecha_final']))
+            ? $_POST['fecha_final']
+            : date($login['anio'] . '-12-31');
+
+        $numero = (isset($_POST['numero']))
+            ? $_POST['numero']
+            : array('');
+
+        $codigo = (isset($_POST['codigo'])
+            ? base64_decode($_POST['codigo'])
+            : null);
 
         $condicion = array(
             'empresa' => $login['id'],
@@ -204,8 +218,14 @@ class LibroDiarioController extends Controller
 
         $login = $this->sesion->get('login');
 
-        $fecha_inicial = (isset($_GET['fecha_inicial'])) ? $_GET['fecha_inicial'] : date($login['anio'].'-01-01');
-        $fecha_final = (isset($_GET['fecha_final'])) ? $_GET['fecha_final'] : date($login['anio'].'-12-31');
+        $fecha_inicial = (isset($_GET['fecha_inicial']))
+            ? $_GET['fecha_inicial']
+            : date($login['anio'] . '-01-01');
+
+        $fecha_final = (isset($_GET['fecha_final']))
+            ? $_GET['fecha_final']
+            : date($login['anio'] . '-12-31');
+        
         $numero = (isset($_GET['numero'])) ? explode(',', $_GET['numero']) : array('');
 
         $condicion = array(
