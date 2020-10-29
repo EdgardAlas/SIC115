@@ -7,11 +7,15 @@
             <a href="/">SCI</a>
         </div>
         <ul class="sidebar-menu">
-            <li class="menu-header">Catálogo de Cuentas </li>
+            <li class="menu-header">Cierre Contable</li>
+            <li>
+                <a class="nav-link" href="/cierre-contable"><i class="fas fa-exclamation-circle"></i> <span>Cierre Contable</span></a>
+            </li>
+            <li class="menu-header">Catálogo de Cuentas</li>
             <li>
                 <a class="nav-link" href="/cuenta"><i class="fas fa-stream"></i> <span>Catálogo de Cuentas</span></a>
             </li>
-            <li class="menu-header">Periodos </li>
+            <li class="menu-header">Periodos</li>
             <li>
                 <a class="nav-link" href="/periodo"><i class="fas fa-calendar-alt"></i> <span>Periodos</span></a>
             </li>
@@ -31,8 +35,10 @@
             <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-invoice-dollar"></i> <span>Balance General</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="/balance-general/forma/cuenta"><i class="fas fa-file-invoice-dollar"></i>Forma de cuenta</a></li>
-                    <li><a class="nav-link" href="/balance-general/forma/reporte"><i class="fas fa-file-invoice-dollar"></i>Forma de Reporte</a>
+                    <li><a class="nav-link" href="/balance-general/forma/cuenta"><i
+                                    class="fas fa-file-invoice-dollar"></i>Forma de cuenta</a></li>
+                    <li><a class="nav-link" href="/balance-general/forma/reporte"><i
+                                    class="fas fa-file-invoice-dollar"></i>Forma de Reporte</a>
                     </li>
                 </ul>
             </li>

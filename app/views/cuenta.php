@@ -24,9 +24,7 @@
                 </div>
             </div>
         </div>
-</div>
-</div>
-</section>
+    </section>
 </div>
 
  <!--Modal Guardar Cuenta-->

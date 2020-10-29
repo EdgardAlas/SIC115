@@ -12,9 +12,7 @@
                 </div>
             </div>
         </div>
-</div>
-</div>
-</section>
+    </section>
 </div>
 
  <!--Modal Iniciar nuevo periodo-->
