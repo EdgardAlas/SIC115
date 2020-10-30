@@ -7,10 +7,23 @@
             <a href="/">SCI</a>
         </div>
         <ul class="sidebar-menu">
-            <li class="menu-header">Cierre Contable</li>
-            <li>
-                <a class="nav-link" href="/cierre-contable"><i class="fas fa-exclamation-circle"></i> <span>Cierre Contable</span></a>
-            </li>
+
+            <!--boton de cierre-->
+
+            <?php
+            $sesion = new Session();
+            $login = $sesion->get('login');
+            //esto es para validar que no aparezca el boton de cierre cuando no sea la fecha inidicada
+            if (date($login['anio'] . '-m-d') === date($login['anio'] . '-m-d')) {
+                ?>
+
+                <li class="menu-header">Cierre Contable</li>
+                <li>
+                    <a class="nav-link" href="/cierre-contable"><i class="fas fa-exclamation-circle"></i> <span>Cierre Contable</span></a>
+                </li>
+                <?php
+            } ?>
+
             <li class="menu-header">Catálogo de Cuentas</li>
             <li>
                 <a class="nav-link" href="/cuenta"><i class="fas fa-stream"></i> <span>Catálogo de Cuentas</span></a>
