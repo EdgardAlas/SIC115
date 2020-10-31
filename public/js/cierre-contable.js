@@ -21,10 +21,16 @@ const monto = new Cleave('#inventario_final', {
  }
 
  function cargarPartidas(estado_resultados){
+     Swal.fire({
+         title: 'Guardando...',
+         onBeforeOpen: () => {
+             Swal.showLoading()
+         }
+     })
      $('#div_partidas').load('/cierre-contable/partidas-cierre', {
          estado_resultados
      }, function(data){
-
+        Swal.close();
      });
  }
 
@@ -40,8 +46,16 @@ $(document).ready(() => {
     $(document).on('click', '#btn_calcular_cierre', function () {
         $('#btn_calcular_cierre').blur();
         calcularCierre();
-
     });
+
+    $(document).on('keyup', '#inventario_final', function (e){
+        const monto = $(this).val();
+
+        if (isEnter(e.keyCode, monto, 1)) {
+            calcularCierre();
+        }
+    })
+
 });
 
 
