@@ -33,7 +33,7 @@
                                 <button class="btn btn-success" id="estado_resultados">Estado de Resultados</button>
                             </div>
                         </div>
-                        <div class="table-responsive">
+                        <div class="table-responsive" id="div_partidas">
                             <table class='table table-striped table-bordered table-hover' style='font-size: 0.80rem;'>
                                 <thead>
                                 <tr>

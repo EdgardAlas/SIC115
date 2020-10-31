@@ -21,7 +21,7 @@ class ConfiguracioModel extends Model
         return $this->_validarCampos($datos, $this->validaciones);
     }
 
-    public function obtenerConfiguracion($empresa, $periodo){
+    public function obtenerConfiguracion($empresa, $periodo, $titulos){
         $datos = $this->conexion->select('configuracion', array(
             '[><]cuenta' => array('cuenta' => 'id')
         ), array(
@@ -29,7 +29,7 @@ class ConfiguracioModel extends Model
         ), array(
             'cuenta.empresa' => $empresa,
             'configuracion.periodo' => $periodo,
-            'titulo' => 'estado_resultados'
+            'titulo' => $titulos
         ));
 
         return $datos;
