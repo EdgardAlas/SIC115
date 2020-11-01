@@ -110,7 +110,7 @@ class CierreContableController extends Controller
         $this->sesionActivaAjax();
         $this->validarMetodoPeticion('POST');
 
-        $inventario_final = isset($_POST['inventario_final']) ? ($_POST['inventario_final']==='' ? 0 : $_POST['inventario_final']) : 6450000;
+        $inventario_final = isset($_POST['inventario_final']) ? ($_POST['inventario_final'] === '' ? 0 : $_POST['inventario_final']) : 6450000;
 
         $login = $this->sesion->get('login');
 
@@ -122,7 +122,8 @@ class CierreContableController extends Controller
 
     }
 
-    public function partidasCierre(){
+    public function partidasCierre()
+    {
         $this->isAjax();
         $this->sesionActivaAjax();
         $this->validarMetodoPeticion('POST');
@@ -144,6 +145,48 @@ class CierreContableController extends Controller
     {
 
         $estado_resultados = array();
+
+        /*
+         * CALCULO IVA
+        */
+        $iva_credito = $this->saldoAcumulado('iva_credito', 'descripcion', $cuentas);
+        $iva_debito = $this->saldoAcumulado('iva_debito', 'descripcion', $cuentas);
+        $estado_resultados['iva_credito'] = $iva_credito;
+        $estado_resultados['iva_debito'] = $iva_debito;
+
+        // ejemplos
+        // iva debito = 1, iva_credito = 0
+        // iva debito = 1, iva_credito = 1
+        // iva debito = 0, iva_credito = 1
+        // iva debito = 0, iva_credito = 0
+
+        if ($iva_debito == 0 && $iva_credito == 0) {
+            $estado_resultados['impuesto_iva'] = 0;
+            $estado_resultados['situacion_iva'] = 'no_hay';
+
+        } else if ($iva_debito == $iva_credito) {
+            $estado_resultados['impuesto_iva'] = 0;
+            $estado_resultados['situacion_iva'] = 'liquidar_cuentas';
+
+        } else if ($iva_debito > $iva_credito) {
+            $estado_resultados['impuesto_iva'] = ($iva_debito - $iva_credito);
+            $estado_resultados['situacion_iva'] = 'pagar';
+
+        } else if ($iva_credito > $iva_debito && $iva_debito > 0) {
+            $estado_resultados['impuesto_iva'] = 0;
+            $estado_resultados['situacion_iva'] = 'liquidar_debito';
+
+        } else if ($iva_debito == 0) {
+            $estado_resultados['impuesto_iva'] = 0;
+            $estado_resultados['situacion_iva'] = 'no_pagar';
+
+        }
+
+
+        /*
+         * FIN CALCULO IVA
+        */
+
 
         /*
          * VENTAS NETAS
@@ -280,7 +323,7 @@ class CierreContableController extends Controller
         */
 
         //reserva legal
-        $reserva_legal = $utilidad_antes_impuestos_reserva*0.07;
+        $reserva_legal = $utilidad_antes_impuestos_reserva * 0.07;
 
         //utilidad antes de impuestos
         $utilidad_antes_impuestos = $utilidad_antes_impuestos_reserva - $reserva_legal;
@@ -297,7 +340,7 @@ class CierreContableController extends Controller
         */
 
         //impuesto sobre la renta
-        $impuesto_renta = $utilidad_antes_impuestos*($ventas_netas > 150000 ? 0.3 : 0.25);
+        $impuesto_renta = $utilidad_antes_impuestos * ($ventas_netas > 150000 ? 0.3 : 0.25);
 
         //utilidad antes de impuestos
         $utilidad_perdida = $utilidad_antes_impuestos - $impuesto_renta;
@@ -313,7 +356,6 @@ class CierreContableController extends Controller
         /* ================================================= */
 
 
-
 //        $iva_credito = $this->saldoAcumulado('iva_credito', 'descripcion', $cuentas);
 //        $iva_debito = $this->saldoAcumulado('iva_debito', 'descripcion', $cuentas);
 //
@@ -322,13 +364,12 @@ class CierreContableController extends Controller
 //        }
 
 
-
-
         Excepcion::json($estado_resultados);
 
     }
 
-    private function saldoAcumulado($cuenta, $columna, $cuentas){
+    private function saldoAcumulado($cuenta, $columna, $cuentas)
+    {
         $cuenta_auxiliar = Utiles::buscar($cuenta, $columna, $cuentas);
 
         return (isset($cuenta_auxiliar['subcuentas'])) ? $this->acumularSaldos($cuenta_auxiliar['subcuentas']) : 0;
@@ -344,7 +385,8 @@ class CierreContableController extends Controller
         return $saldo;
     }
 
-    private function obtenerCuentasConfiguracion($opciones){
+    private function obtenerCuentasConfiguracion($opciones)
+    {
 
         $login = $this->sesion->get('login');
 

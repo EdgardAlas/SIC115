@@ -153,7 +153,7 @@
 
     <!-- Impuesto iva por pagar  -->
     <?php
-    $cuenta = Utiles::buscar('impuest_iva', 'descripcion' , $configuraciones);
+    $cuenta = Utiles::buscar('impuesto_iva', 'descripcion' , $configuraciones);
     ?>
     <div class='row form-group'>
         <div class='col-6'>
@@ -161,10 +161,10 @@
             <input type="text" class='form-control buscar-cuenta'
                    value='<?= !empty($cuenta) ? $cuenta['codigo'] : '' ?>'>
         </div>
-        <div class='col-6' id='div_impuest_iva'>
+        <div class='col-6' id='div_impuesto_iva'>
             <label for="">Cuenta seleccionada</label>
             <input type="text" class='form-control configuracion' readonly tabindex=-1 data-titulo='cierre'
-                   data-descripcion='impuest_iva' data-cuenta='<?= !empty($cuenta) ? base64_encode($cuenta['id']) : -1 ?>'
+                   data-descripcion='impuesto_iva' data-cuenta='<?= !empty($cuenta) ? base64_encode($cuenta['id']) : -1 ?>'
                    data-obligatorio=1 value='<?= !empty($cuenta) ? $cuenta['nombre'] : '' ?>'>
         </div>
     </div>

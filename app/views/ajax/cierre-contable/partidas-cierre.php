@@ -101,6 +101,53 @@ function calcularMonto($monto, $saldo, $movimiento, $codigo) {
 
 //    echo '<br><br>';
 
+    //iva
+    $iva_credito = buscarSubCuentas('iva_credito', 'descripcion', $cuentas);
+    $iva_debito = buscarSubCuentas('iva_debito', 'descripcion', $cuentas);
+    $impuesto_iva= buscarSubCuentas('impuesto_iva', 'descripcion', $cuentas);
+    $saldo_iva_credito = $estado_resultados['iva_credito'];
+    $saldo_iva_debito = $estado_resultados['iva_debito'];
+    $saldo_impuesto_iva = $estado_resultados['impuesto_iva'];
+
+    if($estado_resultados['situacion_iva']==='liquidar_cuentas'){
+        $partida = imprimirCabeceraPartida($partida);
+        $cargo = imprimirFila($iva_debito, 'cargo', null, $fecha);
+        $abono = imprimirFila($iva_credito, 'abono', null, $fecha);
+        imprimirPiePartida(
+            $cargo,
+            $abono,
+            'Liquidar cuentas de IVA'
+        );
+    }
+
+    if($estado_resultados['situacion_iva'] === 'pagar'){
+        $partida = imprimirCabeceraPartida($partida);
+        $cargo = imprimirFila($iva_debito, 'cargo', null, $fecha);
+        if($saldo_iva_credito>0)
+            $abono = imprimirFila($iva_credito, 'abono', null, $fecha);
+        $abono += imprimirFila($impuesto_iva, 'abono', $saldo_impuesto_iva, $fecha);
+
+        imprimirPiePartida(
+            $cargo,
+            $abono,
+            'Liquidar cuentas de IVA y asignar impuesto por pagar'
+        );
+    }
+
+    if($estado_resultados['situacion_iva'] === 'liquidar_debito'){
+        $partida = imprimirCabeceraPartida($partida);
+        $cargo = imprimirFila($iva_debito, 'cargo', null, $fecha);
+        $abono = imprimirFila($iva_credito, 'abono', $saldo_iva_debito, $fecha);
+
+        imprimirPiePartida(
+            $cargo,
+            $abono,
+            'Liquidar cuentas de IVA y asignar impuesto por pagar'
+        );
+    }
+
+
+
     //Liquidar Rebajas y Devoluciones
 
     $ventas = buscarSubCuentas('ventas', 'descripcion', $cuentas);
@@ -306,7 +353,7 @@ function calcularMonto($monto, $saldo, $movimiento, $codigo) {
         imprimirPiePartida(
             $cargo,
             $abono,
-            'Liquidar gastos de administracion, de venta y determinar reserva legal.'
+            'Liquidar gastos, productos financieros y determinar reserva legal.'
         );
     }
 
