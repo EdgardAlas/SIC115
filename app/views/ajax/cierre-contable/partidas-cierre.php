@@ -2,7 +2,10 @@
 $estado_resultados = isset($estado_resultados) ? $estado_resultados : array();
 $cuentas = isset($cuentas) ? $cuentas : array();
 $partida = isset($partida) ? $partida : array();
+$empresa = isset($empresa) ? $empresa : array();
 $fecha = date('Y-m-d');
+
+$partidas_cierre = array();
 
 function buscarSubCuentas($valor, $columna, $arreglo)
 {
@@ -69,15 +72,40 @@ function imprimirPiePartida($cargo, $abono, $titulo)
     <?php
 }
 
-function calcularMonto($monto, $saldo, $movimiento, $codigo) {
+function calcularMonto($monto, $saldo, $movimiento, $codigo)
+{
     $saldocuenta = $monto;
-    if (($saldo==='Deudor' && substr($codigo, strlen($codigo)-1)=='R' && $movimiento === 'Cargo') ||
-        ($saldo==='Acreedor' && substr($codigo, strlen($codigo)-1)=='R' && $movimiento === 'Abono') ||
-        ($saldo === 'Deudor' && substr($codigo, strlen($codigo)-1) !='R' && $movimiento === 'Abono') ||
-        ($saldo === 'Acreedor' && substr($codigo, strlen($codigo)-1) !='R' && $movimiento === 'Cargo')) {
-        $saldocuenta = -saldocuenta;
+    if (($saldo === 'Deudor' && substr($codigo, strlen($codigo) - 1) == 'R' && $movimiento === 'Cargo') ||
+        ($saldo === 'Acreedor' && substr($codigo, strlen($codigo) - 1) == 'R' && $movimiento === 'Abono') ||
+        ($saldo === 'Deudor' && substr($codigo, strlen($codigo) - 1) != 'R' && $movimiento === 'Abono') ||
+        ($saldo === 'Acreedor' && substr($codigo, strlen($codigo) - 1) != 'R' && $movimiento === 'Cargo')) {
+        $saldocuenta = -$saldocuenta;
     }
     return $saldocuenta;
+}
+
+function generarDetalle($cuentas, $monto = null, $movimiento)
+{
+    $partidas = array();
+    foreach ($cuentas as $key => $cuenta) {
+
+        if ($cuenta['ultimo_nivel']) {
+//            var_dump($cuenta['ultimo_nivel'].' - '.$cuenta['nombre'].'<br>');
+            $partidas[] =
+                array(
+                    'cuenta' => $cuenta['id'],
+                    'movimiento' => $movimiento,
+                    'monto' => calcularMonto(
+                        ($monto !== null ? $monto : $cuenta['saldo']),
+                        $cuenta['tipo_saldo'],
+                        $movimiento,
+                        $cuenta['codigo']
+                    )
+                );
+        }
+    }
+
+    return $partidas;
 }
 
 ?>
@@ -99,17 +127,17 @@ function calcularMonto($monto, $saldo, $movimiento, $codigo) {
 
     //print_r($estado_resultados);
 
-//    echo '<br><br>';
+    //    echo '<br><br>';
 
     //iva
     $iva_credito = buscarSubCuentas('iva_credito', 'descripcion', $cuentas);
     $iva_debito = buscarSubCuentas('iva_debito', 'descripcion', $cuentas);
-    $impuesto_iva= buscarSubCuentas('impuesto_iva', 'descripcion', $cuentas);
+    $impuesto_iva = buscarSubCuentas('impuesto_iva', 'descripcion', $cuentas);
     $saldo_iva_credito = $estado_resultados['iva_credito'];
     $saldo_iva_debito = $estado_resultados['iva_debito'];
     $saldo_impuesto_iva = $estado_resultados['impuesto_iva'];
 
-    if($estado_resultados['situacion_iva']==='liquidar_cuentas'){
+    if ($estado_resultados['situacion_iva'] === 'liquidar_cuentas') {
         $partida = imprimirCabeceraPartida($partida);
         $cargo = imprimirFila($iva_debito, 'cargo', null, $fecha);
         $abono = imprimirFila($iva_credito, 'abono', null, $fecha);
@@ -118,12 +146,34 @@ function calcularMonto($monto, $saldo, $movimiento, $codigo) {
             $abono,
             'Liquidar cuentas de IVA'
         );
+
+
+        $partidas_cierre[] = array(
+            'partida' => array(
+                "numero" => $partida,
+                "descripcion" => 'Liquidar cuentsa de IVA.',
+                'fecha' => date($empresa['anio'] . '-m-d'),
+                'partida_cierre' => 1,
+                'periodo' => $empresa['periodo']
+            ),
+        );
+
+        $posicion = count($partidas_cierre) - 1;
+        $partidas_cierre[$posicion]['detalle_partida'] = array();
+        $detalle = generarDetalle($iva_debito, null, 'Cargo');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+        $detalle = generarDetalle($iva_credito, null, 'Abono');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+
+
     }
 
-    if($estado_resultados['situacion_iva'] === 'pagar'){
+    if ($estado_resultados['situacion_iva'] === 'pagar') {
         $partida = imprimirCabeceraPartida($partida);
         $cargo = imprimirFila($iva_debito, 'cargo', null, $fecha);
-        if($saldo_iva_credito>0)
+        if ($saldo_iva_credito > 0)
             $abono = imprimirFila($iva_credito, 'abono', null, $fecha);
         $abono += imprimirFila($impuesto_iva, 'abono', $saldo_impuesto_iva, $fecha);
 
@@ -132,9 +182,32 @@ function calcularMonto($monto, $saldo, $movimiento, $codigo) {
             $abono,
             'Liquidar cuentas de IVA y asignar impuesto por pagar'
         );
+
+
+        $partidas_cierre[] = array(
+            'partida' => array(
+                "numero" => $partida,
+                "descripcion" => 'Liquidar cuentas de IVA y asignar impuesto por pagar.',
+                'fecha' => date($empresa['anio'] . '-m-d'),
+                'partida_cierre' => 1,
+                'periodo' => $empresa['periodo']
+            ),
+        );
+
+        $posicion = count($partidas_cierre) - 1;
+        $partidas_cierre[$posicion]['detalle_partida'] = array();
+        $detalle = generarDetalle($iva_debito, null, 'Cargo');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+        $detalle = generarDetalle($iva_credito, null, 'Abono');
+        if (count($detalle) > 0 && $saldo_iva_credito > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+        $detalle = generarDetalle($impuesto_iva, $saldo_impuesto_iva, 'Abono');
+        if (count($detalle) > 0 && $saldo_iva_credito > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
     }
 
-    if($estado_resultados['situacion_iva'] === 'liquidar_debito'){
+    if ($estado_resultados['situacion_iva'] === 'liquidar_debito') {
         $partida = imprimirCabeceraPartida($partida);
         $cargo = imprimirFila($iva_debito, 'cargo', null, $fecha);
         $abono = imprimirFila($iva_credito, 'abono', $saldo_iva_debito, $fecha);
@@ -142,10 +215,28 @@ function calcularMonto($monto, $saldo, $movimiento, $codigo) {
         imprimirPiePartida(
             $cargo,
             $abono,
-            'Liquidar cuentas de IVA y asignar impuesto por pagar'
+            'Liquidar cuentas de IVA Debito Fiscal'
         );
-    }
 
+        $partidas_cierre[] = array(
+            'partida' => array(
+                "numero" => $partida,
+                "descripcion" => 'Liquidar cuentas de IVA Debito Fiscal',
+                'fecha' => date($empresa['anio'] . '-m-d'),
+                'partida_cierre' => 1,
+                'periodo' => $empresa['periodo']
+            ),
+        );
+
+        $posicion = count($partidas_cierre) - 1;
+        $partidas_cierre[$posicion]['detalle_partida'] = array();
+        $detalle = generarDetalle($iva_debito, null, 'Cargo');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+        $detalle = generarDetalle($iva_credito, $saldo_iva_debito, 'Abono');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+    }
 
 
     //Liquidar Rebajas y Devoluciones
@@ -172,6 +263,26 @@ function calcularMonto($monto, $saldo, $movimiento, $codigo) {
         );
     }
 
+    $partidas_cierre[] = array(
+        'partida' => array(
+            "numero" => $partida,
+            "descripcion" => 'Liquidar rebajas y devoluciones sobre ventas y generar ventas totales.',
+            'fecha' => date($empresa['anio'] . '-m-d'),
+            'partida_cierre' => 1,
+            'periodo' => $empresa['periodo']
+        ),
+    );
+
+    $posicion = count($partidas_cierre) - 1;
+    $partidas_cierre[$posicion]['detalle_partida'] = array();
+    $detalle = generarDetalle($ventas, $total_liquidar, 'Cargo');
+    if (count($detalle) > 0)
+        array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+    $detalle = generarDetalle($rebajas_devoluciones, null, 'Abono');
+    if (count($detalle) > 0)
+        array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+
+
     //liquidar gastos sobre compras y generar compras totales
 
     $compras = buscarSubCuentas('compras', 'descripcion', $cuentas);
@@ -192,6 +303,26 @@ function calcularMonto($monto, $saldo, $movimiento, $codigo) {
             'Liquidar gastos sobre compras y generar compras totales.'
         );
     }
+
+    $partidas_cierre[] = array(
+        'partida' => array(
+            "numero" => $partida,
+            "descripcion" => 'Liquidar gastos sobre compras y generar compras totales.',
+            'fecha' => date($empresa['anio'] . '-m-d'),
+            'partida_cierre' => 1,
+            'periodo' => $empresa['periodo']
+        ),
+    );
+
+    $posicion = count($partidas_cierre) - 1;
+    $partidas_cierre[$posicion]['detalle_partida'] = array();
+    $detalle = generarDetalle($compras, $total_liquidar, 'Cargo');
+    if (count($detalle) > 0)
+        array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+    $detalle = generarDetalle($gastos_compras, null, 'Abono');
+    if (count($detalle) > 0)
+        array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+
 
     //liquidar rebajas y devoluciones sobre compras y generar compras netas
 
@@ -216,6 +347,26 @@ function calcularMonto($monto, $saldo, $movimiento, $codigo) {
         );
     }
 
+    $partidas_cierre[] = array(
+        'partida' => array(
+            "numero" => $partida,
+            "descripcion" => 'Liquidar rebajas y devoluciones sobre compras y generar compras netas.',
+            'fecha' => date($empresa['anio'] . '-m-d'),
+            'partida_cierre' => 1,
+            'periodo' => $empresa['periodo']
+        ),
+    );
+
+    $posicion = count($partidas_cierre) - 1;
+    $partidas_cierre[$posicion]['detalle_partida'] = array();
+    $detalle = generarDetalle($rebajas_devoluciones, null, 'Cargo');
+    if (count($detalle) > 0)
+        array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+    $detalle = generarDetalle($compras, $total_liquidar, 'Abono');
+    if (count($detalle) > 0)
+        array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+
+
     //liquidar inventario y generar mercaderia disponible
     $inventario = buscarSubCuentas('inventario', 'descripcion', $cuentas);
     $total_liquidar = $estado_resultados['inventario_inicial'];
@@ -234,22 +385,24 @@ function calcularMonto($monto, $saldo, $movimiento, $codigo) {
         );
     }
 
-    //Aperturar inventario final
-    $total_liquidar = $estado_resultados['inventario_final'];
+    $partidas_cierre[] = array(
+        'partida' => array(
+            "numero" => $partida,
+            "descripcion" => 'Liquidar inventario y generar mercaderia disponible.',
+            'fecha' => date($empresa['anio'] . '-m-d'),
+            'partida_cierre' => 1,
+            'periodo' => $empresa['periodo']
+        ),
+    );
 
-    if ($total_liquidar > 0) {
-        $estado_resultados['compras'] -= $total_liquidar;
-        $estado_resultados['mercaderia_disponible'] = 0;
-
-        $partida = imprimirCabeceraPartida($partida);
-        $cargo = imprimirFila($inventario, 'cargo', $total_liquidar, $fecha);
-        $abono = imprimirFila($compras, 'abono', $total_liquidar, $fecha);
-        imprimirPiePartida(
-            $cargo,
-            $abono,
-            'Aperturar inventario final.'
-        );
-    }
+    $posicion = count($partidas_cierre) - 1;
+    $partidas_cierre[$posicion]['detalle_partida'] = array();
+    $detalle = generarDetalle($compras, $total_liquidar, 'Cargo');
+    if (count($detalle) > 0)
+        array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+    $detalle = generarDetalle($inventario, null, 'Abono');
+    if (count($detalle) > 0)
+        array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
 
     //Utilidad bruta
     $total_liquidar = $estado_resultados['costo_venta'];
@@ -268,7 +421,68 @@ function calcularMonto($monto, $saldo, $movimiento, $codigo) {
             $abono,
             'Calculo del costo de venta.'
         );
+
+        $partidas_cierre[] = array(
+            'partida' => array(
+                "numero" => $partida,
+                "descripcion" => 'Calculo del costo de venta.',
+                'fecha' => date($empresa['anio'] . '-m-d'),
+                'partida_cierre' => 1,
+                'periodo' => $empresa['periodo']
+            ),
+        );
+
+        $posicion = count($partidas_cierre) - 1;
+        $partidas_cierre[$posicion]['detalle_partida'] = array();
+        $detalle = generarDetalle($ventas, $total_liquidar, 'Cargo');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+        $detalle = generarDetalle($compras, $total_liquidar, 'Abono');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
     }
+
+
+
+
+    //Aperturar inventario final
+    $total_liquidar = $estado_resultados['inventario_final'];
+
+    if ($total_liquidar > 0) {
+        $estado_resultados['compras'] -= $total_liquidar;
+        $estado_resultados['mercaderia_disponible'] = 0;
+
+        $partida = imprimirCabeceraPartida($partida);
+        $cargo = imprimirFila($inventario, 'cargo', $total_liquidar, $fecha);
+        $abono = imprimirFila($compras, 'abono', $total_liquidar, $fecha);
+        imprimirPiePartida(
+            $cargo,
+            $abono,
+            'Aperturar inventario final.'
+        );
+
+        $partidas_cierre[] = array(
+            'partida' => array(
+                "numero" => $partida,
+                "descripcion" => 'Calculo del costo de venta.',
+                'fecha' => date($empresa['anio'] . '-m-d'),
+                'partida_cierre' => 1,
+                'periodo' => $empresa['periodo']
+            ),
+        );
+
+        $posicion = count($partidas_cierre) - 1;
+        $partidas_cierre[$posicion]['detalle_partida'] = array();
+        $detalle = generarDetalle($inventario, $total_liquidar, 'Cargo');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+        $detalle = generarDetalle($compras, $total_liquidar, 'Abono');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+    }
+
+
+
 
     //liquidar ventas y determinar impuesto sobre la renta
 
@@ -305,9 +519,46 @@ function calcularMonto($monto, $saldo, $movimiento, $codigo) {
         imprimirPiePartida(
             $cargo,
             $abono,
-            'Calculo del costo de venta.'
+            'Calculo del impuesto sobre la renta.'
         );
+
+        $partidas_cierre[] = array(
+            'partida' => array(
+                "numero" => $partida,
+                "descripcion" => 'Calculo del impuesto sobre la renta.',
+                'fecha' => date(date($empresa['anio'] . '-m-d')),
+                'partida_cierre' => 1,
+                'periodo' => $empresa['periodo']
+            ),
+        );
+
+        $posicion = count($partidas_cierre) - 1;
+        $partidas_cierre[$posicion]['detalle_partida'] = array();
+        $detalle = generarDetalle($ventas, $saldo_venta, 'Cargo');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+
+        if ($cargo_abono_perdida_ganancias < 0) {
+            $detalle = generarDetalle($perdidas_ganancias, $cargo_perdida_ganancia, 'Cargo');
+            if (count($detalle) > 0)
+                array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+        }
+
+        $detalle = generarDetalle($impuesto_renta, $saldo_impuesto_renta, 'Cargo');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+
+        if ($cargo_abono_perdida_ganancias > 0) {
+            $detalle = generarDetalle($perdidas_ganancias, $abono_perdida_ganancia, 'Abono');
+            if (count($detalle) > 0)
+                array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+        }
+
     }
+
+
+
+
 
     //liquidar gastos de administracion, de venta y determinar reserva legal
     $otros_productos = buscarSubCuentas('otros_productos', 'descripcion', $cuentas);
@@ -355,7 +606,51 @@ function calcularMonto($monto, $saldo, $movimiento, $codigo) {
             $abono,
             'Liquidar gastos, productos financieros y determinar reserva legal.'
         );
+
+        $partidas_cierre[] = array(
+            'partida' => array(
+                "numero" => $partida,
+                "descripcion" => 'Liquidar gastos, productos financieros y determinar reserva legal.',
+                'fecha' => date($empresa['anio'] . '-m-d'),
+                'partida_cierre' => 1,
+                'periodo' => $empresa['periodo']
+            ),
+        );
+
+        $posicion = count($partidas_cierre) - 1;
+        $partidas_cierre[$posicion]['detalle_partida'] = array();
+        $detalle = generarDetalle($otros_productos, null, 'Cargo');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+
+        if ($cargo_abono_perdida_ganancias < 0) {
+            $detalle = generarDetalle($perdidas_ganancias, $cargo_perdida_ganancia, 'Cargo');;
+            if (count($detalle) > 0)
+                array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+        }
+
+        $detalle = generarDetalle($gastos_operacion, null, 'Abono');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+
+        $detalle = generarDetalle($otros_gastos, null, 'Abono');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+
+        $detalle = generarDetalle($reserva_legal, $saldo_reserva_legal, 'Abono');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+
+        if ($cargo_abono_perdida_ganancias > 0) {
+            $detalle = generarDetalle($perdidas_ganancias, $abono_perdida_ganancia, 'Abono');;
+            if (count($detalle) > 0)
+                array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+        }
+
     }
+
+
+
 
     //Determinar utilidad del ejercicio
 
@@ -373,9 +668,29 @@ function calcularMonto($monto, $saldo, $movimiento, $codigo) {
         imprimirPiePartida(
             $cargo,
             $abono,
-            'Perdida del ejercicio'
+            'Perdida del ejercicio.'
         );
-    }else{
+
+        $partidas_cierre[] = array(
+            'partida' => array(
+                "numero" => $partida,
+                "descripcion" => 'Perdida del ejercicio.',
+                'fecha' => date($empresa['anio'] . '-m-d'),
+                'partida_cierre' => 1,
+                'periodo' => $empresa['periodo']
+            ),
+        );
+
+        $posicion = count($partidas_cierre) - 1;
+        $partidas_cierre[$posicion]['detalle_partida'] = array();
+        $detalle = generarDetalle($perdida, abs($utilidad_perdida), 'Cargo');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+        $detalle = generarDetalle($perdidas_ganancias, abs($utilidad_perdida), 'Abono');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+
+    } else {
         //ganancia
         $partida = imprimirCabeceraPartida($partida);
         $cargo = imprimirFila($perdidas_ganancias, 'cargo', abs($utilidad_perdida), $fecha);
@@ -385,12 +700,35 @@ function calcularMonto($monto, $saldo, $movimiento, $codigo) {
             $abono,
             'Utilidad del ejercicio'
         );
+
+        $partidas_cierre[] = array(
+            'partida' => array(
+                "numero" => $partida,
+                "descripcion" => 'Perdida del ejercicio.',
+                'fecha' => date($empresa['anio'] . '-m-d'),
+                'partida_cierre' => 1,
+                'periodo' => $empresa['periodo']
+            ),
+        );
+
+        $posicion = count($partidas_cierre) - 1;
+        $partidas_cierre[$posicion]['detalle_partida'] = array();
+        $detalle = generarDetalle($perdidas_ganancias, abs($utilidad_perdida), 'Cargo');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+        $detalle = generarDetalle($utiliadad, abs($utilidad_perdida), 'Abono');
+        if (count($detalle) > 0)
+            array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
     }
+
+
+    $sesion = new Session();
+    //Guardar partidas en sesion para despues guardarlas en la bd
+    $sesion->set('partidas', $partidas_cierre);
 
     //print_r($estado_resultados);
 
     ?>
-
-
     </tbody>
 </table>
+

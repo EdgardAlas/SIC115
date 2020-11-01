@@ -137,7 +137,8 @@ class CierreContableController extends Controller
         Flight::render('ajax/cierre-contable/partidas-cierre', array(
             'estado_resultados' => $estado_resultados,
             'cuentas' => $cuentas,
-            'partida' => $partida
+            'partida' => $partida,
+            'empresa' => $login
         ));
     }
 
