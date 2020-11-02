@@ -122,7 +122,7 @@ class CuentaController extends Controller
                 ], ['codigo' => $codigo, 'empresa' => $empresa]);
 
             } else if (strlen($codigo_auxiliar) === 1 || (strlen($codigo_auxiliar) == 2
-                && strpos(strtoupper($codigo_auxiliar), 'R') > 0)) {
+                    && strpos(strtoupper($codigo_auxiliar), 'R') > 0)) {
                 $datos = array(array(
                     'id' => 0, 'nombre' => 'Cuenta de primer nivel',
                 ));
@@ -166,6 +166,17 @@ class CuentaController extends Controller
 
         $cuenta_guardar = $this->ordenarDatosCuentaGuardar($cuenta_guardar);
 
+        $padre = $this->modelo->seleccionar(array(
+            'saldo'
+        ), array(
+            'id' => $cuenta_guardar['padre']
+        ));
+
+
+        if ($padre[0]['saldo'] > 0) {
+            Excepcion::json(['error' => true, 'mensaje' => 'La cuenta padre ya ha sido utilizada, no se puede utilizar como cuenta padre']);
+        }
+
         $resultado_guardar = $this->modelo->insertar($cuenta_guardar);
 
         if ($resultado_guardar !== null) {
@@ -182,7 +193,7 @@ class CuentaController extends Controller
             ]);
         }
 
-        Excepcion::json(['error' => true]);
+        Excepcion::json(['error' => true, 'mensaje' => 'Error interno']);
     }
 
     public function editar()

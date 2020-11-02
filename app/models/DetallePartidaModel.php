@@ -95,7 +95,7 @@ class DetallePartidaModel extends Model
                 inner join cuenta on cuenta.id = detalle_partida.cuenta
             inner join periodo on periodo.id = partida.periodo
             where cuenta.codigo like :codigo and partida.fecha between :fecha_inicial and :fecha_final
-            and periodo.id = :periodo and partida.partida_cierre = 0 group by movimiento order by movimiento desc", array(
+            and periodo.id = :periodo group by movimiento order by movimiento desc", array(
                 ':fecha_inicial' => $condicion['fecha_inicial'],
                 ':fecha_final' => $condicion['fecha_final'],
                 ':periodo' => $condicion['periodo'],

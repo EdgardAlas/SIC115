@@ -4,6 +4,7 @@ require_once './app/models/PeriodoModel.php';
 require_once './app/models/CuentaModel.php';
 require_once './app/models/EmpresaModel.php';
 require_once './app/models/PartidaModel.php';
+require_once './app/models/DetallePartidaModel.php';
 require_once './app/models/ConfiguracionModel.php';
 
 class CierreContableController extends Controller
@@ -110,7 +111,7 @@ class CierreContableController extends Controller
         $this->sesionActivaAjax();
         $this->validarMetodoPeticion('POST');
 
-        $inventario_final = isset($_POST['inventario_final']) ? ($_POST['inventario_final'] === '' ? 0 : $_POST['inventario_final']) : 6450000;
+        $inventario_final = isset($_POST['inventario_final']) ? ($_POST['inventario_final'] === '' ? 0 : $_POST['inventario_final']) : 0;
 
         $login = $this->sesion->get('login');
 
@@ -141,6 +142,170 @@ class CierreContableController extends Controller
             'empresa' => $login
         ));
     }
+
+    public function realizarCierre()
+    {
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('POST');
+
+        $login = $this->sesion->get('login');
+
+        $partidas_cierre = $this->sesion->get('partidas');
+
+        $partidas_de_balance = $partidas_cierre[count($partidas_cierre) - 1];
+
+        unset($partidas_cierre[count($partidas_cierre) - 1]);
+
+        $conexion = new Conexion();
+        $partida_model = new PartidaModel($conexion);
+        $cuenta_model = new CuentaModel($conexion);
+        $detalle_partida_model = new DetallePartidaModel($conexion);
+
+
+        foreach ($partidas_cierre as $key => $partida) {
+            $datos_partida = $partida['partida'];
+            $detalle_partida = $partida['detalle_partida'];
+
+            $id_partida = $partida_model->insertar($datos_partida);
+
+            if ($id_partida !== null) {
+                foreach ($detalle_partida as $key_2 => $detalle) {
+                    foreach ($detalle as $key_3 => $detalle_individual) {
+                        $detalle_posicion = $detalle_individual;
+                        $detalle_posicion['partida'] = $id_partida;
+
+                        $monto_acumlado = $detalle_posicion['monto'];
+
+                        $codigo = $detalle_posicion['codigo'];
+
+                        $detalle_posicion['monto'] = abs($detalle_posicion['monto']);
+
+                        unset($detalle_posicion['codigo']);
+
+                        $detalle_partida_model->insertar($detalle_posicion);
+
+                        $cuentas_acumular = $cuenta_model->codigoSiguiente($codigo);
+
+                        foreach ($cuentas_acumular as $key => $cuenta) {
+
+                            $cuenta_base = $cuenta_model->seleccionar(
+                                array('nombre', 'saldo', 'tipo_saldo'), array(
+                                    'codigo' => $cuenta,
+                                    'empresa' => $login['id'],
+                                )
+                            );
+
+                            $cuenta_base = $cuenta_base[0];
+
+                            $es_R = strpos($cuenta, 'R');
+
+                            if ($es_R > 0) {
+                                $monto_acumlado = $monto_acumlado < 0 ? (abs($monto_acumlado)) : -$monto_acumlado;
+                            }
+
+                            $cuenta_model->actualizar(array(
+                                'saldo[+]' => $monto_acumlado,
+                            ), array(
+                                'codigo' => $cuenta,
+                                'empresa' => $login['id'],
+                            ));
+
+                            if ($es_R > 0) {
+                                $monto_acumlado = $monto_acumlado < 0 ? (abs($monto_acumlado)) : -$monto_acumlado;
+                            }
+                        }
+                    }
+
+                }
+            }
+
+
+        }
+
+        //liquidar cuentas de balance
+        $this->liquidarBalance($partidas_de_balance, $cuenta_model, $partida_model, $detalle_partida_model, $login);
+    }
+
+    public function liquidarBalance($partida, $cuenta_model, $partida_model, $detalle_partida_model, $login)
+    {
+        $datos_partida = $partida['partida'];
+        $detalle_partida = $partida['detalle_partida'];
+
+        $id_partida = $partida_model->insertar($datos_partida);
+
+        if ($id_partida !== null) {
+            foreach ($detalle_partida as $key_2 => $detalle) {
+
+                foreach ($detalle as $key_3 => $detalle_individual) {
+                    $detalle_posicion = $detalle_individual;
+                    $detalle_posicion['partida'] = $id_partida;
+
+                    $monto_acumlado = $detalle_posicion['monto'];
+
+
+                    $codigo = $detalle_posicion['codigo'];
+
+                    $cuenta_base = $cuenta_model->seleccionar(
+                        array('nombre', 'saldo', 'tipo_saldo'), array(
+                            'codigo' => $codigo,
+                            'empresa' => $login['id'],
+                        )
+                    );
+
+
+                    $cuenta_base = $cuenta_base[0];
+
+                    $monto_acumlado = -$cuenta_base['saldo'];
+
+                    if (substr($codigo, strlen($codigo) - 1) === 'R') {
+
+                        $monto_acumlado = $cuenta_base['saldo'];
+
+                    }
+
+                    $detalle_posicion['monto'] = $cuenta_base['saldo'];
+
+                    unset($detalle_posicion['codigo']);
+
+                    $detalle_partida_model->insertar($detalle_posicion);
+
+                    $cuentas_acumular = $cuenta_model->codigoSiguiente($codigo);
+
+                    foreach ($cuentas_acumular as $key => $cuenta) {
+
+//                        $cuenta_base = $cuenta_model->seleccionar(
+//                            array('nombre', 'saldo', 'tipo_saldo'), array(
+//                                'codigo' => $cuenta,
+//                                'empresa' => $login['id'],
+//                            )
+//                        );
+//
+//                        $cuenta_base = $cuenta_base[0];
+
+                        $es_R = strpos($cuenta, 'R');
+
+                        if ($es_R > 0) {
+                            $monto_acumlado = $monto_acumlado < 0 ? (abs($monto_acumlado)) : -$monto_acumlado;
+                        }
+
+                        $cuenta_model->actualizar(array(
+                            'saldo[+]' => $monto_acumlado,
+                        ), array(
+                            'codigo' => $cuenta,
+                            'empresa' => $login['id'],
+                        ));
+
+                        if ($es_R > 0) {
+                            $monto_acumlado = $monto_acumlado < 0 ? (abs($monto_acumlado)) : -$monto_acumlado;
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
 
     private function valoresEstadoResultados($cuentas = array(), $inventario_final = 0)
     {
@@ -409,4 +574,9 @@ class CierreContableController extends Controller
         return $datos;
     }
 
+    private function buscarSubCuentas($valor, $columna, $arreglo)
+    {
+        $cuenta_auxiliar = Utiles::buscar($valor, $columna, $arreglo);
+        return (isset($cuenta_auxiliar['orden'])) ? $cuenta_auxiliar['orden'] : -1;
+    }
 }

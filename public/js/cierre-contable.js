@@ -39,6 +39,13 @@ function obtenerMonto() {
     return montoInput = (montoInput.substr(1).replace(/,/g, '')).replace(/\.$/, "");
 }
 
+function realizarCierre(){
+     $.post('/cierre-contable/realizar-cierre', function (data){
+         console.log(data)
+         alert('se realizo todo con exito')
+     });
+}
+
 $(document).ready(() => {
     focus('inventario_final');
     titulo('Cierre Contable');
@@ -54,6 +61,10 @@ $(document).ready(() => {
         if (isEnter(e.keyCode, monto, 1)) {
             calcularCierre();
         }
+    })
+
+    $(document).on('click', '#realizar_cierre', function (e){
+        realizarCierre();
     })
 
 });

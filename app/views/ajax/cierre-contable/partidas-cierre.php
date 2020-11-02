@@ -79,10 +79,11 @@ function calcularMonto($monto, $saldo, $movimiento, $codigo)
         ($saldo === 'Acreedor' && substr($codigo, strlen($codigo) - 1) == 'R' && $movimiento === 'Abono') ||
         ($saldo === 'Deudor' && substr($codigo, strlen($codigo) - 1) != 'R' && $movimiento === 'Abono') ||
         ($saldo === 'Acreedor' && substr($codigo, strlen($codigo) - 1) != 'R' && $movimiento === 'Cargo')) {
-        $saldocuenta = -$saldocuenta;
+        $saldocuenta = -1*$saldocuenta;
     }
     return $saldocuenta;
 }
+
 
 function generarDetalle($cuentas, $monto = null, $movimiento)
 {
@@ -90,6 +91,7 @@ function generarDetalle($cuentas, $monto = null, $movimiento)
     foreach ($cuentas as $key => $cuenta) {
 
         if ($cuenta['ultimo_nivel']) {
+
 //            var_dump($cuenta['ultimo_nivel'].' - '.$cuenta['nombre'].'<br>');
             $partidas[] =
                 array(
@@ -100,7 +102,37 @@ function generarDetalle($cuentas, $monto = null, $movimiento)
                         $cuenta['tipo_saldo'],
                         $movimiento,
                         $cuenta['codigo']
-                    )
+                    ),
+                    'codigo' => $cuenta['codigo']
+                );
+        }
+    }
+
+    return $partidas;
+}
+
+function generarDetalleBalance($cuentas, $monto = null, $movimiento)
+{
+    $partidas = array();
+    foreach ($cuentas as $key => $cuenta) {
+
+        if ($cuenta['ultimo_nivel']) {
+            if(substr($cuenta['codigo'], strlen($cuenta['codigo'])-1)==='R'){
+                $movimiento = $movimiento === 'Abono' ? 'Cargo' : 'Abono';
+            }
+
+
+            $partidas[] =
+                array(
+                    'cuenta' => $cuenta['id'],
+                    'movimiento' => $movimiento,
+                    'monto' => calcularMonto(
+                        ($monto !== null ? $monto : $cuenta['saldo']),
+                        $cuenta['tipo_saldo'],
+                        $movimiento,
+                        $cuenta['codigo']
+                    ),
+                    'codigo' => $cuenta['codigo']
                 );
         }
     }
@@ -544,7 +576,7 @@ function generarDetalle($cuentas, $monto = null, $movimiento)
                 array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
         }
 
-        $detalle = generarDetalle($impuesto_renta, $saldo_impuesto_renta, 'Cargo');
+        $detalle = generarDetalle($impuesto_renta, $saldo_impuesto_renta, 'Abono');
         if (count($detalle) > 0)
             array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
 
@@ -722,9 +754,44 @@ function generarDetalle($cuentas, $monto = null, $movimiento)
     }
 
 
+
+    //LIquidicacion de cuentas de balance
+    $partida++;
+    $activo = buscarSubCuentas('activo', 'descripcion', $cuentas);
+    $pasivo = buscarSubCuentas('pasivo', 'descripcion', $cuentas);
+    $patrimonio = buscarSubCuentas('patrimonio', 'descripcion', $cuentas);
+
+    $partidas_cierre[] = array(
+        'partida' => array(
+            "numero" => $partida,
+            "descripcion" => 'Liquidar cuentas de balance.',
+            'fecha' => date($empresa['anio'] . '-m-d'),
+            'partida_cierre' => 1,
+            'periodo' => $empresa['periodo']
+        ),
+    );
+
+    $posicion = count($partidas_cierre) - 1;
+
+    $partidas_cierre[$posicion]['detalle_partida'] = array();
+
+    $detalle = generarDetalleBalance($patrimonio, null, 'Cargo');
+    if (count($detalle) > 0)
+        array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+
+    $detalle = generarDetalleBalance($pasivo, null, 'Cargo');
+    if (count($detalle) > 0)
+        array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+
+    $detalle = generarDetalleBalance($activo, null, 'Abono');
+    if (count($detalle) > 0)
+        array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+
+
     $sesion = new Session();
     //Guardar partidas en sesion para despues guardarlas en la bd
     $sesion->set('partidas', $partidas_cierre);
+    $sesion->set('cuentas', $cuentas);
 
     //print_r($estado_resultados);
 

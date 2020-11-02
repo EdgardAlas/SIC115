@@ -143,6 +143,16 @@ function guardarCuenta(cuenta) {
                 limpiarCampos();
                 cargarTablaCuentas();
             })
+        }else{
+            Swal.fire({
+                title: 'Error',
+                text: data.mensaje,
+                icon: 'warning',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                focus('codigo')
+            })
         }
     });
 }
