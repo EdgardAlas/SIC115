@@ -13,8 +13,11 @@
             <?php
             $sesion = new Session();
             $login = $sesion->get('login');
+            $fecha_inicial = strtotime(date($login['anio']."-m-d",time()));
+            $fecha_final = strtotime(date($login['anio']."-m-d",time()));
+
             //esto es para validar que no aparezca el boton de cierre cuando no sea la fecha inidicada
-            if (date($login['anio'] . '-m-d') === date($login['anio'] . '-m-d')) {
+            if ($fecha_inicial>=$fecha_final && $login['estado']!=='CERRADO') {
                 ?>
 
                 <li class="menu-header">Cierre Contable</li>

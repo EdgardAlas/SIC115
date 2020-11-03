@@ -9,7 +9,7 @@ function empezarCierre(){
         confirmButtonText: 'Si',
         cancelButtonText: 'No',
     }).then((result) => {
-        if(result){
+        if(result.value){
             $.post('/cierre-contable/validar-cierre', {cierre: true}, function (data){
                 if(!data.error){
                     location.href = data.url;

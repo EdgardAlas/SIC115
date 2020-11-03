@@ -40,10 +40,57 @@ function obtenerMonto() {
 }
 
 function realizarCierre(){
-     $.post('/cierre-contable/realizar-cierre', function (data){
-         console.log(data)
-         alert('se realizo todo con exito')
-     });
+
+    Swal.fire({
+        title: 'Atención',
+        text: "¿Esta seguro de realizar el cierre contable?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#6777ef',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+    }).then((result) => {
+        if (result.value) {
+            Swal.fire({
+                title: 'Guardando...',
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                }
+            })
+            $.post('/cierre-contable/realizar-cierre', function (data){
+                console.log(data)
+                Swal.close();
+
+                if(!data.error){
+                    Swal.fire({
+                        title: 'Exito',
+                        text: data.mensaje,
+                        icon: 'success',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        location.href = data.redireccion
+                    })
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.mensaje,
+                        icon: 'warning',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        focus('inventario_final')
+                    })
+                }
+
+            });
+        } else {
+            focus('inventario_final');
+        }
+    })
+
+
 }
 
 $(document).ready(() => {
@@ -64,6 +111,7 @@ $(document).ready(() => {
     })
 
     $(document).on('click', '#realizar_cierre', function (e){
+        $('#realizar_cierre').blur();
         realizarCierre();
     })
 

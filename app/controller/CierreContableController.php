@@ -20,6 +20,9 @@ class CierreContableController extends Controller
 
         $estado = $this->sesion->get('login')['estado'];
 
+        $this->sesion->set('partidas', null);
+        $this->sesion->set('cuentas', null);
+
         if ($estado === 'CIERRE') {
             $this->view('cierre-contable', [
                 'js_especifico' => Utiles::printScript('cierre-contable')
@@ -151,6 +154,14 @@ class CierreContableController extends Controller
 
         $login = $this->sesion->get('login');
 
+        if($this->sesion->get('partidas')===null){
+            Excepcion::json([
+                'error' => true,
+                'mensaje' => 'Falta calcular las partidas de cierre',
+                'redireccion' => null
+            ]);
+        }
+
         $partidas_cierre = $this->sesion->get('partidas');
 
         $partidas_de_balance = $partidas_cierre[count($partidas_cierre) - 1];
@@ -225,6 +236,25 @@ class CierreContableController extends Controller
 
         //liquidar cuentas de balance
         $this->liquidarBalance($partidas_de_balance, $cuenta_model, $partida_model, $detalle_partida_model, $login);
+
+        //actualizar periodo
+
+        $periodo_model = new PeriodoModel($conexion);
+
+        $periodo_model->actualizar(array(
+            'estado' => 'CERRADO'
+        ), array(
+            'empresa' => $login['id']
+        ));
+
+        $this->actualizarPeriodActual($login['usuario']);
+
+
+        Excepcion::json([
+            'error' => false,
+            'mensaje' => 'Cierre creado con exito',
+            'redireccion' => '/periodo'
+        ]);
     }
 
     public function liquidarBalance($partida, $cuenta_model, $partida_model, $detalle_partida_model, $login)
