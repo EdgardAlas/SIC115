@@ -99,7 +99,13 @@ $(document).ready(() => {
 
     $(document).on('click', '#btn_calcular_cierre', function () {
         $('#btn_calcular_cierre').blur();
-        calcularCierre();
+        const monto = $(this).val();
+
+        if(monto.length > 1)
+            calcularCierre();
+        else
+            focus('inventario_final')
+
     });
 
     $(document).on('keyup', '#inventario_final', function (e){
