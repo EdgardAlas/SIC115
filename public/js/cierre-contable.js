@@ -99,8 +99,8 @@ $(document).ready(() => {
 
     $(document).on('click', '#btn_calcular_cierre', function () {
         $('#btn_calcular_cierre').blur();
-        const monto = $(this).val();
-
+        const monto = $("#inventario_final").val();
+        console.log(monto);
         if(monto.length > 1)
             calcularCierre();
         else
