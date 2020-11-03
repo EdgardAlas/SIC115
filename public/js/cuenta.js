@@ -132,6 +132,7 @@ function validarCuentaEditar() {
 
 function guardarCuenta(cuenta) {
     $.post('/cuenta/guardar', { cuenta }, function(data) {
+        log(data);
         if (!data.error) {
             Swal.fire({
                 title: 'Exito',
