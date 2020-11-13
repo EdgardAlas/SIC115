@@ -132,6 +132,7 @@ function validarCuentaEditar() {
 
 function guardarCuenta(cuenta) {
     $.post('/cuenta/guardar', { cuenta }, function(data) {
+        log(data);
         if (!data.error) {
             Swal.fire({
                 title: 'Exito',
@@ -142,6 +143,16 @@ function guardarCuenta(cuenta) {
             }).then((result) => {
                 limpiarCampos();
                 cargarTablaCuentas();
+            })
+        }else{
+            Swal.fire({
+                title: 'Error',
+                text: data.mensaje,
+                icon: 'warning',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                focus('codigo')
             })
         }
     });

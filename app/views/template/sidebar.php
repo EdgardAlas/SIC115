@@ -7,11 +7,31 @@
             <a href="/">SCI</a>
         </div>
         <ul class="sidebar-menu">
-            <li class="menu-header">Catálogo de Cuentas </li>
+
+            <!--boton de cierre-->
+
+            <?php
+            $sesion = new Session();
+            $login = $sesion->get('login');
+            $fecha_inicial = strtotime(date($login['anio']."-m-d",time()));
+            $fecha_final = strtotime(date($login['anio']."-m-d",time()));
+
+            //esto es para validar que no aparezca el boton de cierre cuando no sea la fecha inidicada
+            if ($fecha_inicial>=$fecha_final && $login['estado']!=='CERRADO') {
+                ?>
+
+                <li class="menu-header">Cierre Contable</li>
+                <li>
+                    <a class="nav-link" href="/cierre-contable"><i class="fas fa-exclamation-circle"></i> <span>Cierre Contable</span></a>
+                </li>
+                <?php
+            } ?>
+
+            <li class="menu-header">Catálogo de Cuentas</li>
             <li>
                 <a class="nav-link" href="/cuenta"><i class="fas fa-stream"></i> <span>Catálogo de Cuentas</span></a>
             </li>
-            <li class="menu-header">Periodos </li>
+            <li class="menu-header">Periodos</li>
             <li>
                 <a class="nav-link" href="/periodo"><i class="fas fa-calendar-alt"></i> <span>Periodos</span></a>
             </li>
@@ -31,8 +51,10 @@
             <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-invoice-dollar"></i> <span>Balance General</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="/balance-general/forma/cuenta"><i class="fas fa-file-invoice-dollar"></i>Forma de cuenta</a></li>
-                    <li><a class="nav-link" href="/balance-general/forma/reporte"><i class="fas fa-file-invoice-dollar"></i>Forma de Reporte</a>
+                    <li><a class="nav-link" href="/balance-general/forma/cuenta"><i
+                                    class="fas fa-file-invoice-dollar"></i>Forma de cuenta</a></li>
+                    <li><a class="nav-link" href="/balance-general/forma/reporte"><i
+                                    class="fas fa-file-invoice-dollar"></i>Forma de Reporte</a>
                     </li>
                 </ul>
             </li>

@@ -122,7 +122,7 @@ class CuentaController extends Controller
                 ], ['codigo' => $codigo, 'empresa' => $empresa]);
 
             } else if (strlen($codigo_auxiliar) === 1 || (strlen($codigo_auxiliar) == 2
-                && strpos(strtoupper($codigo_auxiliar), 'R') > 0)) {
+                    && strpos(strtoupper($codigo_auxiliar), 'R') > 0)) {
                 $datos = array(array(
                     'id' => 0, 'nombre' => 'Cuenta de primer nivel',
                 ));
@@ -166,6 +166,21 @@ class CuentaController extends Controller
 
         $cuenta_guardar = $this->ordenarDatosCuentaGuardar($cuenta_guardar);
 
+        $padre = $this->modelo->seleccionar(array(
+            'codigo', 'saldo'
+        ), array(
+            'id' => $cuenta_guardar['padre']
+        ));
+
+        $login = $this->sesion->get('login');
+
+        if ($padre[0]['saldo'] != $this->saldoAcumulado($login['id'], $this->modelo, $padre[0]['codigo'])) {
+            Excepcion::json([
+                'error' => true,
+                'mensaje' => 'La cuenta padre ya ha sido utilizada en una transacción de forma individual, no se puede utilizar como cuenta padre'
+            ]);
+        }
+
         $resultado_guardar = $this->modelo->insertar($cuenta_guardar);
 
         if ($resultado_guardar !== null) {
@@ -182,7 +197,7 @@ class CuentaController extends Controller
             ]);
         }
 
-        Excepcion::json(['error' => true]);
+        Excepcion::json(['error' => true, 'mensaje' => 'Error interno']);
     }
 
     public function editar()
@@ -454,6 +469,31 @@ class CuentaController extends Controller
                 $this->subCuentas($arreglo, $nivel + 1, $sub_cuenta['id'], $nivel_maximo, $empresa);
             }
         }
+    }
+
+    private function saldoAcumulado($empresa, CuentaModel $cuenta_model, $codigo)
+    {
+        $saldos = $cuenta_model->conexion()->query(
+            'SELECT codigo, saldo, tipo_saldo FROM cuenta where codigo like :codigo and empresa = :empresa'
+            , array(
+            'codigo' => '%' . $codigo . '%',
+            'empresa' => $empresa
+        ))->fetchAll();
+
+        $saldo = 0;
+
+        var_dump($saldos);
+        foreach ($saldos as $key => $cuenta) {
+            if($cuenta['codigo']!==$codigo){
+                if($cuenta['tipo_saldo'] === 'Deudor'){
+                    $saldo += $cuenta['saldo'];
+                }else{
+                    $saldo -= $cuenta['saldo'];
+                }
+            }
+        }
+
+        return $saldo;
 
     }
 }

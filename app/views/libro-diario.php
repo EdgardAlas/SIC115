@@ -10,7 +10,8 @@
                         <div class="form-group row">
                             <div class="col-12">
                                 <?php
-                                    if($estado!=='CIERRE'){
+                                    $estado_periodo = isset($estado) ? $estado : '';
+                                    if($estado_periodo!=='CIERRE'){
                                         ?>
                                 <button type="button" id='btn_partida' class="btn btn-primary" autofocus>
                                     Agregar Partida
@@ -56,7 +57,6 @@
                 </div>
             </div>
         </div>
-
     </section>
 </div>
 

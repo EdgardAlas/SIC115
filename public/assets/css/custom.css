@@ -47,3 +47,9 @@
 td{
     word-break:break-all
 }
+
+.sticky-bottom{
+    background-color: #fff;
+    position: sticky;
+    bottom: 0;
+}

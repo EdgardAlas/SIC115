@@ -78,7 +78,7 @@ Flight::route('/(@controlador(/@metodo(/@id)))', function ($controlador, $metodo
             $objControlador->$metodo($id);
         } catch (Exception $e) {
 //            Exepcion::generarExcepcion('');
-            echo $e->getMessage();
+            var_dump($e);
         }
     }
 });

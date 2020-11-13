@@ -21,4 +21,18 @@ class ConfiguracioModel extends Model
         return $this->_validarCampos($datos, $this->validaciones);
     }
 
+    public function obtenerConfiguracion($empresa, $periodo, $titulos){
+        $datos = $this->conexion->select('configuracion', array(
+            '[><]cuenta' => array('cuenta' => 'id')
+        ), array(
+            'configuracion.titulo', 'configuracion.descripcion', 'cuenta.codigo', 'cuenta.orden'
+        ), array(
+            'cuenta.empresa' => $empresa,
+            'configuracion.periodo' => $periodo,
+            'titulo' => $titulos
+        ));
+
+        return $datos;
+    }
+
 }
