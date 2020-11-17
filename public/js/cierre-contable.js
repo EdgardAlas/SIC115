@@ -7,39 +7,39 @@ const monto = new Cleave('#inventario_final', {
     prefix: '$'
 });
 
- function calcularCierre(){
-     const inventario_final = obtenerMonto();
+function calcularCierre() {
+    const inventario_final = obtenerMonto();
 
-     $.post('/cierre-contable/calcular-cierre', {
-         inventario_final
-     }, function(data){
-         // for (const i in data) {
-         //     log(`${i} = ${data[i]}`)
-         // }
-         cargarPartidas(data);
-     })
- }
+    $.post('/cierre-contable/calcular-cierre', {
+        inventario_final
+    }, function (data) {
+        // for (const i in data) {
+        //     log(`${i} = ${data[i]}`)
+        // }
+        cargarPartidas(data);
+    })
+}
 
- function cargarPartidas(estado_resultados){
-     Swal.fire({
-         title: 'Guardando...',
-         onBeforeOpen: () => {
-             Swal.showLoading()
-         }
-     })
-     $('#div_partidas').load('/cierre-contable/partidas-cierre', {
-         estado_resultados
-     }, function(data){
+function cargarPartidas(estado_resultados) {
+    Swal.fire({
+        title: 'Guardando...',
+        onBeforeOpen: () => {
+            Swal.showLoading()
+        }
+    })
+    $('#div_partidas').load('/cierre-contable/partidas-cierre', {
+        estado_resultados
+    }, function (data) {
         Swal.close();
-     });
- }
+    });
+}
 
 function obtenerMonto() {
     let montoInput = $('#inventario_final').val();
     return montoInput = (montoInput.substr(1).replace(/,/g, '')).replace(/\.$/, "");
 }
 
-function realizarCierre(){
+function realizarCierre() {
 
     Swal.fire({
         title: 'Atención',
@@ -58,11 +58,11 @@ function realizarCierre(){
                     Swal.showLoading()
                 }
             })
-            $.post('/cierre-contable/realizar-cierre', function (data){
+            $.post('/cierre-contable/realizar-cierre', function (data) {
                 console.log(data)
                 Swal.close();
 
-                if(!data.error){
+                if (!data.error) {
                     Swal.fire({
                         title: 'Exito',
                         text: data.mensaje,
@@ -72,7 +72,7 @@ function realizarCierre(){
                     }).then((result) => {
                         location.href = data.redireccion
                     })
-                }else{
+                } else {
                     Swal.fire({
                         title: 'Error',
                         text: data.mensaje,
@@ -101,14 +101,14 @@ $(document).ready(() => {
         $('#btn_calcular_cierre').blur();
         const monto = $("#inventario_final").val();
         console.log(monto);
-        if(monto.length > 1)
+        if (monto.length > 1)
             calcularCierre();
         else
             focus('inventario_final')
 
     });
 
-    $(document).on('keyup', '#inventario_final', function (e){
+    $(document).on('keyup', '#inventario_final', function (e) {
         const monto = $(this).val();
 
         if (isEnter(e.keyCode, monto, 1)) {
@@ -116,9 +116,16 @@ $(document).ready(() => {
         }
     })
 
-    $(document).on('click', '#realizar_cierre', function (e){
+    $(document).on('click', '#realizar_cierre', function (e) {
         $('#realizar_cierre').blur();
         realizarCierre();
+    })
+
+    $(document).on('click', '#forma_reporte', function (e) {
+        log('Balance en forma de reporte');
+        $.get('/cierre-contable/balance-forma-reporte', {inventario_final: 6450000}, function (data) {
+            log(data)
+        })
     })
 
 });

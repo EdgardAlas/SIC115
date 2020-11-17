@@ -154,7 +154,7 @@ class CierreContableController extends Controller
 
         $login = $this->sesion->get('login');
 
-        if($this->sesion->get('partidas')===null){
+        if ($this->sesion->get('partidas') === null) {
             Excepcion::json([
                 'error' => true,
                 'mensaje' => 'Falta calcular las partidas de cierre',
@@ -334,6 +334,142 @@ class CierreContableController extends Controller
 
             }
         }
+    }
+
+    public function balanceFormaReporte()
+    {
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('GET');
+
+        $inventario_final = isset($_GET['inventario_final']) ? ($_GET['inventario_final'] === '' ? 0 : $_GET['inventario_final']) : 0;
+
+        $login = $this->sesion->get('login');
+
+//        $configuracion_model = new ConfiguracioModel(new Conexion());
+//        $cuenta_model = new CuentaModel(new Conexion());
+        $datos = $this->obtenerCuentasConfiguracion(['estado_resultados', 'cierre']);
+
+        $cuentas_balance = $this->obtenerCuentasConfiguracion(['clasificacion', 'cierre', 'estado_resultados']);
+
+        $partidas = $this->valoresEstadoResultadosParaBalance($datos, $inventario_final);
+
+        $this->asiganarSaldosBalance($cuentas_balance, $partidas);
+
+    }
+
+    private function asiganarSaldosBalance($cuentas, $estado_resultados)
+    {
+
+
+        $activo = $this->obtenerSubCuentas('activo', $cuentas);
+        $pasivo = $this->obtenerSubCuentas('pasivo', $cuentas);
+        $patrimonio = $this->obtenerSubCuentas('patrimonio', $cuentas);
+
+
+        $inventario_final = $estado_resultados['inventario_final'];
+        $codigo = $this->obtenerSubCuentas('inventario', $cuentas)[0]['codigo'];
+        $this->asignarSaldo($activo, $inventario_final, $codigo, 'ASIGNAR');
+
+        $reserva_legal = $estado_resultados['reserva_legal'];
+        $codigo = $this->obtenerSubCuentas('reserva_legal', $cuentas)[0]['codigo'];
+        $this->asignarSaldo($patrimonio, $reserva_legal, $codigo, 'ASIGNAR');
+
+        $utilidad_perdida = $estado_resultados['utilidad_perdida'];
+
+        if($utilidad_perdida > 0){
+            $codigo = $this->obtenerSubCuentas('utilidad', $cuentas)[0]['codigo'];
+            $this->asignarSaldo($patrimonio, $utilidad_perdida, $codigo, 'AUMENTAR');
+        }else{
+            $codigo = $this->obtenerSubCuentas('perdida', $cuentas)[0]['codigo'];
+            $this->asignarSaldo($patrimonio, abs($utilidad_perdida), $codigo, 'AUMENTAR');
+        }
+
+
+        $impuesto_iva = $estado_resultados['impuesto_iva'];
+        $codigo = $this->obtenerSubCuentas('impuesto_iva', $cuentas)[0]['codigo'];
+        $this->asignarSaldo($pasivo, $impuesto_iva, $codigo, 'AUMENTAR');
+
+        $iva_credito = $estado_resultados['iva_credito'];
+        $codigo = $this->obtenerSubCuentas('iva_credito', $cuentas)[0]['codigo'];
+        $this->asignarSaldo($pasivo, $iva_credito, $codigo, 'DISMINUIR');
+
+
+        $iva_debito = $estado_resultados['iva_debito'];
+        $codigo = $this->obtenerSubCuentas('iva_debito', $cuentas)[0]['codigo'];
+        $this->asignarSaldo($pasivo, $iva_debito, $codigo, 'DISMINUIR');
+
+        $impuesto_renta = $estado_resultados['impuesto_renta'];
+        $codigo = $this->obtenerSubCuentas('impuesto_renta', $cuentas)[0]['codigo'];
+        $this->asignarSaldo($pasivo, $impuesto_renta, $codigo, 'AUMENTAR');
+
+
+        $cuentas[0]['subcuentas'] = $activo;
+        $cuentas[1]['subcuentas'] = $pasivo;
+        $cuentas[2]['subcuentas'] = $patrimonio;
+
+        $balance = array_slice($cuentas, 0, 3);
+        Excepcion::json($balance);
+
+
+//        print_r(
+//            [
+//                $inventario_final, $reserva_legal, $utilidad_perdida, $impuesto_renta, $iva_debito, $iva_credito, $impuesto_renta, $impuesto_iva
+//            ]
+//        );
+
+
+        /*
+         * se necesita:
+         * INVENTARIO FINAL, RESERVA LEGA, UTILIDAD O PERDIDA, IVA POR PAGAR, IMPUESTO POR PAGAR
+        */
+
+    }
+
+    private function asignarSaldo(&$cuentas, $saldo = 0, $codigo, $tipo)
+    {
+        foreach ($cuentas as $key => $cuenta) {
+
+            if ($cuenta['codigo'] === $codigo) {
+                switch ($tipo) {
+                    case'LIQUIDAR':
+                        $cuentas[$key]['saldo'] = 0;
+                        $cuentas[$key][3] = 0;
+                        break;
+                    case 'AUMENTAR':
+                        $cuentas[$key]['saldo'] += $saldo;
+                        $cuentas[$key][3] += $saldo;
+                        break;
+                    case 'DISMINUIR':
+                        $cuentas[$key]['saldo'] -= $saldo;
+                        $cuentas[$key][3] -= $saldo;
+                        break;
+                    case 'ASIGNAR':
+                        $cuentas[$key]['saldo'] = $saldo;
+                        $cuentas[$key][3] = $saldo;
+                        break;
+                }
+            }
+        }
+    }
+
+    private function obtenerSubCuentas($buscar, $cuentas)
+    {
+        $subcuentas = Utiles::buscar($buscar, 'descripcion', $cuentas);
+        $subcuentas = $subcuentas['subcuentas'];
+        foreach ($subcuentas as $key => $cuenta) {
+            if (!$cuenta['ultimo_nivel']) {
+                unset($subcuentas[$key]);
+            }
+        }
+        return $subcuentas;
+    }
+
+
+    private function obtenerIndiceEspecifico($buscar, $indice, $cuentas)
+    {
+        $subcuentas = Utiles::buscar($buscar, $indice, $cuentas);
+        return $subcuentas;
     }
 
 
@@ -564,6 +700,233 @@ class CierreContableController extends Controller
 
     }
 
+    private function valoresEstadoResultadosParaBalance($cuentas = array(), $inventario_final = 0)
+    {
+
+        $estado_resultados = array();
+
+        /*
+         * CALCULO IVA
+        */
+        $iva_credito = $this->saldoAcumulado('iva_credito', 'descripcion', $cuentas);
+        $iva_debito = $this->saldoAcumulado('iva_debito', 'descripcion', $cuentas);
+        $estado_resultados['iva_credito'] = $iva_credito;
+        $estado_resultados['iva_debito'] = $iva_debito;
+
+        // ejemplos
+        // iva debito = 1, iva_credito = 0
+        // iva debito = 1, iva_credito = 1
+        // iva debito = 0, iva_credito = 1
+        // iva debito = 0, iva_credito = 0
+
+        if ($iva_debito == 0 && $iva_credito == 0) {
+            $estado_resultados['impuesto_iva'] = 0;
+            $estado_resultados['situacion_iva'] = 'no_hay';
+
+        } else if ($iva_debito == $iva_credito) {
+            $estado_resultados['impuesto_iva'] = 0;
+            $estado_resultados['situacion_iva'] = 'liquidar_cuentas';
+
+        } else if ($iva_debito > $iva_credito) {
+            $estado_resultados['impuesto_iva'] = ($iva_debito - $iva_credito);
+            $estado_resultados['situacion_iva'] = 'pagar';
+
+        } else if ($iva_credito > $iva_debito && $iva_debito > 0) {
+            $estado_resultados['impuesto_iva'] = 0;
+            $estado_resultados['situacion_iva'] = 'liquidar_debito';
+
+        } else if ($iva_debito == 0) {
+            $estado_resultados['impuesto_iva'] = 0;
+            $estado_resultados['situacion_iva'] = 'no_pagar';
+
+        }
+
+
+        /*
+         * FIN CALCULO IVA
+        */
+
+
+        /*
+         * VENTAS NETAS
+        */
+
+        //ventas
+
+        $ventas = $this->saldoAcumulado('ventas', 'descripcion', $cuentas);
+
+        //rebajas y devoluciones
+        $rebajas_ventas = $this->saldoAcumulado('rebajas_ventas', 'descripcion', $cuentas);
+
+        $devoluciones_ventas = $this->saldoAcumulado('devoluciones_ventas', 'descripcion', $cuentas);
+
+        //ventas netas
+        $ventas_netas = $ventas - ($rebajas_ventas + $devoluciones_ventas);
+
+        $estado_resultados['ventas'] = $ventas;
+        $estado_resultados['rebajas_ventas'] = $rebajas_ventas;
+        $estado_resultados['devoluciones_ventas'] = $devoluciones_ventas;
+        $estado_resultados['ventas_netas'] = $ventas_netas;
+
+
+        /*
+         * FIN VENTAS NETAS
+        */
+
+        /*
+         * COSTO DE VENTA
+        */
+
+        //compras
+        $compras = $this->saldoAcumulado('compras', 'descripcion', $cuentas);
+
+        //gastos sobre compras
+        $gastos_compras = $this->saldoAcumulado('gastos_compras', 'descripcion', $cuentas);
+
+        //compras totales
+
+        $compras_totales = $compras + $gastos_compras;
+
+        //rebajas y devoluciones sobre compras
+        $rebajas_compras = $this->saldoAcumulado('rebajas_compras', 'descripcion', $cuentas);
+
+        $devoluciones_compras = $this->saldoAcumulado('devoluciones_compras', 'descripcion', $cuentas);
+
+        //compras netas
+        $compras_netas = $compras_totales - ($rebajas_compras + $devoluciones_compras);
+
+        //inventario inicial
+
+        $inventario_inicial = $this->saldoAcumulado('inventario', 'descripcion', $cuentas);
+
+        //mercaderia disponible
+
+        $mercaderia_disponible = $compras_netas + $inventario_inicial;
+
+        //costo de venta
+        $costo_venta = $mercaderia_disponible - $inventario_final;
+
+        $estado_resultados['compras'] = $compras;
+        $estado_resultados['gastos_compras'] = $gastos_compras;
+        $estado_resultados['compras_totales'] = $compras_totales;
+        $estado_resultados['rebajas_compras'] = $rebajas_compras;
+        $estado_resultados['devoluciones_compras'] = $devoluciones_compras;
+        $estado_resultados['compras_netas'] = $compras_netas;
+        $estado_resultados['inventario_inicial'] = $inventario_inicial;
+        $estado_resultados['mercaderia_disponible'] = $mercaderia_disponible;
+        $estado_resultados['inventario_final'] = $inventario_final;
+        $estado_resultados['costo_venta'] = $costo_venta;
+
+
+        /*
+         * FIN COSTO DE VENTA
+        */
+
+        /*
+         * UTILIDAD BRUTA
+        */
+
+        //utilidad bruta
+
+        $utilidad_bruta = $ventas_netas - $costo_venta;
+
+        $estado_resultados['utilidad_bruta'] = $utilidad_bruta;
+
+        /*
+         * FIN UTILIDAD BRUTA
+        */
+
+        /*
+         * Utilidad de operacion
+        */
+
+        //gastos de operacion
+        $gastos_operacion = $this->saldoAcumulado('gastos_operacion', 'descripcion', $cuentas);
+
+        //utlidad de operacion
+
+        $utilidad_operacion = $utilidad_bruta - $gastos_operacion;
+
+        $estado_resultados['gastos_operacion'] = $gastos_operacion;
+        $estado_resultados['utilidad_operacion'] = $utilidad_operacion;
+
+        /*
+         * FIN UTILIDAD BRUTA
+        */
+
+        /*
+         * UTILIDAD ANTES DE IMPUESTOS y RESERVA
+        */
+
+        //otros productos
+        $otros_productos = $this->saldoAcumulado('otros_productos', 'descripcion', $cuentas);
+
+        //otros gastos
+        $otros_gastos = $this->saldoAcumulado('otros_gastos', 'descripcion', $cuentas);
+
+        //utilidad antes de impuests y resera
+
+        $utilidad_antes_impuestos_reserva = $utilidad_operacion + $otros_productos - $otros_gastos;
+
+        $estado_resultados['otros_productos'] = $otros_productos;
+        $estado_resultados['otros_gastos'] = $otros_gastos;
+        $estado_resultados['utilidad_antes_impuestos_reserva'] = $utilidad_antes_impuestos_reserva;
+
+
+        /*
+         * FIN UTILIDAD ANTES DE IMPUESTOS y RESERVA
+        */
+
+        /*
+         *  UTILIDAD ANTES DE IMPUESTO
+        */
+
+        //reserva legal
+        $reserva_legal = $utilidad_antes_impuestos_reserva * 0.07;
+
+        //utilidad antes de impuestos
+        $utilidad_antes_impuestos = $utilidad_antes_impuestos_reserva - $reserva_legal;
+
+        $estado_resultados['reserva_legal'] = $reserva_legal;
+        $estado_resultados['utilidad_antes_impuestos'] = $utilidad_antes_impuestos;
+
+        /*
+         * FIN UTILIDAD ANTES DE IMPUESTO
+        */
+
+        /*
+         *  UTILIDAD DEL EJERCICIO
+        */
+
+        //impuesto sobre la renta
+        $impuesto_renta = $utilidad_antes_impuestos * ($ventas_netas > 150000 ? 0.3 : 0.25);
+
+        //utilidad antes de impuestos
+        $utilidad_perdida = $utilidad_antes_impuestos - $impuesto_renta;
+
+        $estado_resultados['impuesto_renta'] = $impuesto_renta;
+        $estado_resultados['utilidad_perdida'] = $utilidad_perdida;
+
+        /*
+         * UTLIDAD DEL EJERCICIO
+        */
+
+
+        /* ================================================= */
+
+
+//        $iva_credito = $this->saldoAcumulado('iva_credito', 'descripcion', $cuentas);
+//        $iva_debito = $this->saldoAcumulado('iva_debito', 'descripcion', $cuentas);
+//
+//        if($iva_credito>$iva_debito){
+//
+//        }
+
+
+        return $estado_resultados;
+
+    }
+
     private function saldoAcumulado($cuenta, $columna, $cuentas)
     {
         $cuenta_auxiliar = Utiles::buscar($cuenta, $columna, $cuentas);
@@ -589,6 +952,7 @@ class CierreContableController extends Controller
         $configuracion_model = new ConfiguracioModel(new Conexion());
         $cuenta_model = new CuentaModel(new Conexion());
         $datos = $configuracion_model->obtenerConfiguracion($login['id'], $login['periodo'], $opciones);
+
         foreach ($datos as $key => $dato) {
             $cuentas = $cuenta_model->conexion()->query(
                 'SELECT id, codigo, nombre, saldo, tipo_saldo, ultimo_nivel from cuenta 
