@@ -118,11 +118,11 @@ class CierreContableController extends Controller
 
         $login = $this->sesion->get('login');
 
-        $configuracion_model = new ConfiguracioModel(new Conexion());
-        $cuenta_model = new CuentaModel(new Conexion());
-        $datos = $this->obtenerCuentasConfiguracion(['estado_resultados', 'cierre']);
+//        $configuracion_model = new ConfiguracioModel(new Conexion());
+//        $cuenta_model = new CuentaModel(new Conexion());
+        $datos = $this->obtenerCuentasConfiguracion(['estado_resultados', 'cierre'], $login);
 
-        $partidas = $this->valoresEstadoResultados($datos, $inventario_final);
+        $this->valoresEstadoResultados($datos, $inventario_final);
 
     }
 
@@ -133,7 +133,7 @@ class CierreContableController extends Controller
         $this->validarMetodoPeticion('POST');
         $login = $this->sesion->get('login');
         $estado_resultados = isset($_POST['estado_resultados']) ? $_POST['estado_resultados'] : array();
-        $cuentas = $this->obtenerCuentasConfiguracion(['estado_resultados', 'cierre', 'clasificacion']);
+        $cuentas = $this->obtenerCuentasConfiguracion(['estado_resultados', 'cierre', 'clasificacion'], $login);
         $partida_model = new PartidaModel(new Conexion());
         $partida = $partida_model->generarNumeroPartida($login['id'], $login['periodo']);
 
@@ -343,28 +343,43 @@ class CierreContableController extends Controller
         $this->validarMetodoPeticion('GET');
 
         $inventario_final = isset($_GET['inventario_final']) ? ($_GET['inventario_final'] === '' ? 0 : $_GET['inventario_final']) : 0;
+        $periodo = isset($_GET['periodo']) ? $_GET['periodo'] : null;
+
 
         $login = $this->sesion->get('login');
 
+        if($periodo!==null){
+            $login['periodo'] = $periodo;
+        }
+
 //        $configuracion_model = new ConfiguracioModel(new Conexion());
 //        $cuenta_model = new CuentaModel(new Conexion());
-        $datos = $this->obtenerCuentasConfiguracion(['estado_resultados', 'cierre']);
+        $datos = $this->obtenerCuentasConfiguracion(['estado_resultados', 'cierre'], $login);
 
-        $cuentas_balance = $this->obtenerCuentasConfiguracion(['clasificacion', 'cierre', 'estado_resultados']);
+        $cuentas_balance = $this->obtenerCuentasConfiguracion(['clasificacion', 'cierre', 'estado_resultados'], $login);
 
         $partidas = $this->valoresEstadoResultadosParaBalance($datos, $inventario_final);
 
-        $this->asiganarSaldosBalance($cuentas_balance, $partidas);
+        $this->asiganarSaldosBalance($cuentas_balance, $partidas, $login['periodo']);
 
     }
 
-    private function asiganarSaldosBalance($cuentas, $estado_resultados)
+    private function asiganarSaldosBalance($cuentas, $estado_resultados, $periodo)
     {
 
 
         $activo = $this->obtenerSubCuentas('activo', $cuentas);
         $pasivo = $this->obtenerSubCuentas('pasivo', $cuentas);
         $patrimonio = $this->obtenerSubCuentas('patrimonio', $cuentas);
+
+
+        $conexion = new Conexion();
+        $detalle_partida_model = new DetallePartidaModel($conexion);
+
+        $detalle_partida_model->asignarSaldosCalculados($activo, $periodo);
+        $detalle_partida_model->asignarSaldosCalculados($pasivo, $periodo);
+        $detalle_partida_model->asignarSaldosCalculados($patrimonio, $periodo);
+
 
 
         $inventario_final = $estado_resultados['inventario_final'];
@@ -944,10 +959,8 @@ class CierreContableController extends Controller
         return $saldo;
     }
 
-    private function obtenerCuentasConfiguracion($opciones)
+    private function obtenerCuentasConfiguracion($opciones, $login)
     {
-
-        $login = $this->sesion->get('login');
 
         $configuracion_model = new ConfiguracioModel(new Conexion());
         $cuenta_model = new CuentaModel(new Conexion());
