@@ -15,6 +15,7 @@ class CuentaController extends Controller
     public function index()
     {
         $this->sesionActiva();
+
         $this->view('cuenta', [
             'js_especifico' => Utiles::printScript('cuenta'),
         ]);
@@ -100,6 +101,7 @@ class CuentaController extends Controller
         $this->validarMetodoPeticion('POST');
 
         $empresa = $this->sesion->get('login')['id'];
+        $periodo = $this->sesion->get('login')['periodo'];
 
         $codigo = isset($_POST['codigo']) ? $_POST['codigo'] : '';
 
@@ -107,6 +109,7 @@ class CuentaController extends Controller
         $existe_cuenta = array(
             'codigo' => $codigo,
             'empresa' => $empresa,
+            'periodo' => $periodo
         );
 
         if ($this->modelo->existe($existe_cuenta)) {
@@ -120,7 +123,7 @@ class CuentaController extends Controller
             if (strlen($codigo) > 0) {
                 $datos = $this->modelo->seleccionar([
                     'id', 'nombre',
-                ], ['codigo' => $codigo, 'empresa' => $empresa]);
+                ], ['codigo' => $codigo, 'empresa' => $empresa, 'periodo' => $periodo]);
 
             } else if (strlen($codigo_auxiliar) === 1 || (strlen($codigo_auxiliar) == 2
                     && strpos(strtoupper($codigo_auxiliar), 'R') > 0)) {
@@ -135,7 +138,7 @@ class CuentaController extends Controller
         ));
     }
 
-    public function arbol()
+    /*public function arbol()
     {
 
         $cuentas = $this->catalogoDeCuentas($this->sesion->get('login')['id']);
@@ -143,13 +146,15 @@ class CuentaController extends Controller
         Flight::render('arbol', [
             'datos' => $cuentas,
         ]);
-    }
+    }*/
 
     public function guardar()
     {
         $this->isAjax();
         $this->sesionActivaAjax();
         $this->validarMetodoPeticion('POST');
+
+        $login = $this->sesion->get('login');
 
         $resultado_validaciones = [];
 
@@ -174,7 +179,6 @@ class CuentaController extends Controller
                 'id' => $cuenta_guardar['padre']
             ));
 
-            $login = $this->sesion->get('login');
 
             if ($padre[0]['saldo'] != $this->saldoAcumulado($login['id'], $this->modelo, $padre[0]['codigo'])) {
                 Excepcion::json([
@@ -407,7 +411,7 @@ class CuentaController extends Controller
 
         var_dump($datos);
         $datos['empresa'] = $this->sesion->get('login')['id'];
-
+        $datos['periodo'] = $this->sesion->get('login')['periodo'];
         $datos['codigo'] = strtoupper($datos['codigo']);
         $datos['padre'] = base64_decode($datos['padre']);
 
@@ -433,12 +437,13 @@ class CuentaController extends Controller
         return $datos;
     }
 
-    private function catalogoDeCuentas($empresa)
+    private function catalogoDeCuentas($empresa, $periodo)
     {
         $arreglo = array();
 
         $nivel_maximo = $this->modelo->obtenerUno(['nivel'], [
             'empresa' => $empresa,
+            'periodo' => $periodo,
             'ORDER' => [
                 'nivel' => 'DESC',
             ],
@@ -446,34 +451,38 @@ class CuentaController extends Controller
 
         $niveles = $this->modelo->seleccionar('*', [
             'empresa' => $empresa,
+            'periodo' => $periodo,
             'nivel' => 1,
         ]);
 
         foreach ($niveles as $key => $nivel) {
 
             array_push($arreglo, $nivel);
-            $this->subCuentas($arreglo, 2, $nivel['id'], $nivel_maximo, $empresa);
+            $this->subCuentas($arreglo, 2, $nivel['id'], $nivel_maximo, $empresa, $periodo);
         }
 
         return $arreglo;
 
     }
 
-    private function subCuentas(&$arreglo, $nivel, $id, $nivel_maximo, $empresa)
+    private function subCuentas(&$arreglo, $nivel, $id, $nivel_maximo, $empresa, $periodo)
     {
         if ($nivel <= $nivel_maximo) {
             $sub_cuentas = $this->modelo->seleccionar('*', [
                 'empresa' => $empresa,
                 'nivel' => $nivel,
                 'padre' => $id,
+                'periodo' => $periodo,
                 'ORDER' => array(
                     'codigo' => 'ASC',
                 ),
             ]);
 
+
+
             foreach ($sub_cuentas as $key => $sub_cuenta) {
                 array_push($arreglo, $sub_cuenta);
-                $this->subCuentas($arreglo, $nivel + 1, $sub_cuenta['id'], $nivel_maximo, $empresa);
+                $this->subCuentas($arreglo, $nivel + 1, $sub_cuenta['id'], $nivel_maximo, $empresa, $periodo);
             }
         }
     }

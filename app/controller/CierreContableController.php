@@ -105,6 +105,9 @@ class CierreContableController extends Controller
         $data['periodo'] = $periodoModel->ultimoPeriodo($data['id']);
         $data['anio'] = $periodoModel->ultimoAnio($data['id']);
         $data['estado'] = $periodoModel->estadoPeriodo($data['periodo'], $data['id']);
+        if($data['estado']=='CERRADO'){
+            $data['periodo'] = null;
+        }
         $sesion->set('login', $data);
     }
 
@@ -249,6 +252,7 @@ class CierreContableController extends Controller
 
         $this->actualizarPeriodActual($login['usuario']);
 
+        $this->copiarCuentasYConfiguracion($login['id'], $login['periodo']);
 
         Excepcion::json([
             'error' => false,
@@ -986,4 +990,60 @@ class CierreContableController extends Controller
         $cuenta_auxiliar = Utiles::buscar($valor, $columna, $arreglo);
         return (isset($cuenta_auxiliar['orden'])) ? $cuenta_auxiliar['orden'] : -1;
     }
+
+    private function copiarCuentasYConfiguracion($empresa, $periodo){
+        $conexion = new Conexion();
+
+        $cuenta_model = new CuentaModel($conexion);
+
+        $copias_cuentas = $cuenta_model->seleccionar(
+            '*', array(
+                'periodo' => $periodo,
+                'empresa' => $empresa
+            )
+        );
+
+        foreach ($copias_cuentas as $key => $cuenta) {
+            unset($copias_cuentas[$key]['id']);
+            unset($copias_cuentas[$key]['periodo']);
+        }
+
+
+        $cuenta_model->insertar($copias_cuentas);
+        $this->actualizarPadres($cuenta_model, $empresa);
+    }
+
+    private function actualizarPadres(CuentaModel $modelo,  $empresa){
+        $cuentas = $modelo->seleccionar(
+            ['id', 'padre'], array(
+                'empresa' => $empresa,
+                'periodo' => null
+            )
+        );
+
+        foreach ($cuentas as $key => $cuenta) {
+            if($cuenta['padre']!=null){
+                $padre_viejo = $modelo->seleccionar(['codigo'], array(
+                    'empresa' => $empresa,
+                    'id' => $cuenta['padre']
+                ));
+
+                $padre_nuevo = $modelo->seleccionar(['id'], array(
+                    'empresa' => $empresa,
+                    'codigo' => $padre_viejo[0]['codigo'],
+                    'periodo' => null
+                ));
+
+                $modelo->actualizar([
+                    'padre' => $padre_nuevo[0]['id']
+                ], array(
+                    'id' => $cuenta['id']
+                ));
+
+            }
+        }
+
+    }
+
+
 }

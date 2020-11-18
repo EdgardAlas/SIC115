@@ -76,6 +76,8 @@ class PeriodoController extends Controller
 
         $anio = ($sesion['anio'] === null) ? date('Y') : $sesion['anio'] + 1;
 
+        $utlimo_periodo = $this->modelo->ultimoPeriodo($sesion['id']);
+
         $periodo = array(
             'empresa' => $sesion['id'],
             'anio' => $anio
@@ -85,6 +87,12 @@ class PeriodoController extends Controller
 
         if ($resultado !== null) {
             $this->crearSesion($sesion['usuario']);
+
+            /*
+             * Aca se hara la copia de la configuracion y actualizacion de las cuentas de la configuracion
+             * Crear la partida 1
+             * */
+
             Excepcion::json(['error' => false, 'mensaje' => 'Periodo creado con exito', 'icono' => 'success']);
         }
 

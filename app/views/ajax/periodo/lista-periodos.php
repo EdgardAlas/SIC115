@@ -1,6 +1,6 @@
 <?php
-    $periodo_activo = ($periodo) ? $periodo : null;
-    $lista_periodos = ($periodos) ? $periodos : array();
+    $periodo_activo = isset($periodo) ? $periodo : null;
+    $lista_periodos = isset($periodos) ? $periodos : array();
 ?>
 
 <div class="row">
