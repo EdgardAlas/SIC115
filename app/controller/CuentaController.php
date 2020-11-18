@@ -28,8 +28,9 @@ class CuentaController extends Controller
         $this->validarMetodoPeticion('GET');
 
         $empresa = $this->sesion->get('login')['id'];
+        $periodo = $this->sesion->get('login')['periodo'];
 
-        $datos = $this->catalogoDeCuentas($empresa);
+        $datos = $this->catalogoDeCuentas($empresa, $periodo);
 
         /* $datos = $this->modelo->seleccionar('*', array(
         'empresa' => $empresa,
@@ -166,20 +167,23 @@ class CuentaController extends Controller
 
         $cuenta_guardar = $this->ordenarDatosCuentaGuardar($cuenta_guardar);
 
-        $padre = $this->modelo->seleccionar(array(
-            'codigo', 'saldo'
-        ), array(
-            'id' => $cuenta_guardar['padre']
-        ));
+        if (isset($cuenta_guardar['padre'])) {
+            $padre = $this->modelo->seleccionar(array(
+                'codigo', 'saldo'
+            ), array(
+                'id' => $cuenta_guardar['padre']
+            ));
 
-        $login = $this->sesion->get('login');
+            $login = $this->sesion->get('login');
 
-        if ($padre[0]['saldo'] != $this->saldoAcumulado($login['id'], $this->modelo, $padre[0]['codigo'])) {
-            Excepcion::json([
-                'error' => true,
-                'mensaje' => 'La cuenta padre ya ha sido utilizada en una transacción de forma individual, no se puede utilizar como cuenta padre'
-            ]);
+            if ($padre[0]['saldo'] != $this->saldoAcumulado($login['id'], $this->modelo, $padre[0]['codigo'])) {
+                Excepcion::json([
+                    'error' => true,
+                    'mensaje' => 'La cuenta padre ya ha sido utilizada en una transacción de forma individual, no se puede utilizar como cuenta padre'
+                ]);
+            }
         }
+
 
         $resultado_guardar = $this->modelo->insertar($cuenta_guardar);
 
@@ -401,6 +405,7 @@ class CuentaController extends Controller
     private function ordenarDatosCuentaGuardar($datos)
     {
 
+        var_dump($datos);
         $datos['empresa'] = $this->sesion->get('login')['id'];
 
         $datos['codigo'] = strtoupper($datos['codigo']);
@@ -422,6 +427,8 @@ class CuentaController extends Controller
         if (strlen($codigoR) > 1) {
             $datos['nivel'] = (strlen($codigoR) / 2) + 1;
         }
+
+        var_dump($datos);
 
         return $datos;
     }
@@ -484,10 +491,10 @@ class CuentaController extends Controller
 
         var_dump($saldos);
         foreach ($saldos as $key => $cuenta) {
-            if($cuenta['codigo']!==$codigo){
-                if($cuenta['tipo_saldo'] === 'Deudor'){
+            if ($cuenta['codigo'] !== $codigo) {
+                if ($cuenta['tipo_saldo'] === 'Deudor') {
                     $saldo += $cuenta['saldo'];
-                }else{
+                } else {
                     $saldo -= $cuenta['saldo'];
                 }
             }
