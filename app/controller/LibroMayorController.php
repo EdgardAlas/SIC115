@@ -15,8 +15,13 @@ class LibroMayorController extends Controller
     public function index()
     {
         $this->sesionActiva();
+        $this->validarPeriodo();
+
+
         $this->view('libro-mayor', [
             'js_especifico' => Utiles::printScript('libro-mayor')
+        ], [
+            'anio' => $this->sesion->get('login')['anio']
         ]);
     }
 
@@ -57,9 +62,10 @@ class LibroMayorController extends Controller
             ? $_POST['fecha_final']
             : date($login['anio'] . '-12-31');
 
-        $cuentas = $cuenta_model->seleccionar(array('nombre', 'id', 'codigo', 'tipo_saldo'), array(
+        $cuentas = $cuenta_model->seleccionar(array('nombre', 'id', 'codigo', 'tipo_saldo', 'periodo'), array(
             'empresa' => $login['id'],
             'nivel' => $nivel,
+            'periodo' => $login['periodo'],
             'ORDER' => array(
                 'orden' => 'ASC'
             )
@@ -74,11 +80,13 @@ class LibroMayorController extends Controller
 
 
         if ($_POST['cuenta'][0] !== '') {
-            $cuentas = $cuenta_model->seleccionar(array('nombre', 'id', 'codigo', 'tipo_saldo'), array(
+            $cuentas = $cuenta_model->seleccionar(array('nombre', 'id', 'codigo', 'tipo_saldo', 'periodo'), array(
                 'empresa' => $login['id'],
-                'codigo' => $_POST['cuenta']
+                'codigo' => $_POST['cuenta'],
+                'periodo' => $login['periodo']
             ));
         }
+
 
 
         $partidas = $partida_model->obtenerPartidas($cuentas, $condicion);
@@ -116,6 +124,7 @@ class LibroMayorController extends Controller
         $cuentas = $cuenta_model->seleccionar(array('nombre', 'id', 'codigo', 'tipo_saldo'), array(
             'empresa' => $login['id'],
             'nivel' => $nivel,
+            'periodo' => $login['periodo'],
             'ORDER' => array(
                 'orden' => 'ASC'
             )
@@ -134,7 +143,8 @@ class LibroMayorController extends Controller
             if ($_GET['cuenta'] !== '') {
                 $cuentas = $cuenta_model->seleccionar(array('nombre', 'id', 'codigo', 'tipo_saldo'), array(
                     'empresa' => $login['id'],
-                    'codigo' => $_GET['cuenta']
+                    'codigo' => $_GET['cuenta'],
+                    'periodo' => $login['periodo']
                 ));
             }
         }

@@ -14,12 +14,15 @@ class BalanceGeneralController extends Controller
 
     public function index()
     {
+        $this->validarPeriodo();
         $this->view('balance-general', ['js_especifico' => Utiles::printScript('balance-general')]);
     }
 
     public function forma($forma)
     {
         $this->sesionActiva();
+        $this->validarPeriodo();
+
         if(strlen($forma)==0){
             Excepcion::noEncontrado();
         }
@@ -41,10 +44,14 @@ class BalanceGeneralController extends Controller
     public function balanceFormaReporte()
     {
         $this->sesionActiva();
+        $this->validarPeriodo();
+
+
         $this->view('balance-general', ['js_especifico' => Utiles::printScript('balance-general'),]);
     }
 
     public function formaCuenta(){
+        $this->validarPeriodo();
         $this->isAjax();
         $this->sesionActivaAjax();
         $this->validarMetodoPeticion('GET');
@@ -66,7 +73,8 @@ class BalanceGeneralController extends Controller
             'titulo' => array('clasificacion'),
             'descripcion' => array('activo', 'pasivo', 'patrimonio'),
             'empresa.id' => $empresa,
-            'periodo.id' => $periodo
+            'periodo.id' => $periodo,
+            'cuenta.periodo' => $periodo
         ));
 
 
@@ -77,6 +85,7 @@ class BalanceGeneralController extends Controller
                 'orden' => $cuenta['orden'],
                 'nivel' => array(2,3),
                 'empresa' => $empresa,
+                'periodo' => $periodo,
                 'ORDER' => array(
                     'codigo' => 'ASC'
                 )

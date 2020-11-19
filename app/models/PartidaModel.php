@@ -61,7 +61,7 @@ class PartidaModel extends Model
                     inner join empresa on empresa.id = cuenta.empresa
                     inner join periodo on periodo.empresa = empresa.id
                         where periodo.id = :periodo and empresa.id = :empresa 
-                        and cuenta.codigo like :cuenta
+                        and cuenta.codigo like :cuenta and cuenta.periodo = :periodo
                         and partida.fecha between :fecha_inicial and :fecha_final',
             [
                 ':empresa' => $condicion['empresa'],

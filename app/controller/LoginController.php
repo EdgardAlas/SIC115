@@ -144,6 +144,9 @@ class LoginController extends Controller
         $data['periodo'] = $periodoModel->ultimoPeriodo($data['id']);
         $data['anio'] = $periodoModel->ultimoAnio($data['id']);
         $data['estado'] = $periodoModel->estadoPeriodo($data['periodo'], $data['id']);
+        if($data['estado']=='CERRADO'){
+            $data['periodo'] = null;
+        }
         $sesion->set('login', $data);
     }
 }

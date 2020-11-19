@@ -17,10 +17,12 @@ class BalanzaComprobacionController extends Controller
     {
 
         $this->sesionActiva();
-        // $this->validarPeriodo();
+        $this->validarPeriodo();
 
         $this->view('balanza-comprobacion', [
             'js_especifico' => Utiles::printScript('balanza-comprobacion'),
+        ], [
+            'anio' => $this->sesion->get('login')['anio']
         ]);
 
     }
@@ -43,23 +45,24 @@ class BalanzaComprobacionController extends Controller
             'nivel' => 1,
             'periodo' => $periodo
         );
-        
 
-        if(isset($_POST['fecha_inicial'])){
+
+        if (isset($_POST['fecha_inicial'])) {
             $condicion['fecha_inicial'] = $_POST['fecha_inicial'];
         }
 
-        if(isset($_POST['fecha_final'])){
+        if (isset($_POST['fecha_final'])) {
             $condicion['fecha_final'] = $_POST['fecha_final'];
         }
 
-        if(isset($_POST['nivel'])){
+        if (isset($_POST['nivel'])) {
             $condicion['nivel'] = $_POST['nivel'];
         }
 
-        $cuentas = $cuenta_model->seleccionar(array('nombre','id','codigo', 'saldo', 'tipo_saldo'), array(
+        $cuentas = $cuenta_model->seleccionar(array('nombre', 'id', 'codigo', 'saldo', 'tipo_saldo'), array(
             'empresa' => $empresa,
             'nivel' => $condicion['nivel'],
+            'periodo' => $periodo,
             'ORDER' => array(
                 'orden' => 'ASC'
             )
@@ -73,7 +76,7 @@ class BalanzaComprobacionController extends Controller
         ));
     }
 
-    
+
     public function reporteBalanzaComprobacion()
     {
         $this->sesionActiva();
@@ -91,21 +94,21 @@ class BalanzaComprobacionController extends Controller
             'nivel' => 1,
             'periodo' => $periodo
         );
-        
 
-        if(isset($_GET['fecha_inicial'])){
+
+        if (isset($_GET['fecha_inicial'])) {
             $condicion['fecha_inicial'] = $_GET['fecha_inicial'];
         }
 
-        if(isset($_GET['fecha_final'])){
+        if (isset($_GET['fecha_final'])) {
             $condicion['fecha_final'] = $_GET['fecha_final'];
         }
 
-        if(isset($_GET['nivel'])){
+        if (isset($_GET['nivel'])) {
             $condicion['nivel'] = $_GET['nivel'];
         }
 
-        $cuentas = $cuenta_model->seleccionar(array('nombre','id','codigo', 'saldo', 'tipo_saldo'), array(
+        $cuentas = $cuenta_model->seleccionar(array('nombre', 'id', 'codigo', 'saldo', 'tipo_saldo'), array(
             'empresa' => $empresa,
             'nivel' => $condicion['nivel'],
             'ORDER' => array(

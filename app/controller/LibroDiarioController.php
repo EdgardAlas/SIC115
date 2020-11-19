@@ -86,6 +86,7 @@ class LibroDiarioController extends Controller
                         array('nombre', 'saldo', 'tipo_saldo'), array(
                             'codigo' => $cuenta,
                             'empresa' => $empresa,
+                            'periodo' => $periodo
                         )
                     );
 
@@ -117,6 +118,7 @@ class LibroDiarioController extends Controller
                     ), array(
                         'codigo' => $cuenta,
                         'empresa' => $empresa,
+                        'periodo' => $periodo
                     ));
 
                     if ($es_R > 0) {
