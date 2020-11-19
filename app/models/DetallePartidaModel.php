@@ -43,6 +43,7 @@ class DetallePartidaModel extends Model
                         inner join cuenta on detalle.cuenta = cuenta.id
                             where periodo.id = :periodo and empresa.id = :empresa and
                             partida.fecha between :fecha_inicial and :fecha_final and partida.numero = :numero
+                             and cuenta.periodo = :periodo
                             ", array(
                     ':periodo' => $condicion['periodo'],
                     ':empresa' => $condicion['empresa'],
@@ -75,7 +76,8 @@ class DetallePartidaModel extends Model
             inner join empresa on periodo.empresa = empresa.id
             inner join cuenta on detalle.cuenta = cuenta.id
                 where periodo.id = :periodo and empresa.id = :empresa and
-                partida.fecha between :fecha_inicial and :fecha_final
+                partida.fecha between :fecha_inicial and :fecha_final and cuenta.periodo = :periodo and cuenta.periodo = :periodo
+                
                 ", array(
             ':periodo' => $condicion['periodo'],
             ':empresa' => $condicion['empresa'],
@@ -95,7 +97,7 @@ class DetallePartidaModel extends Model
                 inner join cuenta on cuenta.id = detalle_partida.cuenta
             inner join periodo on periodo.id = partida.periodo
             where cuenta.codigo like :codigo and partida.fecha between :fecha_inicial and :fecha_final
-            and periodo.id = :periodo group by movimiento order by movimiento desc", array(
+            and periodo.id = :periodo and cuenta.periodo = :periodo group by movimiento order by movimiento desc", array(
                 ':fecha_inicial' => $condicion['fecha_inicial'],
                 ':fecha_final' => $condicion['fecha_final'],
                 ':periodo' => $condicion['periodo'],
@@ -121,7 +123,7 @@ class DetallePartidaModel extends Model
     public function asignarSaldosCalculados(&$cuentas, $periodo)
     {
 
-        echo "Periodo: ".$periodo;
+        echo "Periodo: " . $periodo;
 
         foreach ($cuentas as $key => $cuenta) {
             $cuentas[$key]['saldo'] = 0;
@@ -132,7 +134,7 @@ class DetallePartidaModel extends Model
                 from detalle_partida inner join partida on partida.id = detalle_partida.partida
                 inner join cuenta on cuenta.id = detalle_partida.cuenta
             inner join periodo on periodo.id = partida.periodo
-            where cuenta.codigo like :codigo and periodo.id = :periodo group by movimiento order by movimiento desc",
+            where cuenta.codigo like :codigo and periodo.id = :periodo and cuenta.periodo = :periodo group by movimiento order by movimiento desc",
                 array(
                     ':periodo' => $periodo,
                     ':codigo' => $cuenta['codigo'],

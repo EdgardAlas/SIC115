@@ -15,10 +15,10 @@ class CuentaController extends Controller
     public function index()
     {
         $this->sesionActiva();
-
+        $estado = $this->sesion->get('login')['estado'];
         $this->view('cuenta', [
             'js_especifico' => Utiles::printScript('cuenta'),
-        ]);
+        ], ['estado' => $estado]);
     }
 
     public function tablaCuentas()
@@ -38,7 +38,7 @@ class CuentaController extends Controller
         )); */
 
         Flight::render('ajax/cuentas/tabla-cuentas', array(
-            'datos' => $datos,
+            'datos' => $datos
         ));
 
     }
@@ -180,7 +180,7 @@ class CuentaController extends Controller
             ));
 
 
-            if ($padre[0]['saldo'] != $this->saldoAcumulado($login['id'], $this->modelo, $padre[0]['codigo'])) {
+            if ($padre[0]['saldo'] != $this->saldoAcumulado($login['id'], $login['periodo'], $this->modelo, $padre[0]['codigo'])) {
                 Excepcion::json([
                     'error' => true,
                     'mensaje' => 'La cuenta padre ya ha sido utilizada en una transacción de forma individual, no se puede utilizar como cuenta padre'
@@ -266,11 +266,13 @@ class CuentaController extends Controller
         $this->validarMetodoPeticion('GET');
 
         $empresa = $this->sesion->get('login')['id'];
+        $periodo = $this->sesion->get('login')['periodo'];
 
         $datos = $this->modelo->seleccionar(array(
             'id', 'nombre', 'codigo', 'tipo_saldo',
         ), array(
             'empresa' => $empresa,
+            'periodo' => $periodo,
             'ultimo_nivel' => 1,
         ));
 
@@ -286,11 +288,13 @@ class CuentaController extends Controller
         $this->validarMetodoPeticion('GET');
 
         $empresa = $this->sesion->get('login')['id'];
+        $periodo = $this->sesion->get('login')['periodo'];
 
         $datos = $this->modelo->conexion()->query('SELECT distinct nivel from cuenta inner
                     join empresa on empresa.id = cuenta.empresa
-                        where empresa.id = :empresa', array(
+                        where empresa.id = :empresa and cuenta.periodo = :periodo', array(
             'empresa' => $empresa,
+            'periodo' => $periodo
         ))->fetchAll();
 
         Flight::render('ajax/cuentas/input-niveles', array(
@@ -307,12 +311,14 @@ class CuentaController extends Controller
         $data = isset($_POST['data']) ? $_POST['data'] : array();
 
         $empresa = $this->sesion->get('login')['id'];
+        $periodo = $this->sesion->get('login')['periodo'];
 
         $cuenta = $this->modelo->seleccionar(array(
             'id', 'nombre',
         ), array(
             'empresa' => $empresa,
             'codigo' => $data['codigo'],
+            'periodo' => $periodo
         ));
 
         if (empty($cuenta)) {
@@ -479,7 +485,6 @@ class CuentaController extends Controller
             ]);
 
 
-
             foreach ($sub_cuentas as $key => $sub_cuenta) {
                 array_push($arreglo, $sub_cuenta);
                 $this->subCuentas($arreglo, $nivel + 1, $sub_cuenta['id'], $nivel_maximo, $empresa, $periodo);
@@ -487,12 +492,13 @@ class CuentaController extends Controller
         }
     }
 
-    private function saldoAcumulado($empresa, CuentaModel $cuenta_model, $codigo)
+    private function saldoAcumulado($empresa, $periodo, CuentaModel $cuenta_model, $codigo)
     {
         $saldos = $cuenta_model->conexion()->query(
-            'SELECT codigo, saldo, tipo_saldo FROM cuenta where codigo like :codigo and empresa = :empresa'
+            'SELECT codigo, saldo, tipo_saldo FROM cuenta where codigo like :codigo and empresa = :empresa and periodo = :periodo'
             , array(
             'codigo' => '%' . $codigo . '%',
+            'periodo' => $periodo,
             'empresa' => $empresa
         ))->fetchAll();
 

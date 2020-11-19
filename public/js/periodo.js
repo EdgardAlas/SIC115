@@ -28,12 +28,21 @@ function iniciarPeriodo() {
         cancelButtonText: 'No',
     }).then((result) => {
         if (result.value) {
+
+            Swal.fire({
+                title: 'Iniciando Periodo...',
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                }
+            })
+
             $.post('/periodo/iniciar-periodo', {}, function (data) {
                 console.log(data)
                 if (!data.error) {
                     $('#modal_iniciar_periodo').modal('hide');
                     listaPeriodos(false);
                 }
+                Swal.close();
 
                 Swal.fire({
                     title: 'Atención',

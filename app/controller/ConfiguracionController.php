@@ -15,6 +15,8 @@ class ConfiguracionController extends Controller
     public function index()
     {
         $this->sesionActiva();
+        $this->validarPeriodo();
+
         $this->view('configuracion', [
             'js_especifico' => Utiles::printScript('configuracion')
         ]);

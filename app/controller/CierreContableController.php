@@ -973,8 +973,9 @@ class CierreContableController extends Controller
         foreach ($datos as $key => $dato) {
             $cuentas = $cuenta_model->conexion()->query(
                 'SELECT id, codigo, nombre, saldo, tipo_saldo, ultimo_nivel from cuenta 
-                        where empresa = :empresa and codigo LIKE :codigo AND orden = :orden ORDER BY :codigo', array(
+                        where empresa = :empresa and codigo LIKE :codigo AND orden = :orden and periodo = :periodo ORDER BY :codigo', array(
                     ':empresa' => $login['id'],
+                    ':periodo' => $login['periodo'],
                     ':codigo' => '%' . $dato['codigo'] . '%',
                     ':orden' => $dato['orden']
                 )
