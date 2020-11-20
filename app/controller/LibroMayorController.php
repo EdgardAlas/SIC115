@@ -15,7 +15,7 @@ class LibroMayorController extends Controller
     public function index()
     {
         $this->sesionActiva();
-        $this->validarPeriodo();
+        //$this->validarPeriodo();
 
 
         $this->view('libro-mayor', [
@@ -52,7 +52,7 @@ class LibroMayorController extends Controller
 
         $login = $this->sesion->get('login');
 
-        $nivel = isset($_POST['nivel']) ? $_POST['nivel'] : 3;
+        $nivel = isset($_POST['nivel']) ? $_POST['nivel'] : 1;
 
         $fecha_inicial = (isset($_POST['fecha_inicial']))
             ? $_POST['fecha_inicial']
@@ -61,6 +61,8 @@ class LibroMayorController extends Controller
         $fecha_final = (isset($_POST['fecha_final']))
             ? $_POST['fecha_final']
             : date($login['anio'] . '-12-31');
+
+        $login['periodo'] = isset($_POST['periodo']) ? base64_decode($_POST['periodo']) : $login['periodo'];
 
         $cuentas = $cuenta_model->seleccionar(array('nombre', 'id', 'codigo', 'tipo_saldo', 'periodo'), array(
             'empresa' => $login['id'],
@@ -120,6 +122,8 @@ class LibroMayorController extends Controller
             ? $_GET['fecha_final']
             : date($login['anio'] . '-12-31');
 
+
+        $login['periodo'] = isset($_GET['periodo']) ? base64_decode($_GET['periodo']) : $login['periodo'];
 
         $cuentas = $cuenta_model->seleccionar(array('nombre', 'id', 'codigo', 'tipo_saldo'), array(
             'empresa' => $login['id'],

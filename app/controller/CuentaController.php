@@ -286,10 +286,13 @@ class CuentaController extends Controller
     {
         $this->isAjax();
         $this->sesionActivaAjax();
-        $this->validarMetodoPeticion('GET');
+        $this->validarMetodoPeticion('POST');
 
         $empresa = $this->sesion->get('login')['id'];
         $periodo = $this->sesion->get('login')['periodo'];
+
+        $periodo = isset($_POST['periodo']) ? base64_decode($_POST['periodo']) : $periodo;
+
 
         $datos = $this->modelo->conexion()->query('SELECT distinct nivel from cuenta inner
                     join empresa on empresa.id = cuenta.empresa

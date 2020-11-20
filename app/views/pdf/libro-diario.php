@@ -177,7 +177,7 @@ foreach ($data as $key => $partida) {
     }
     $pdf->Row(array(
         $contador_detalle == 0 ? Utiles::fechaSinFormato($partida['fecha']) : '',
-        $partida['movimiento'] === 'Cargo' ? $partida['cuenta'] : '    ' . $partida['cuenta'],
+        $partida['movimiento'] === 'Cargo' ? iconv('UTF-8', 'cp1252', $partida['cuenta']) : '    ' . iconv('UTF-8', 'cp1252', $partida['cuenta']),
         ($partida['movimiento'] === 'Cargo' ? Utiles::monto($partida['monto']) : ''),
         ($partida['movimiento'] === 'Abono' ? Utiles::monto($partida['monto']) : '')
     ));
@@ -191,7 +191,7 @@ foreach ($data as $key => $partida) {
         $pdf->SetFont('courier', 'B', 9);
         $pdf->SetAligns(array('L', 'C', 'R', 'R'));
         $pdf->Row(array(
-            '',$partida['descripcion'],'',''
+            '',iconv('UTF-8', 'cp1252', $partida['descripcion']),'',''
         ));
         $pdf->Row(array(
             '','','',''

@@ -1,8 +1,13 @@
 function tablaLibroMayorEspecifico(carga) {
+
+    cambiarFechas($('#periodo').find(':selected').attr('data-anio'));
     const fecha_inicial = $("#fecha_inicial").val();
     const fecha_final = $("#fecha_final").val();
     const nivel = $("#nivel").val();
     const cuentas = $("#cuenta").val().split(',');
+
+    const periodo = $('#periodo').val();
+
     const cuenta = [...new Set(cuentas)];
 
 
@@ -19,7 +24,8 @@ function tablaLibroMayorEspecifico(carga) {
         fecha_inicial,
         fecha_final,
         cuenta,
-        nivel
+        nivel,
+        periodo
     }, function (data) {
         if (carga) {
             Swal.close();
@@ -29,9 +35,28 @@ function tablaLibroMayorEspecifico(carga) {
     reporteLibroMayor();
 }
 
+function cambiarFechas(anio) {
+    let fecha = new Date();
+    $('#fecha_inicial').val(`${anio}-01-01`);
+    $('#fecha_final').val(`${anio}-${fecha.getMonth() + 1}-${fecha.getDate()}`);
+}
+
 function cargarNiveles() {
-    $("#contenedor_niveles").load('/cuenta/input-niveles', function () {
+
+    const periodo = $('#periodo').val();
+
+    $("#contenedor_niveles").load('/cuenta/input-niveles',{
+        periodo
+    }, function () {
         tablaLibroMayorEspecifico(true);
+    });
+}
+
+
+function cargarPeriodos() {
+    $('#list_periodos').load('/periodo/input-periodos', function (data) {
+        console.log(data)
+        cargarNiveles();
     });
 }
 
@@ -68,17 +93,18 @@ function reporteLibroMayor() {
     let fecha_inicial = $('#fecha_inicial').val(),
         fecha_final = $('#fecha_final').val(),
         nivel = $('#nivel').val(),
-        cuenta = $('#cuenta').val().split(',');
+        cuenta = $('#cuenta').val().split(','),
+        periodo = $('#periodo').val();
 
     cuenta = [...new Set(cuenta)];
 
-    $('#btn_imprimir').attr('href', `/libro-mayor/reporte-libro-mayor?fecha_inicial=${fecha_inicial}&fecha_final=${fecha_final}&nivel=${nivel}&cuenta=${cuenta}`);
+    $('#btn_imprimir').attr('href', `/libro-mayor/reporte-libro-mayor?fecha_inicial=${fecha_inicial}&fecha_final=${fecha_final}&nivel=${nivel}&cuenta=${cuenta}&periodo=${periodo}`);
 
 }
 
 $(document).ready(() => {
     titulo('Libro Mayor');
-    cargarNiveles();
+    cargarPeriodos();
 
 
     $(document).on('click', '.numero_partida', function () {
@@ -106,6 +132,10 @@ $(document).ready(() => {
     });
 
     $(document).on('keyup', '#cuenta', function () {
+        tablaLibroMayorEspecifico();
+    });
+
+    $(document).on('change', '#periodo', function () {
         tablaLibroMayorEspecifico();
     });
 });

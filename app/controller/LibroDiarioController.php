@@ -17,7 +17,7 @@ class LibroDiarioController extends Controller
     public function index()
     {
         $this->sesionActiva();
-        $this->validarPeriodo();
+        //$this->validarPeriodo();
 
         $this->view('libro-diario', [
             'js_especifico' => Utiles::printScript('libro-diario'),
@@ -193,6 +193,9 @@ class LibroDiarioController extends Controller
             ? base64_decode($_POST['codigo'])
             : null);
 
+
+        $login['periodo'] = isset($_POST['periodo']) ? base64_decode($_POST['periodo']) : $login['periodo'];
+
         $condicion = array(
             'empresa' => $login['id'],
             'periodo' => $login['periodo'],
@@ -230,6 +233,8 @@ class LibroDiarioController extends Controller
         
         $numero = (isset($_GET['numero'])) ? explode(',', $_GET['numero']) : array('');
 
+        $login['periodo'] = isset($_GET['periodo']) ? base64_decode($_GET['periodo']) : $login['periodo'];
+
         $condicion = array(
             'empresa' => $login['id'],
             'periodo' => $login['periodo'],
@@ -246,26 +251,6 @@ class LibroDiarioController extends Controller
         ));
 
     }
-
-    public function test()
-    {
-        $conexion = new Conexion();
-        $detalle_partida_model = new DetallePartidaModel($conexion);
-        $data = $detalle_partida_model->obtenerLibroDiario();
-        //Exepcion::json($this->eliminarDuplicados($data));
-        echo array_count_values(array_column($data, 'numero'))[5];
-    }
-
-    /*  public function eliminarDuplicados($arreglo){
-    foreach ($arreglo as $key => $value) {
-    foreach ($value as $eliminar => $valor) {
-    if(is_numeric($eliminar)){
-    unset($arreglo[$key][$eliminar]);
-    }
-    }
-    }
-    return $arreglo;
-    } */
 
     public function editar()
     {

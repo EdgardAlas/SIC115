@@ -113,7 +113,7 @@ class PeriodoController extends Controller
             Excepcion::json(['error' => false, 'mensaje' => 'Periodo creado con exito', 'icono' => 'success', 'error_' => $this->modelo->error()]);
         }
 
-        Excepcion::json(['error' => true, 'mensaje' => 'Error al iniciar el periodo', 'icono' => 'warning','error_' => $this->modelo->error()]);
+        Excepcion::json(['error' => true, 'mensaje' => 'Error al iniciar el periodo', 'icono' => 'warning', 'error_' => $this->modelo->error()]);
 
     }
 
@@ -374,5 +374,24 @@ class PeriodoController extends Controller
         return $saldocuenta;
     }
 
+    public function inputPeriodos()
+    {
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('GET');
+
+        $login = $this->sesion->get('login');
+
+        $periodos = $this->modelo->seleccionar(['id', 'anio'], array(
+            'empresa' => $login['id']
+        ));
+
+        Flight::render('ajax/periodo/input-periodos', array(
+            'periodos' => $periodos,
+            'periodo_actual' => $login['periodo']
+        ));
+
+
+    }
 
 }
