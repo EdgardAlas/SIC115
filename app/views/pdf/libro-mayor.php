@@ -197,7 +197,7 @@ foreach ($data as $key => $partida) {
         $pdf->Row(array(
             '', '',
             $partida['tipo_saldo'] === 'Deudor' ? Utiles::monto($total_cargo - $total_abono) : '-',
-            $partida['tipo_saldo'] === 'Acreedor' ? Utiles::monto($total_cargo - $total_abono) : '-'
+            $partida['tipo_saldo'] === 'Acreedor' ? Utiles::monto($total_abono - $total_cargo) : '-'
         ));
         $pdf->Row(array('','','',''));
     }

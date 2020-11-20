@@ -11,98 +11,6 @@ const cleave = new Cleave('#monto', {
     prefix: '$'
 });
 
-$(document).ready(function() {
-
-    $("#btnPartida").on("click", function() {
-        $("#partidas").modal("show");
-        cuentaSelect();
-        tablaDetalle();
-    });
-
-    $("#partidas").on("shown.bs.modal", function(e) {
-        focusCampo("descripcion");
-    });
-
-    $(document).on('click', '#btnAgregar', function(e) {
-        //e.preventDefault();
-
-        agregarDetalle();
-    });
-
-    $(document).on('click', '#btnGuardarPartida', function(e) {
-        //e.preventDefault();
-        $('#btnGuardarPartida').blur();
-        if (!validarGuardarPartida()) {
-            guardarDetalle();
-        }
-
-    });
-
-    shortcut.add("Alt+G", function() {
-        if ($('#partidas').is(':visible'))
-            if (!validarGuardarPartida()) {
-                guardarDetalle();
-            }
-    });
-
-    //usar la tecle f8 para cambiar entre el saldo de la cuenta
-    shortcut.add("F7", function() {
-        var saldo = $("#movimiento").val();
-        if (saldo == "Cargo") {
-            $("#movimiento").val("Abono");
-        } else {
-            $("#movimiento").val("Cargo");
-        }
-    }, {
-        "type": "keydown",
-        "propagate": true,
-        "target": document
-    });
-
-    $("#descripcion").on('keyup', function(e) {
-        validForm("#descripcion", 0);
-        if ($(this).val().length > 0 && e.keyCode == 13) {
-            $("#codigoCuenta").select2('focus');
-        }
-    });
-
-
-    $(document).on('focus', '.select2-selection.select2-selection--single', function(e) {
-        $(this).closest(".select2-container").siblings('select:enabled').select2('open');
-    });
-
-    $(document).on('select2:closing', 'select.select2', function(e) {
-        $(e.target).data("select2").$selection.one('focus focusin', function(e) {
-            e.stopPropagation();
-        });
-    });
-
-    $(document).on("focusout", "#descripcion", function() {
-        validForm("#descripcion", 0);
-    });
-
-    $(document).on("focusout", "#monto", function() {
-        validForm("#monto", 1);
-    });
-
-    $(document).on("keyup", "#monto", function(e) {
-        validForm("#monto", 1);
-        if ($(this).val().length > 1 && e.keyCode == 13) {
-            agregarDetalle();
-        }
-    });
-
-
-    $(document).on("select2:close", "#codigoCuenta", function() {
-        let val = atob($("#codigoCuenta").val().split(' ')[0]);
-
-        if (val == -1)
-            $("#cuentaSelect").addClass('has-error');
-        else
-            $("#cuentaSelect").removeClass('has-error');
-    });
-});
-
 function validForm(id, validacion) {
     let val = $(id).val();
     if (val.length == validacion)
@@ -291,3 +199,101 @@ function validarGuardarPartida() {
 
     return false;
 }
+
+function cargarPeriodos(){
+    $('#list_periodos').load('/periodo/input-periodos');
+}
+
+$(document).ready(function() {
+
+    cargarPeriodos();
+
+    $("#btnPartida").on("click", function() {
+        $("#partidas").modal("show");
+        cuentaSelect();
+        tablaDetalle();
+    });
+
+    $("#partidas").on("shown.bs.modal", function(e) {
+        focusCampo("descripcion");
+    });
+
+    $(document).on('click', '#btnAgregar', function(e) {
+        //e.preventDefault();
+
+        agregarDetalle();
+    });
+
+    $(document).on('click', '#btnGuardarPartida', function(e) {
+        //e.preventDefault();
+        $('#btnGuardarPartida').blur();
+        if (!validarGuardarPartida()) {
+            guardarDetalle();
+        }
+
+    });
+
+    shortcut.add("Alt+G", function() {
+        if ($('#partidas').is(':visible'))
+            if (!validarGuardarPartida()) {
+                guardarDetalle();
+            }
+    });
+
+    //usar la tecle f8 para cambiar entre el saldo de la cuenta
+    shortcut.add("F7", function() {
+        var saldo = $("#movimiento").val();
+        if (saldo == "Cargo") {
+            $("#movimiento").val("Abono");
+        } else {
+            $("#movimiento").val("Cargo");
+        }
+    }, {
+        "type": "keydown",
+        "propagate": true,
+        "target": document
+    });
+
+    $("#descripcion").on('keyup', function(e) {
+        validForm("#descripcion", 0);
+        if ($(this).val().length > 0 && e.keyCode == 13) {
+            $("#codigoCuenta").select2('focus');
+        }
+    });
+
+
+    $(document).on('focus', '.select2-selection.select2-selection--single', function(e) {
+        $(this).closest(".select2-container").siblings('select:enabled').select2('open');
+    });
+
+    $(document).on('select2:closing', 'select.select2', function(e) {
+        $(e.target).data("select2").$selection.one('focus focusin', function(e) {
+            e.stopPropagation();
+        });
+    });
+
+    $(document).on("focusout", "#descripcion", function() {
+        validForm("#descripcion", 0);
+    });
+
+    $(document).on("focusout", "#monto", function() {
+        validForm("#monto", 1);
+    });
+
+    $(document).on("keyup", "#monto", function(e) {
+        validForm("#monto", 1);
+        if ($(this).val().length > 1 && e.keyCode == 13) {
+            agregarDetalle();
+        }
+    });
+
+
+    $(document).on("select2:close", "#codigoCuenta", function() {
+        let val = atob($("#codigoCuenta").val().split(' ')[0]);
+
+        if (val == -1)
+            $("#cuentaSelect").addClass('has-error');
+        else
+            $("#cuentaSelect").removeClass('has-error');
+    });
+});

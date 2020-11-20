@@ -158,10 +158,10 @@ function imprimirTotales() {
 
 function calcularMonto(monto, saldo, movimiento, codigo) {
     let saldocuenta = monto;
-    if ((saldo==='Deudor' && codigo[codigo.length-1]=='R' && movimiento === 'Cargo') ||
-        (saldo==='Acreedor' && codigo[codigo.length-1]=='R' && movimiento === 'Abono') ||
-        (saldo === 'Deudor' && codigo[codigo.length-1] !='R' && movimiento === 'Abono') ||
-        (saldo === 'Acreedor' && codigo[codigo.length-1] !='R' && movimiento === 'Cargo')) {
+    if ((saldo === 'Deudor' && codigo[codigo.length - 1] == 'R' && movimiento === 'Cargo') ||
+        (saldo === 'Acreedor' && codigo[codigo.length - 1] == 'R' && movimiento === 'Abono') ||
+        (saldo === 'Deudor' && codigo[codigo.length - 1] != 'R' && movimiento === 'Abono') ||
+        (saldo === 'Acreedor' && codigo[codigo.length - 1] != 'R' && movimiento === 'Cargo')) {
         saldocuenta = -saldocuenta;
     }
     return saldocuenta;
@@ -402,23 +402,32 @@ function tablaLibroDiarioFechas() {
         }
     }) */
 
+    cambiarFechas($('#periodo').find(':selected').attr('data-anio'));
+
     let fecha_inicial = $('#fecha_inicial').val(),
         fecha_final = $('#fecha_final').val(),
-        numero = $('#numero_partida').val().split(',');
+        numero = $('#numero_partida').val().split(','),
+        periodo = $('#periodo').val();
 
     numero = [...new Set(numero)];
-
-
 
     $('#contendor_partidas').load('/libro-diario/tabla-libro-diario', {
         fecha_inicial,
         fecha_final,
-        numero
+        numero,
+        periodo
     }, function () {
         /* Swal.close(); */
     });
 
     reporteLibroDiario();
+}
+
+
+function cambiarFechas(anio) {
+    let fecha = new Date();
+    $('#fecha_inicial').val(`${anio}-01-01`);
+    $('#fecha_final').val(`${anio}-${fecha.getMonth() + 1}-${fecha.getDate()}`);
 }
 
 
@@ -432,12 +441,20 @@ function reporteLibroDiario() {
 
     let fecha_inicial = $('#fecha_inicial').val(),
         fecha_final = $('#fecha_final').val(),
-        numero = $('#numero_partida').val().split(',');
+        numero = $('#numero_partida').val().split(','),
+        periodo = $('#periodo').val();
 
     numero = [...new Set(numero)];
 
-    $('#btn_imprimir').attr('href', `/libro-diario/reporte-libro-diario?fecha_inicial=${fecha_inicial}&fecha_final=${fecha_final}&numero=${numero}`);
+    $('#btn_imprimir').attr('href', `/libro-diario/reporte-libro-diario?fecha_inicial=${fecha_inicial}&fecha_final=${fecha_final}&numero=${numero}&periodo=${periodo}`);
 
+}
+
+function cargarPeriodos() {
+    $('#list_periodos').load('/periodo/input-periodos', function (data) {
+        console.log(data)
+        tablaLibroDiarioFechas(true);
+    });
 }
 
 $(document).ready(() => {
@@ -448,7 +465,7 @@ $(document).ready(() => {
 
     tablaSinPaginacion('tabla_detalle_partida');
 
-    tablaLibroDiario(true);
+    cargarPeriodos();
 
     /* Eventos */
 
@@ -574,6 +591,10 @@ $(document).ready(() => {
     });
 
     $(document).on('change', '#fecha_final', function () {
+        tablaLibroDiarioFechas();
+    });
+
+    $(document).on('change', '#periodo', function () {
         tablaLibroDiarioFechas();
     });
 

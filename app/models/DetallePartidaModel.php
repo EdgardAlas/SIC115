@@ -43,7 +43,7 @@ class DetallePartidaModel extends Model
                         inner join cuenta on detalle.cuenta = cuenta.id
                             where periodo.id = :periodo and empresa.id = :empresa and
                             partida.fecha between :fecha_inicial and :fecha_final and partida.numero = :numero
-                             and cuenta.periodo = :periodo
+                             and cuenta.periodo = :periodo and detalle.monto > 0
                             ", array(
                     ':periodo' => $condicion['periodo'],
                     ':empresa' => $condicion['empresa'],
@@ -76,7 +76,9 @@ class DetallePartidaModel extends Model
             inner join empresa on periodo.empresa = empresa.id
             inner join cuenta on detalle.cuenta = cuenta.id
                 where periodo.id = :periodo and empresa.id = :empresa and
-                partida.fecha between :fecha_inicial and :fecha_final and cuenta.periodo = :periodo and cuenta.periodo = :periodo
+                partida.fecha between :fecha_inicial and :fecha_final and cuenta.periodo = :periodo and cuenta.periodo = :periodo and detalle.monto > 0 
+                
+                
                 
                 ", array(
             ':periodo' => $condicion['periodo'],
