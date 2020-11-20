@@ -181,7 +181,8 @@ foreach ($data as $key => $partida) {
         $pdf->SetFont('courier', '', 9);
         foreach ($partida['partidas'] as $key_movimiento => $movimientos) {
             $pdf->Row(array(
-                Utiles::fechaSinFormato($movimientos['fecha']), $movimientos['descripcion'],
+                Utiles::fechaSinFormato($movimientos['fecha']),
+                iconv('UTF-8', 'cp1252', $movimientos['descripcion']),
                 $movimientos['movimiento'] === 'Cargo' ? Utiles::monto($movimientos['monto']) : '-',
                 $movimientos['movimiento'] === 'Abono' ? Utiles::monto($movimientos['monto']) : '-'
             ));
