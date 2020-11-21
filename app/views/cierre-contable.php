@@ -17,7 +17,7 @@
                             </div>
                         </div>
 
-                        <div class="row form-group">
+                        <div id="reportes" class="row form-group d-none">
                             <div class="col-12">
                                 <div class="dropdown d-inline">
                                     <button class="btn btn-success dropdown-toggle" type="button"
@@ -30,7 +30,8 @@
                                         <a class="dropdown-item" id="forma_reporte" href="/cierre-contable/balance-forma-reporte">Forma de Reporte</a>
                                     </div>
                                 </div>
-                                <button class="btn btn-success" id="estado_resultados">Estado de Resultados</button>
+
+                                <a id="estado_resultados" class="btn btn-success" href="/cierre-contable/estado-resultados">Estado de Resultados</a>
                             </div>
                         </div>
                         <div class="table-responsive" id="div_partidas">

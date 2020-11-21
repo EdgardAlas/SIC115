@@ -386,27 +386,70 @@ class CierreContableController extends Controller
 
     }
 
+    public function EstadoResultados()
+    {
+        $this->sesionActiva();
+        $this->validarMetodoPeticion('GET');
+
+        $login = $this->sesion->get('login');
+
+        $inventario_final = isset($_GET['inventario_final']) ? ($_GET['inventario_final'] === '' ? 0 : $_GET['inventario_final']) : 0;
+
+        $periodo = isset($_GET['periodo']) ? $_GET['periodo'] : null;
+
+        $periodo_pasado = isset($_GET['periodo_pasado']) ? $_GET['periodo_pasado'] : null;
+
+        if ($periodo !== null) {
+            $login['periodo'] = $periodo;
+        }
+
+        if ($periodo_pasado !== null) {
+            $inventario_final = $this->inventarioFinalPeriodoPasado($login['empresa'], $login['periodo']);
+        }
+
+
+//        $configuracion_model = new ConfiguracioModel(new Conexion());
+//        $cuenta_model = new CuentaModel(new Conexion());
+        $datos = $this->obtenerCuentasConfiguracion(['estado_resultados', 'cierre'], $login);
+
+
+        $partidas = $this->valoresEstadoResultadosParaBalance($datos, $inventario_final);
+        //echo $partidas;
+        //Excepcion::json($partidas);
+        $this->asignarSaldosEstadoResultados($login['periodo'], $login, $datos);
+
+
+        //Excepcion::json($datos);
+
+        Flight::render('pdf/estado-de-resultado', array(
+            'partidas' => $datos,
+            'empresa' => $login['nombre'],
+            'inventario_final' => $inventario_final
+        ));
+
+
+    }
+
     public function asignarSaldosEstadoResultados($periodo, $login, &$cuentas)
     {
         $conexion = new Conexion();
         $detalle_partida_model = new DetallePartidaModel($conexion);
 
-        $iva_credito = $this->obtenerSubCuentas('iva_credito',$cuentas);
+        $iva_credito = $this->obtenerSubCuentas('iva_credito', $cuentas);
         $detalle_partida_model->asignarSaldosCalculados($iva_credito, $periodo);
         $indice = Utiles::posicionArreglo('iva_credito', 'descripcion', $cuentas);
 
-        if($indice!==false){
+        if ($indice !== false) {
             $cuentas[$indice]['subcuentas'] = $iva_credito;
         }
 
-        $iva_debito = $this->obtenerSubCuentas('iva_debito',$cuentas);
+        $iva_debito = $this->obtenerSubCuentas('iva_debito', $cuentas);
         $detalle_partida_model->asignarSaldosCalculados($iva_debito, $periodo);
         $indice = Utiles::posicionArreglo('iva_debito', 'descripcion', $cuentas);
 
-        if($indice!==false){
+        if ($indice !== false) {
             $cuentas[$indice]['subcuentas'] = $iva_debito;
         }
-
 
 
         /*
@@ -416,33 +459,32 @@ class CierreContableController extends Controller
         //ventas
 
 
-        $ventas = $this->obtenerSubCuentas('ventas',$cuentas);
+        $ventas = $this->obtenerSubCuentas('ventas', $cuentas);
         $detalle_partida_model->asignarSaldosCalculados($ventas, $periodo);
         $indice = Utiles::posicionArreglo('ventas', 'descripcion', $cuentas);
 
-        if($indice!==false){
+        if ($indice !== false) {
             $cuentas[$indice]['subcuentas'] = $ventas;
         }
 
 
         //rebajas y devoluciones
 
-        $rebajas_ventas = $this->obtenerSubCuentas('rebajas_ventas',$cuentas);
+        $rebajas_ventas = $this->obtenerSubCuentas('rebajas_ventas', $cuentas);
         $detalle_partida_model->asignarSaldosCalculados($rebajas_ventas, $periodo);
         $indice = Utiles::posicionArreglo('rebajas_ventas', 'descripcion', $cuentas);
 
-        if($indice!==false){
+        if ($indice !== false) {
             $cuentas[$indice]['subcuentas'] = $rebajas_ventas;
         }
 
 
-
-        $devoluciones_ventas = $this->obtenerSubCuentas('devoluciones_ventas',$cuentas);
+        $devoluciones_ventas = $this->obtenerSubCuentas('devoluciones_ventas', $cuentas);
         $detalle_partida_model->asignarSaldosCalculados($devoluciones_ventas, $periodo);
 
         $indice = Utiles::posicionArreglo('devoluciones_ventas', 'descripcion', $cuentas);
 
-        if($indice!==false){
+        if ($indice !== false) {
             $cuentas[$indice]['subcuentas'] = $devoluciones_ventas;
         }
 
@@ -456,56 +498,56 @@ class CierreContableController extends Controller
 
         //compras
 
-        $compras = $this->obtenerSubCuentas('compras',$cuentas);
+        $compras = $this->obtenerSubCuentas('compras', $cuentas);
         $detalle_partida_model->asignarSaldosCalculados($compras, $periodo);
 
         $indice = Utiles::posicionArreglo('compras', 'descripcion', $cuentas);
 
-        if($indice!==false){
+        if ($indice !== false) {
             $cuentas[$indice]['subcuentas'] = $compras;
         }
 
 
         //gastos sobre compras
-        $gastos_compras = $this->obtenerSubCuentas('gastos_compras',$cuentas);
+        $gastos_compras = $this->obtenerSubCuentas('gastos_compras', $cuentas);
         $detalle_partida_model->asignarSaldosCalculados($gastos_compras, $periodo);
 
         $indice = Utiles::posicionArreglo('gastos_compras', 'descripcion', $cuentas);
 
-        if($indice!==false){
+        if ($indice !== false) {
             $cuentas[$indice]['subcuentas'] = $gastos_compras;
         }
 
 
         //rebajas y devoluciones sobre compras
 
-        $rebajas_compras = $this->obtenerSubCuentas('rebajas_compras',$cuentas);
+        $rebajas_compras = $this->obtenerSubCuentas('rebajas_compras', $cuentas);
         $detalle_partida_model->asignarSaldosCalculados($rebajas_compras, $periodo);
 
         $indice = Utiles::posicionArreglo('rebajas_compras', 'descripcion', $cuentas);
 
-        if($indice!==false){
+        if ($indice !== false) {
             $cuentas[$indice]['subcuentas'] = $rebajas_compras;
         }
 
 
-        $devoluciones_compras = $this->obtenerSubCuentas('devoluciones_compras',$cuentas);
+        $devoluciones_compras = $this->obtenerSubCuentas('devoluciones_compras', $cuentas);
         $detalle_partida_model->asignarSaldosCalculados($devoluciones_compras, $periodo);
 
         $indice = Utiles::posicionArreglo('devoluciones_compras', 'descripcion', $cuentas);
 
-        if($indice!==false){
+        if ($indice !== false) {
             $cuentas[$indice]['subcuentas'] = $devoluciones_compras;
         }
 
         //inventario inicial
 
-        $inventario_inicial = $this->obtenerSubCuentas('inventario',$cuentas);
+        $inventario_inicial = $this->obtenerSubCuentas('inventario', $cuentas);
         $detalle_partida_model->asignarSaldosCalculados($inventario_inicial, $periodo);
 
         $indice = Utiles::posicionArreglo('inventario', 'descripcion', $cuentas);
 
-        if($indice!==false){
+        if ($indice !== false) {
             $cuentas[$indice]['subcuentas'] = $inventario_inicial;
         }
 
@@ -529,15 +571,14 @@ class CierreContableController extends Controller
 
         //gastos de operacion
 
-        $gastos_operacion = $this->obtenerSubCuentas('gastos_operacion',$cuentas);
+        $gastos_operacion = $this->obtenerSubCuentas('gastos_operacion', $cuentas);
         $detalle_partida_model->asignarSaldosCalculados($gastos_operacion, $periodo);
 
         $indice = Utiles::posicionArreglo('gastos_operacion', 'descripcion', $cuentas);
 
-        if($indice!==false){
+        if ($indice !== false) {
             $cuentas[$indice]['subcuentas'] = $gastos_operacion;
         }
-
 
 
         /*
@@ -550,22 +591,22 @@ class CierreContableController extends Controller
 
         //otros productos
 
-        $otros_productos = $this->obtenerSubCuentas('otros_productos',$cuentas);
+        $otros_productos = $this->obtenerSubCuentas('otros_productos', $cuentas);
         $detalle_partida_model->asignarSaldosCalculados($otros_productos, $periodo);
 
         $indice = Utiles::posicionArreglo('otros_productos', 'descripcion', $cuentas);
 
-        if($indice!==false){
+        if ($indice !== false) {
             $cuentas[$indice]['subcuentas'] = $otros_productos;
         }
 
         //otros gastos
-        $otros_gastos = $this->obtenerSubCuentas('otros_gastos',$cuentas);
+        $otros_gastos = $this->obtenerSubCuentas('otros_gastos', $cuentas);
         $detalle_partida_model->asignarSaldosCalculados($otros_gastos, $periodo);
 
         $indice = Utiles::posicionArreglo('otros_gastos', 'descripcion', $cuentas);
 
-        if($indice!==false){
+        if ($indice !== false) {
             $cuentas[$indice]['subcuentas'] = $otros_gastos;
         }
 

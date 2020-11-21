@@ -1,7 +1,7 @@
 <?php
 
 $data = isset($datos) ? $datos : array();
-$empresa = isset($emp) ? $emp : 'Sistema Contable';
+$empresa = isset($empresa) ? $empresa : 'Sistema Contable';
 
 use Fpdf\Fpdf;
 
