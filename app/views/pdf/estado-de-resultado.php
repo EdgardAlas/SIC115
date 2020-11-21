@@ -117,9 +117,9 @@ class PDF extends FPDF
         $this->Cell(80);
         $this->Cell(30, 10, utf8_decode('Estado de resultado'), 0, 0, 'C');
         $this->Ln(15);
-        $this->SetFillColor(21, 151, 168);
+        $this->SetFillColor(255, 255, 255);
         $this->SetTextColor(255);
-        $this->SetDrawColor(21, 151, 168); // color de linea
+        $this->SetDrawColor(255, 255, 255); // color de linea
         $this->SetLineWidth(.1); // ancho de linea
         $this->SetFont('Arial', 'B', 11);
         $this->SetFont('Arial', 'B', 11);
@@ -246,7 +246,7 @@ class PDF extends FPDF
 $pdf = new PDF($empresa);
 $pdf->AliasNbPages();
 $pdf->AddPage();
-$pdf->SetDrawColor(21, 151, 168);
+$pdf->SetDrawColor(255, 255, 255);
 $pdf->SetFont('courier', '', 9);
 $pdf->SetFillColor(224, 235, 255); //
 $pdf->SetTextColor(0);
