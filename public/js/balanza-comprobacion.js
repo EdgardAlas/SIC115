@@ -12,7 +12,7 @@ function tablaBalanzaComprobacion(carga = false) {
         })
     }
 
-    console.log(nivel);
+
     $('#contenedor-balanza').load('/balanza-comprobacion/tabla-balanza-comprobacion', {
         fecha_inicial,
         fecha_final,
@@ -36,7 +36,7 @@ function totales() {
 }
 
 function cargarNiveles() {
-    $("#contenedor_niveles").load('/cuenta/input-niveles', function () {
+    $("#contenedor_niveles").load('/cuenta/input-niveles-balanza', function () {
         tablaBalanzaComprobacion(true);
     });
 }
@@ -59,6 +59,7 @@ function reporteBalanza() {
 
 $(document).ready(() => {
     titulo('Balanza de Comprobación');
+
     cargarNiveles();
 
     /* 

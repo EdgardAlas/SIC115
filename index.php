@@ -12,18 +12,7 @@ Flight::map('notFound', function () {
     Flight::render('error/404', 404);
 });
 
- Flight::map('error', function (Exception $ex) {
-    header("HTTP/1.0 500 Internal Server Error");
-    
-    /* echo $ex->getTraceAsString();
-    echo '<br>';
-    echo $ex->getMessage(); */
-    /* var_dump($ex); */
-    header("HTTP/1.0 500 Internal Error");
-    /* $url =  trim(Flight::request()->url,'/'); */
-    Flight::render('error/500', 500);
-    
-});
+
 
 //MVC creditos: https://steemit.com/php/@kalangaum/easy-php-routing-management
 

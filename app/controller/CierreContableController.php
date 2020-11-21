@@ -105,7 +105,7 @@ class CierreContableController extends Controller
         $data['periodo'] = $periodoModel->ultimoPeriodo($data['id']);
         $data['anio'] = $periodoModel->ultimoAnio($data['id']);
         $data['estado'] = $periodoModel->estadoPeriodo($data['periodo'], $data['id']);
-        if($data['estado']=='CERRADO'){
+        if ($data['estado'] == 'CERRADO') {
             $data['periodo'] = null;
         }
         $sesion->set('login', $data);
@@ -124,6 +124,8 @@ class CierreContableController extends Controller
 //        $configuracion_model = new ConfiguracioModel(new Conexion());
 //        $cuenta_model = new CuentaModel(new Conexion());
         $datos = $this->obtenerCuentasConfiguracion(['estado_resultados', 'cierre'], $login);
+
+        $this->asignarSaldosEstadoResultados($login['periodo'], $login, $datos);
 
         $this->valoresEstadoResultados($datos, $inventario_final);
 
@@ -168,6 +170,7 @@ class CierreContableController extends Controller
         $partidas_cierre = $this->sesion->get('partidas');
 
         $partidas_de_balance = $partidas_cierre[count($partidas_cierre) - 1];
+
 
         unset($partidas_cierre[count($partidas_cierre) - 1]);
 
@@ -342,19 +345,25 @@ class CierreContableController extends Controller
 
     public function balanceFormaReporte()
     {
-        $this->isAjax();
-        $this->sesionActivaAjax();
+        $this->sesionActiva();
         $this->validarMetodoPeticion('GET');
-
-        $inventario_final = isset($_GET['inventario_final']) ? ($_GET['inventario_final'] === '' ? 0 : $_GET['inventario_final']) : 0;
-        $periodo = isset($_GET['periodo']) ? $_GET['periodo'] : null;
-
 
         $login = $this->sesion->get('login');
 
-        if($periodo!==null){
+        $inventario_final = isset($_GET['inventario_final']) ? ($_GET['inventario_final'] === '' ? 0 : $_GET['inventario_final']) : 0;
+
+        $periodo = isset($_GET['periodo']) ? $_GET['periodo'] : null;
+
+        $periodo_pasado = isset($_GET['periodo_pasado']) ? $_GET['periodo_pasado'] : null;
+
+        if ($periodo !== null) {
             $login['periodo'] = $periodo;
         }
+
+        if ($periodo_pasado !== null) {
+            $inventario_final = $this->inventarioFinalPeriodoPasado($login['empresa'], $login['periodo']);
+        }
+
 
 //        $configuracion_model = new ConfiguracioModel(new Conexion());
 //        $cuenta_model = new CuentaModel(new Conexion());
@@ -364,9 +373,207 @@ class CierreContableController extends Controller
 
         $partidas = $this->valoresEstadoResultadosParaBalance($datos, $inventario_final);
 
-        $this->asiganarSaldosBalance($cuentas_balance, $partidas, $login['periodo']);
+        $this->asignarSaldosEstadoResultados($login['periodo'], $login, $partidas);
+
+        $cuentas_balance_general = $this->asiganarSaldosBalance($cuentas_balance, $partidas, $login['periodo']);
+
+
+        Flight::render('pdf/forma-reporte', array(
+            'datos' => $cuentas_balance_general,
+            'empresa' => $login['nombre']
+        ));
+
 
     }
+
+    public function asignarSaldosEstadoResultados($periodo, $login, &$cuentas)
+    {
+        $conexion = new Conexion();
+        $detalle_partida_model = new DetallePartidaModel($conexion);
+
+        $iva_credito = $this->obtenerSubCuentas('iva_credito',$cuentas);
+        $detalle_partida_model->asignarSaldosCalculados($iva_credito, $periodo);
+        $indice = Utiles::posicionArreglo('iva_credito', 'descripcion', $cuentas);
+
+        if($indice!==false){
+            $cuentas[$indice]['subcuentas'] = $iva_credito;
+        }
+
+        $iva_debito = $this->obtenerSubCuentas('iva_debito',$cuentas);
+        $detalle_partida_model->asignarSaldosCalculados($iva_debito, $periodo);
+        $indice = Utiles::posicionArreglo('iva_debito', 'descripcion', $cuentas);
+
+        if($indice!==false){
+            $cuentas[$indice]['subcuentas'] = $iva_debito;
+        }
+
+
+
+        /*
+                 * VENTAS NETAS
+                */
+
+        //ventas
+
+
+        $ventas = $this->obtenerSubCuentas('ventas',$cuentas);
+        $detalle_partida_model->asignarSaldosCalculados($ventas, $periodo);
+        $indice = Utiles::posicionArreglo('ventas', 'descripcion', $cuentas);
+
+        if($indice!==false){
+            $cuentas[$indice]['subcuentas'] = $ventas;
+        }
+
+
+        //rebajas y devoluciones
+
+        $rebajas_ventas = $this->obtenerSubCuentas('rebajas_ventas',$cuentas);
+        $detalle_partida_model->asignarSaldosCalculados($rebajas_ventas, $periodo);
+        $indice = Utiles::posicionArreglo('rebajas_ventas', 'descripcion', $cuentas);
+
+        if($indice!==false){
+            $cuentas[$indice]['subcuentas'] = $rebajas_ventas;
+        }
+
+
+
+        $devoluciones_ventas = $this->obtenerSubCuentas('devoluciones_ventas',$cuentas);
+        $detalle_partida_model->asignarSaldosCalculados($devoluciones_ventas, $periodo);
+
+        $indice = Utiles::posicionArreglo('devoluciones_ventas', 'descripcion', $cuentas);
+
+        if($indice!==false){
+            $cuentas[$indice]['subcuentas'] = $devoluciones_ventas;
+        }
+
+        /*
+         * FIN VENTAS NETAS
+        */
+
+        /*
+         * COSTO DE VENTA
+        */
+
+        //compras
+
+        $compras = $this->obtenerSubCuentas('compras',$cuentas);
+        $detalle_partida_model->asignarSaldosCalculados($compras, $periodo);
+
+        $indice = Utiles::posicionArreglo('compras', 'descripcion', $cuentas);
+
+        if($indice!==false){
+            $cuentas[$indice]['subcuentas'] = $compras;
+        }
+
+
+        //gastos sobre compras
+        $gastos_compras = $this->obtenerSubCuentas('gastos_compras',$cuentas);
+        $detalle_partida_model->asignarSaldosCalculados($gastos_compras, $periodo);
+
+        $indice = Utiles::posicionArreglo('gastos_compras', 'descripcion', $cuentas);
+
+        if($indice!==false){
+            $cuentas[$indice]['subcuentas'] = $gastos_compras;
+        }
+
+
+        //rebajas y devoluciones sobre compras
+
+        $rebajas_compras = $this->obtenerSubCuentas('rebajas_compras',$cuentas);
+        $detalle_partida_model->asignarSaldosCalculados($rebajas_compras, $periodo);
+
+        $indice = Utiles::posicionArreglo('rebajas_compras', 'descripcion', $cuentas);
+
+        if($indice!==false){
+            $cuentas[$indice]['subcuentas'] = $rebajas_compras;
+        }
+
+
+        $devoluciones_compras = $this->obtenerSubCuentas('devoluciones_compras',$cuentas);
+        $detalle_partida_model->asignarSaldosCalculados($devoluciones_compras, $periodo);
+
+        $indice = Utiles::posicionArreglo('devoluciones_compras', 'descripcion', $cuentas);
+
+        if($indice!==false){
+            $cuentas[$indice]['subcuentas'] = $devoluciones_compras;
+        }
+
+        //inventario inicial
+
+        $inventario_inicial = $this->obtenerSubCuentas('inventario',$cuentas);
+        $detalle_partida_model->asignarSaldosCalculados($inventario_inicial, $periodo);
+
+        $indice = Utiles::posicionArreglo('inventario', 'descripcion', $cuentas);
+
+        if($indice!==false){
+            $cuentas[$indice]['subcuentas'] = $inventario_inicial;
+        }
+
+        /*
+         * FIN COSTO DE VENTA
+        */
+
+        /*
+         * UTILIDAD BRUTA
+        */
+
+        //utilidad bruta
+
+        /*
+         * FIN UTILIDAD BRUTA
+        */
+
+        /*
+         * Utilidad de operacion
+        */
+
+        //gastos de operacion
+
+        $gastos_operacion = $this->obtenerSubCuentas('gastos_operacion',$cuentas);
+        $detalle_partida_model->asignarSaldosCalculados($gastos_operacion, $periodo);
+
+        $indice = Utiles::posicionArreglo('gastos_operacion', 'descripcion', $cuentas);
+
+        if($indice!==false){
+            $cuentas[$indice]['subcuentas'] = $gastos_operacion;
+        }
+
+
+
+        /*
+         * FIN UTILIDAD BRUTA
+        */
+
+        /*
+         * UTILIDAD ANTES DE IMPUESTOS y RESERVA
+        */
+
+        //otros productos
+
+        $otros_productos = $this->obtenerSubCuentas('otros_productos',$cuentas);
+        $detalle_partida_model->asignarSaldosCalculados($otros_productos, $periodo);
+
+        $indice = Utiles::posicionArreglo('otros_productos', 'descripcion', $cuentas);
+
+        if($indice!==false){
+            $cuentas[$indice]['subcuentas'] = $otros_productos;
+        }
+
+        //otros gastos
+        $otros_gastos = $this->obtenerSubCuentas('otros_gastos',$cuentas);
+        $detalle_partida_model->asignarSaldosCalculados($otros_gastos, $periodo);
+
+        $indice = Utiles::posicionArreglo('otros_gastos', 'descripcion', $cuentas);
+
+        if($indice!==false){
+            $cuentas[$indice]['subcuentas'] = $otros_gastos;
+        }
+
+        /*
+         * FIN UTILIDAD ANTES DE IMPUESTOS y RESERVA
+        */
+    }
+
 
     private function asiganarSaldosBalance($cuentas, $estado_resultados, $periodo)
     {
@@ -385,7 +592,6 @@ class CierreContableController extends Controller
         $detalle_partida_model->asignarSaldosCalculados($patrimonio, $periodo);
 
 
-
         $inventario_final = $estado_resultados['inventario_final'];
         $codigo = $this->obtenerSubCuentas('inventario', $cuentas)[0]['codigo'];
         $this->asignarSaldo($activo, $inventario_final, $codigo, 'ASIGNAR');
@@ -396,10 +602,10 @@ class CierreContableController extends Controller
 
         $utilidad_perdida = $estado_resultados['utilidad_perdida'];
 
-        if($utilidad_perdida > 0){
+        if ($utilidad_perdida > 0) {
             $codigo = $this->obtenerSubCuentas('utilidad', $cuentas)[0]['codigo'];
             $this->asignarSaldo($patrimonio, $utilidad_perdida, $codigo, 'AUMENTAR');
-        }else{
+        } else {
             $codigo = $this->obtenerSubCuentas('perdida', $cuentas)[0]['codigo'];
             $this->asignarSaldo($patrimonio, abs($utilidad_perdida), $codigo, 'AUMENTAR');
         }
@@ -409,9 +615,10 @@ class CierreContableController extends Controller
         $codigo = $this->obtenerSubCuentas('impuesto_iva', $cuentas)[0]['codigo'];
         $this->asignarSaldo($pasivo, $impuesto_iva, $codigo, 'AUMENTAR');
 
+
         $iva_credito = $estado_resultados['iva_credito'];
         $codigo = $this->obtenerSubCuentas('iva_credito', $cuentas)[0]['codigo'];
-        $this->asignarSaldo($pasivo, $iva_credito, $codigo, 'DISMINUIR');
+        $this->asignarSaldo($activo, $iva_credito, $codigo, 'DISMINUIR');
 
 
         $iva_debito = $estado_resultados['iva_debito'];
@@ -428,7 +635,9 @@ class CierreContableController extends Controller
         $cuentas[2]['subcuentas'] = $patrimonio;
 
         $balance = array_slice($cuentas, 0, 3);
-        Excepcion::json($balance);
+
+
+        return $balance;
 
 
 //        print_r(
@@ -475,7 +684,7 @@ class CierreContableController extends Controller
     private function obtenerSubCuentas($buscar, $cuentas)
     {
         $subcuentas = Utiles::buscar($buscar, 'descripcion', $cuentas);
-        $subcuentas = $subcuentas['subcuentas'];
+        $subcuentas = isset($subcuentas['subcuentas']) ? $subcuentas['subcuentas'] : array();
         foreach ($subcuentas as $key => $cuenta) {
             if (!$cuenta['ultimo_nivel']) {
                 unset($subcuentas[$key]);
@@ -972,12 +1181,11 @@ class CierreContableController extends Controller
 
         foreach ($datos as $key => $dato) {
             $cuentas = $cuenta_model->conexion()->query(
-                'SELECT id, codigo, nombre, saldo, tipo_saldo, ultimo_nivel from cuenta 
-                        where empresa = :empresa and codigo LIKE :codigo AND orden = :orden and periodo = :periodo ORDER BY :codigo', array(
+                'SELECT id, codigo, nombre, saldo, tipo_saldo, ultimo_nivel, nivel, orden from cuenta 
+                        where empresa = :empresa and codigo LIKE :codigo  and periodo = :periodo and cuenta.periodo = :periodo ORDER BY tipo_saldo', array(
                     ':empresa' => $login['id'],
                     ':periodo' => $login['periodo'],
-                    ':codigo' => '%' . $dato['codigo'] . '%',
-                    ':orden' => $dato['orden']
+                    ':codigo' => $dato['codigo'] . '%',
                 )
             )->fetchAll();
 
@@ -992,7 +1200,8 @@ class CierreContableController extends Controller
         return (isset($cuenta_auxiliar['orden'])) ? $cuenta_auxiliar['orden'] : -1;
     }
 
-    private function copiarCuentasYConfiguracion($empresa, $periodo){
+    private function copiarCuentasYConfiguracion($empresa, $periodo)
+    {
         $conexion = new Conexion();
 
         $cuenta_model = new CuentaModel($conexion);
@@ -1014,7 +1223,8 @@ class CierreContableController extends Controller
         $this->actualizarPadres($cuenta_model, $empresa);
     }
 
-    private function actualizarPadres(CuentaModel $modelo,  $empresa){
+    private function actualizarPadres(CuentaModel $modelo, $empresa)
+    {
         $cuentas = $modelo->seleccionar(
             ['id', 'padre'], array(
                 'empresa' => $empresa,
@@ -1023,7 +1233,7 @@ class CierreContableController extends Controller
         );
 
         foreach ($cuentas as $key => $cuenta) {
-            if($cuenta['padre']!=null){
+            if ($cuenta['padre'] != null) {
                 $padre_viejo = $modelo->seleccionar(['codigo'], array(
                     'empresa' => $empresa,
                     'id' => $cuenta['padre']
@@ -1046,5 +1256,25 @@ class CierreContableController extends Controller
 
     }
 
+//$empresa, $periodo
+    private function inventarioFinalPeriodoPasado($empresa, $periodo)
+    {
+        $consulta = "select monto from detalle_partida inner join partida on partida.id = detalle_partida.partida
+                        inner join periodo on periodo.id = partida.periodo inner join empresa on 
+                        empresa.id = periodo.empresa inner join cuenta on cuenta.id = detalle_partida.cuenta
+                        where empresa.id = :empresa and periodo.id = :periodo and cuenta.periodo = :periodo 
+                        and partida.partida_cierre = 1 and partida.descripcion like '%inventario final%' limit 1";
+        $conexion = new Conexion();
+        $query = $conexion->obtenerConexion()->query($consulta, array(
+            ':empresa' => $empresa,
+            ':periodo' => $periodo
+        ))->fetchAll();
+
+        if (!empty($query)) {
+            return $query[0]['monto'];
+        }
+        return 0;
+
+    }
 
 }
