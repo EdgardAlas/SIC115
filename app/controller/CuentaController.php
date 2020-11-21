@@ -306,6 +306,31 @@ class CuentaController extends Controller
         ));
     }
 
+    public function inputNivelesBalanza()
+    {
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('GET');
+
+        $empresa = $this->sesion->get('login')['id'];
+        $periodo = $this->sesion->get('login')['periodo'];
+
+        $periodo = isset($_POST['periodo']) ? base64_decode($_POST['periodo']) : $periodo;
+
+
+        $datos = $this->modelo->conexion()->query('SELECT distinct nivel from cuenta inner
+                    join empresa on empresa.id = cuenta.empresa
+                        where empresa.id = :empresa and cuenta.periodo = :periodo', array(
+            'empresa' => $empresa,
+            'periodo' => $periodo
+        ))->fetchAll();
+
+        Flight::render('ajax/cuentas/input-niveles', array(
+            'datosBD' => $datos,
+        ));
+    }
+
+
     public function buscarCuentaConfiguracion()
     {
         $this->isAjax();

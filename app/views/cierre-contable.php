@@ -26,8 +26,8 @@
                                         Balance General
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <button class="dropdown-item" id="forma_cuenta">Forma de Cuenta</button>
-                                        <button class="dropdown-item" id="forma_reporte">Forma de Reporte</button>
+                                        <a class="dropdown-item" id="forma_cuenta">Forma de Cuenta</a>
+                                        <a class="dropdown-item" id="forma_reporte" href="/cierre-contable/balance-forma-reporte">Forma de Reporte</a>
                                     </div>
                                 </div>
                                 <button class="btn btn-success" id="estado_resultados">Estado de Resultados</button>

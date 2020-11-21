@@ -26,7 +26,7 @@ class PDF extends FPDF
         $this->Cell(30, 10, $this->empresa, 0, 1, 'C');
         $this->SetFont('Arial', '', 12);
         $this->Cell(80);
-        $this->Cell(30, 10, utf8_decode('Balance General'), 0, 0, 'C');
+        $this->Cell(30, 10, utf8_decode('Libro Diario'), 0, 0, 'C');
         $this->Ln(15);
         $this->SetFillColor(21, 151, 168);
         $this->SetTextColor(255);
@@ -34,8 +34,10 @@ class PDF extends FPDF
         $this->SetLineWidth(.1); // ancho de linea
         $this->SetFont('Arial', 'B', 11);
         $this->SetFont('Arial', 'B', 11);
-        $this->Cell(150, 5, 'Cuenta', 1, 0, 'C', 1);
-        $this->Cell(40, 5, 'Saldo', 1, 1, 'C', 1);
+        $this->Cell(25, 5, 'Fecha', 1, 0, 'C', 1);
+        $this->Cell(100, 5, 'Cuenta', 1, 0, 'C', 1);
+        $this->Cell(32.5, 5, 'Debe', 1, 0, 'C', 1);
+        $this->Cell(32.5, 5, 'Haber', 1, 1, 'C', 1);
     }
 
     public function Footer()
@@ -162,135 +164,11 @@ $pdf->SetFillColor(224, 235, 255); //
 $pdf->SetTextColor(0);
 $pdf->SetFont('');
 
+$contador_detalle = 0;
+$cantidad_detalle = 1;
 
-$pdf->SetWidths(array(150, 40));
-$pdf->SetAligns(array('L', 'R'));
-
-$activo = 0;
-$pasivo = 0;
-$patrimonio = 0;
-
-$codigo_activo = $data[0]['orden'];
-$codigo_pasivo = $data[1]['orden'];
-$codigo_patrimonio = $data[2]['orden'];
-
-
-foreach ($data as $key => $cuenta_principal) {
-
-
-    $pdf->SetFont('courier', 'B', 9);
-
-    if ($cuenta_principal['orden'] == $codigo_pasivo) {
-        $pdf->Row(array(
-            'Total Activo',
-            Utiles::monto(($activo))
-        ));
-        $pdf->Row(array(
-            '', ''
-        ));
-    }
-
-
-    $pdf->Row(array(
-        iconv('UTF-8', 'cp1252', $cuenta_principal['codigo'] . ' - ' . ucfirst($cuenta_principal['descripcion'])),
-        ''
-    ));
-
-
-    $contador_segundo_nivel = 0;
-    $nombre_segundo_nivel = '';
-    $total_segundo_nivel = 0;
-
-
-    foreach ($cuenta_principal['subcuentas'] as $key_2 => $cuenta) {
-
-        if ($cuenta['nivel'] > 2) {
-            $pdf->SetFont('courier', '', 9);
-        }
-
-        if ($cuenta['nivel'] == 2) {
-
-
-            $pdf->SetFont('courier', 'B', 9);
-
-            if ($contador_segundo_nivel > 0) {
-                $pdf->Row(array(
-                    'Total ' . $nombre_segundo_nivel,
-                    Utiles::monto($total_segundo_nivel)
-                ));
-            }
-
-            $nombre_segundo_nivel = $cuenta['nombre'];
-
-            $pdf->Row(array(
-                iconv('UTF-8', 'cp1252', $cuenta['codigo'] . ' - ' . $cuenta['nombre']),
-                ''
-            ));
-
-            $contador_segundo_nivel++;
-            $total_segundo_nivel = 0;
-        }
-
-        if ($cuenta['ultimo_nivel']) {
-            $pdf->Row(array(
-                iconv('UTF-8', 'cp1252', $cuenta['codigo'] . ' - ' . $cuenta['nombre']),
-                Utiles::monto($cuenta['saldo'])
-            ));
-
-            switch ($cuenta['orden']) {
-                case $codigo_activo:
-
-                    if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
-                        $activo -= $cuenta['saldo'];
-                    } else {
-                        $activo += $cuenta['saldo'];
-                    }
-
-                    break;
-                case $codigo_pasivo:
-
-                    if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
-                        $pasivo -= $cuenta['saldo'];
-                    } else {
-                        $pasivo += $cuenta['saldo'];
-                    }
-
-                    break;
-                case $codigo_patrimonio:
-                    if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
-                        $patrimonio -= $cuenta['saldo'];
-                    } else {
-                        $patrimonio += $cuenta['saldo'];
-                    }
-
-                    break;
-            }
-
-            $total_segundo_nivel += $cuenta['saldo'];
-
-        }
-
-    }
-    $pdf->SetFont('courier', 'B', 9);
-
-    if ($contador_segundo_nivel > 0) {
-        $pdf->Row(array(
-            'Total ' . $nombre_segundo_nivel,
-            Utiles::monto($total_segundo_nivel)
-        ));
-        $pdf->Row(array(
-            '', ''
-        ));
-
-    }
-
-}
-
-
-$pdf->Row(array(
-    'Pasivo + Patrimonio',
-    Utiles::monto(($pasivo + $patrimonio))
-));
+$pdf->SetWidths(array(25,100,32.5,32.5));
+$pdf->SetAligns(array('L', 'L', 'R', 'R'));
 
 /**/
 

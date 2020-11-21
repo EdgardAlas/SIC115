@@ -54,4 +54,10 @@ class Utiles
 
         return $encontrado;
     }
+
+    public static  function posicionArreglo($valor, $columna, $arreglo){
+
+        return array_search($valor , array_column($arreglo, $columna));
+    }
+
 }

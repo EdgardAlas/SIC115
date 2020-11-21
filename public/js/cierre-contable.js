@@ -18,7 +18,13 @@ function calcularCierre() {
         // }
         cargarPartidas(data);
     })
+    urlBalanceReporte(inventario_final);
 }
+
+function urlBalanceReporte(inventario_final){
+    $('#forma_reporte').attr('href', `/cierre-contable/balance-forma-reporte?inventario_final=${inventario_final}`);
+}
+
 
 function cargarPartidas(estado_resultados) {
     Swal.fire({
@@ -121,12 +127,7 @@ $(document).ready(() => {
         realizarCierre();
     })
 
-    $(document).on('click', '#forma_reporte', function (e) {
-        log('Balance en forma de reporte');
-        $.get('/cierre-contable/balance-forma-reporte', {inventario_final: 6450000}, function (data) {
-            log(data)
-        })
-    })
+
 
 });
 

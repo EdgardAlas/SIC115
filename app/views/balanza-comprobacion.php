@@ -28,7 +28,7 @@
                             </div>
 
                             <div class="col-12 col-sm-12 col-lg-4 form-group" id='contenedor_niveles'>
-                                <label for="nivel">Nivel</label>
+
                             </div>
                         </div>
 
