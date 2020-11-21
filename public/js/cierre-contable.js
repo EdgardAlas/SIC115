@@ -19,10 +19,16 @@ function calcularCierre() {
         cargarPartidas(data);
     })
     urlBalanceReporte(inventario_final);
+    urlEstadoResultadosReporte(inventario_final);
+    $('#reportes').removeClass('d-none')
 }
 
 function urlBalanceReporte(inventario_final){
     $('#forma_reporte').attr('href', `/cierre-contable/balance-forma-reporte?inventario_final=${inventario_final}`);
+}
+
+function urlEstadoResultadosReporte(inventario_final){
+    $('#estado_resultados').attr('href', `/cierre-contable/estado-resultados?inventario_final=${inventario_final}`);
 }
 
 
