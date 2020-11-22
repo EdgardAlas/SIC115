@@ -13,7 +13,7 @@ function empezarCierre(){
             $.post('/cierre-contable/validar-cierre', {cierre: true}, function (data){
                 console.log(data)
                 if(!data.error){
-                    //location.href = data.url;
+                    location.href = data.url;
                 }else{
                     Swal.fire({
                         title: 'Atención',
