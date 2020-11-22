@@ -56,11 +56,14 @@ class CierreContableController extends Controller
                 'estado' => 'CIERRE'
             ), array(
                 'empresa' => $login['id'],
-                'periodo' => $login['periodo']
+                'id' => $login['periodo']
             ));
 
-            $this->actualizarPeriodActual($login['usuario']);
 
+            $this->actualizarPeriodActual($login['usuario']);
+Excepcion::json(
+    $periodo_model->error()
+);
             Excepcion::json([
                 'error' => false,
                 'mensaje' => 'exito',
