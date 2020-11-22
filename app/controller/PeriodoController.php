@@ -61,7 +61,7 @@ class PeriodoController extends Controller
             'estado' => $estado
         );
 
-        $lista_periodos = $this->modelo->seleccionar(['estado', 'anio'], array(
+        $lista_periodos = $this->modelo->seleccionar(['estado', 'anio', 'id'], array(
             'empresa' => $empresa
         ));
 

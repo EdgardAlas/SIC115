@@ -361,7 +361,7 @@ class CierreContableController extends Controller
         }
 
         if ($periodo_pasado !== null) {
-            $inventario_final = $this->inventarioFinalPeriodoPasado($login['empresa'], $login['periodo']);
+            $inventario_final = $this->inventarioFinalPeriodoPasado($login['id'], $login['periodo']);
         }
 
 
@@ -371,11 +371,12 @@ class CierreContableController extends Controller
 
         $cuentas_balance = $this->obtenerCuentasConfiguracion(['clasificacion', 'cierre', 'estado_resultados'], $login);
 
+        $this->asignarSaldosEstadoResultados($login['periodo'], $login, $datos);
+
         $partidas = $this->valoresEstadoResultadosParaBalance($datos, $inventario_final);
 
-        $this->asignarSaldosEstadoResultados($login['periodo'], $login, $partidas);
-
         $cuentas_balance_general = $this->asiganarSaldosBalance($cuentas_balance, $partidas, $login['periodo']);
+
 
 
         Flight::render('pdf/forma-reporte', array(
@@ -404,7 +405,7 @@ class CierreContableController extends Controller
         }
 
         if ($periodo_pasado !== null) {
-            $inventario_final = $this->inventarioFinalPeriodoPasado($login['empresa'], $login['periodo']);
+            $inventario_final = $this->inventarioFinalPeriodoPasado($login['id'], $login['periodo']);
         }
 
 
