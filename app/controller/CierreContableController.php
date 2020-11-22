@@ -61,9 +61,7 @@ class CierreContableController extends Controller
 
 
             $this->actualizarPeriodActual($login['usuario']);
-Excepcion::json(
-    $periodo_model->error()
-);
+
             Excepcion::json([
                 'error' => false,
                 'mensaje' => 'exito',
