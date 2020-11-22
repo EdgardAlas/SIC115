@@ -55,7 +55,8 @@ class CierreContableController extends Controller
             $periodo_model->actualizar(array(
                 'estado' => 'CIERRE'
             ), array(
-                'empresa' => $login['id']
+                'empresa' => $login['id'],
+                'periodo' => $login['periodo']
             ));
 
             $this->actualizarPeriodActual($login['usuario']);
