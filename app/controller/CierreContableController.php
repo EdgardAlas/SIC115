@@ -371,7 +371,7 @@ class CierreContableController extends Controller
 //        $cuenta_model = new CuentaModel(new Conexion());
         $datos = $this->obtenerCuentasConfiguracion(['estado_resultados', 'cierre'], $login);
 
-        $cuentas_balance = $this->obtenerCuentasConfiguracion(['clasificacion', 'cierre', 'estado_resultados'], $login);
+        $cuentas_balance = $this->obtenerCuentasConfiguracionBalance(['clasificacion', 'cierre', 'estado_resultados'], $login);
 
         $this->asignarSaldosEstadoResultados($login['periodo'], $login, $datos);
 
@@ -388,6 +388,51 @@ class CierreContableController extends Controller
 
 
     }
+
+    public function balanceFormaCuenta()
+    {
+        $this->sesionActiva();
+        $this->validarMetodoPeticion('GET');
+
+        $login = $this->sesion->get('login');
+
+        $inventario_final = isset($_GET['inventario_final']) ? ($_GET['inventario_final'] === '' ? 0 : $_GET['inventario_final']) : 0;
+
+        $periodo = isset($_GET['periodo']) ? $_GET['periodo'] : null;
+
+        $periodo_pasado = isset($_GET['periodo_pasado']) ? $_GET['periodo_pasado'] : null;
+
+        if ($periodo !== null) {
+            $login['periodo'] = $periodo;
+        }
+
+        if ($periodo_pasado !== null) {
+            $inventario_final = $this->inventarioFinalPeriodoPasado($login['id'], $login['periodo']);
+        }
+
+
+//        $configuracion_model = new ConfiguracioModel(new Conexion());
+//        $cuenta_model = new CuentaModel(new Conexion());
+        $datos = $this->obtenerCuentasConfiguracion(['estado_resultados', 'cierre'], $login);
+
+        $cuentas_balance = $this->obtenerCuentasConfiguracionBalance(['clasificacion', 'cierre', 'estado_resultados'], $login);
+
+        $this->asignarSaldosEstadoResultados($login['periodo'], $login, $datos);
+
+        $partidas = $this->valoresEstadoResultadosParaBalance($datos, $inventario_final);
+
+        $cuentas_balance_general = $this->asiganarSaldosBalance($cuentas_balance, $partidas, $login['periodo']);
+
+
+
+        Flight::render('pdf/forma-cuenta', array(
+            'datos' => $cuentas_balance_general,
+            'empresa' => $login['nombre']
+        ));
+
+
+    }
+
 
     public function EstadoResultados()
     {
@@ -1227,6 +1272,28 @@ class CierreContableController extends Controller
             $cuentas = $cuenta_model->conexion()->query(
                 'SELECT id, codigo, nombre, saldo, tipo_saldo, ultimo_nivel, nivel, orden from cuenta 
                         where empresa = :empresa and codigo LIKE :codigo  and periodo = :periodo and cuenta.periodo = :periodo ORDER BY tipo_saldo', array(
+                    ':empresa' => $login['id'],
+                    ':periodo' => $login['periodo'],
+                    ':codigo' => $dato['codigo'] . '%',
+                )
+            )->fetchAll();
+
+            $datos[$key]['subcuentas'] = $cuentas;
+        }
+        return $datos;
+    }
+
+    private function obtenerCuentasConfiguracionBalance($opciones, $login)
+    {
+
+        $configuracion_model = new ConfiguracioModel(new Conexion());
+        $cuenta_model = new CuentaModel(new Conexion());
+        $datos = $configuracion_model->obtenerConfiguracion($login['id'], $login['periodo'], $opciones);
+
+        foreach ($datos as $key => $dato) {
+            $cuentas = $cuenta_model->conexion()->query(
+                'SELECT id, codigo, nombre, saldo, tipo_saldo, ultimo_nivel, nivel, orden from cuenta 
+                        where empresa = :empresa and codigo LIKE :codigo  and periodo = :periodo and cuenta.periodo = :periodo ORDER BY codigo', array(
                     ':empresa' => $login['id'],
                     ':periodo' => $login['periodo'],
                     ':codigo' => $dato['codigo'] . '%',

@@ -175,6 +175,7 @@ $codigo_pasivo = $data[1]['orden'];
 $codigo_patrimonio = $data[2]['orden'];
 
 
+
 foreach ($data as $key => $cuenta_principal) {
 
 
@@ -231,44 +232,46 @@ foreach ($data as $key => $cuenta_principal) {
             $total_segundo_nivel = 0;
         }
 
-        if ($cuenta['ultimo_nivel']) {
-            $pdf->Row(array(
-                iconv('UTF-8', 'cp1252', $cuenta['codigo'] . ' - ' . $cuenta['nombre']),
-                Utiles::monto($cuenta['saldo'])
-            ));
 
-            switch ($cuenta['orden']) {
-                case $codigo_activo:
 
-                    if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
-                        $activo -= $cuenta['saldo'];
-                    } else {
-                        $activo += $cuenta['saldo'];
-                    }
+                $pdf->Row(array(
+                    iconv('UTF-8', 'cp1252', $cuenta['codigo'] . ' - ' . $cuenta['nombre']),
+                    Utiles::monto($cuenta['saldo'])
+                ));
 
-                    break;
-                case $codigo_pasivo:
 
-                    if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
-                        $pasivo -= $cuenta['saldo'];
-                    } else {
-                        $pasivo += $cuenta['saldo'];
-                    }
+                switch ($cuenta['orden']) {
+                    case $codigo_activo:
 
-                    break;
-                case $codigo_patrimonio:
-                    if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
-                        $patrimonio -= $cuenta['saldo'];
-                    } else {
-                        $patrimonio += $cuenta['saldo'];
-                    }
+                        if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
+                            $activo -= $cuenta['saldo'];
+                        } else {
+                            $activo += $cuenta['saldo'];
+                        }
 
-                    break;
-            }
+                        break;
+                    case $codigo_pasivo:
 
-            $total_segundo_nivel += $cuenta['saldo'];
+                        if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
+                            $pasivo -= $cuenta['saldo'];
+                        } else {
+                            $pasivo += $cuenta['saldo'];
+                        }
 
-        }
+                        break;
+                    case $codigo_patrimonio:
+                        if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
+                            $patrimonio -= $cuenta['saldo'];
+                        } else {
+                            $patrimonio += $cuenta['saldo'];
+                        }
+
+                        break;
+                }
+
+                $total_segundo_nivel += $cuenta['saldo'];
+
+
 
     }
     $pdf->SetFont('courier', 'B', 9);

@@ -66,7 +66,10 @@ $lista_periodos = isset($periodos) ? $periodos : array();
                                         Balance General
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" id="forma_cuenta">Forma de Cuenta</a>
+                                        <a class="dropdown-item" id="forma_cuenta"
+                                           href="/cierre-contable/balance-forma-cuenta?periodo=<?= $period['id'] ?>&periodo_pasado=true">
+                                            Forma de Cuenta
+                                        </a>
                                         <a class="dropdown-item" id="forma_reporte"
                                            href="/cierre-contable/balance-forma-reporte?periodo=<?= $period['id'] ?>&periodo_pasado=true">
                                             Forma de Reporte
