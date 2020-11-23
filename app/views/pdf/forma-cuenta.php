@@ -246,7 +246,7 @@ foreach ($data[0]['subcuentas'] as $key => $cuenta) {
 
     if ($cuenta['saldo'] > 0) {
         $pdf->Row(array(
-            $cuenta['nombre'],
+            $cuenta['codigo'].' - '.$cuenta['nombre'],
             substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R' ? '(' . Utiles::monto($cuenta['saldo']) . ')'
                 : Utiles::monto($cuenta['saldo']),
             '',
@@ -379,7 +379,7 @@ foreach ($data[1]['subcuentas'] as $key => $cuenta) {
             '',
             '',
             '',
-            $cuenta['nombre'],
+            $cuenta['codigo'].' - '.$cuenta['nombre'],
             substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R' ? '(' . Utiles::monto($cuenta['saldo']) . ')'
                 : Utiles::monto($cuenta['saldo'])
         ));
@@ -501,7 +501,7 @@ foreach ($data[2]['subcuentas'] as $key => $cuenta) {
             '',
             '',
             '',
-            $cuenta['nombre'],
+            $cuenta['codigo'].' - '.$cuenta['nombre'],
             substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R' ? '(' . Utiles::monto($cuenta['saldo']) . ')'
                 : Utiles::monto($cuenta['saldo'])
         ));

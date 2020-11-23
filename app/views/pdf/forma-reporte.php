@@ -1,5 +1,9 @@
 <?php
 
+require_once './app/models/CuentaModel.php';
+$cuenta_model = new CuentaModel(new Conexion());
+$sesion = $_SESSION['login'];
+
 $data = isset($datos) ? $datos : array();
 $empresa = isset($empresa) ? $empresa : 'Sistema Contable';
 
@@ -30,12 +34,10 @@ class PDF extends FPDF
         $this->Ln(15);
         $this->SetFillColor(21, 151, 168);
         $this->SetTextColor(255);
-        $this->SetDrawColor(21, 151, 168); // color de linea
+        $this->SetDrawColor(255, 255, 255); // color de linea
         $this->SetLineWidth(.1); // ancho de linea
         $this->SetFont('Arial', 'B', 11);
         $this->SetFont('Arial', 'B', 11);
-        $this->Cell(150, 5, 'Cuenta', 1, 0, 'C', 1);
-        $this->Cell(40, 5, 'Saldo', 1, 1, 'C', 1);
     }
 
     public function Footer()
@@ -156,9 +158,9 @@ class PDF extends FPDF
 $pdf = new PDF($empresa);
 $pdf->AliasNbPages();
 $pdf->AddPage();
-$pdf->SetDrawColor(21, 151, 168);
+$pdf->SetDrawColor(255, 255, 255);
 $pdf->SetFont('courier', '', 9);
-$pdf->SetFillColor(224, 235, 255); //
+$pdf->SetFillColor(255, 255, 255); //
 $pdf->SetTextColor(0);
 $pdf->SetFont('');
 
@@ -175,125 +177,315 @@ $codigo_pasivo = $data[1]['orden'];
 $codigo_patrimonio = $data[2]['orden'];
 
 
+$codigo = '';
 
-foreach ($data as $key => $cuenta_principal) {
+$cuentas_activo = $data[0]['subcuentas'];
+$cuentas_pasivo = $data[1]['subcuentas'];
+$cuentas_patrimonio = $data[2]['subcuentas'];
 
+$recorrido = 0;
+$total_subcuenta = 0;
 
-    $pdf->SetFont('courier', 'B', 9);
+foreach ($cuentas_activo as $key => $cuenta) {
+    if ($codigo != $cuenta['codigo'][0] . $cuenta['codigo'][1]) {
 
-    if ($cuenta_principal['orden'] == $codigo_pasivo) {
-        $pdf->Row(array(
-            'Total Activo',
-            Utiles::monto(($activo))
-        ));
-        $pdf->Row(array(
-            '', ''
-        ));
-    }
-
-
-    $pdf->Row(array(
-        iconv('UTF-8', 'cp1252', $cuenta_principal['codigo'] . ' - ' . ucfirst($cuenta_principal['descripcion'])),
-        ''
-    ));
-
-
-    $contador_segundo_nivel = 0;
-    $nombre_segundo_nivel = '';
-    $total_segundo_nivel = 0;
-
-
-    foreach ($cuenta_principal['subcuentas'] as $key_2 => $cuenta) {
-
-        if ($cuenta['nivel'] > 2) {
+        if ($recorrido > 0) {
+            $pdf->SetFont('courier', 'B', 9);
+            $pdf->Row(array(
+                'Total Activo Corriente',
+                Utiles::monto($total_subcuenta)
+            ));
+            $pdf->Row(array('',''));
+            $total_subcuenta = 0;
             $pdf->SetFont('courier', '', 9);
         }
 
-        if ($cuenta['nivel'] == 2) {
+        $codigo = $cuenta['codigo'][0] . $cuenta['codigo'][1];
+
+        $cuenta_padre = $cuenta_model->seleccionar(['codigo', 'nombre'], array(
+            'empresa' => $sesion['id'],
+            'periodo' => $sesion['periodo'],
+            'codigo' => $codigo
+        ));
+
+        $pdf->SetFont('courier', 'B', 9);
 
 
-            $pdf->SetFont('courier', 'B', 9);
+        $pdf->Row(array(
+            $cuenta_padre[0]['codigo'] . ' - ' . $cuenta_padre[0]['nombre'],
+            ''
+        ));
 
-            if ($contador_segundo_nivel > 0) {
-                $pdf->Row(array(
-                    'Total ' . $nombre_segundo_nivel,
-                    Utiles::monto($total_segundo_nivel)
-                ));
+        $pdf->SetFont('courier', '', 9);
+    }
+
+    if ($cuenta['saldo'] > 0) {
+        $pdf->Row(array(
+            $cuenta['codigo'] . ' - ' . $cuenta['nombre'],
+            substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R' ? '(' . Utiles::monto($cuenta['saldo']) . ')'
+                : Utiles::monto($cuenta['saldo'])
+        ));
+    }
+
+    switch ($cuenta['orden']) {
+        case $codigo_activo:
+
+            if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
+                $activo -= $cuenta['saldo'];
+            } else {
+                $activo += $cuenta['saldo'];
             }
 
-            $nombre_segundo_nivel = $cuenta['nombre'];
+            break;
+        case $codigo_pasivo:
 
-            $pdf->Row(array(
-                iconv('UTF-8', 'cp1252', $cuenta['codigo'] . ' - ' . $cuenta['nombre']),
-                ''
-            ));
+            if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
+                $pasivo -= $cuenta['saldo'];
+            } else {
+                $pasivo += $cuenta['saldo'];
+            }
 
-            $contador_segundo_nivel++;
-            $total_segundo_nivel = 0;
-        }
+            break;
+        case $codigo_patrimonio:
+            if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
+                $patrimonio -= $cuenta['saldo'];
+            } else {
+                $patrimonio += $cuenta['saldo'];
+            }
 
-
-
-                $pdf->Row(array(
-                    iconv('UTF-8', 'cp1252', $cuenta['codigo'] . ' - ' . $cuenta['nombre']),
-                    Utiles::monto($cuenta['saldo'])
-                ));
-
-
-                switch ($cuenta['orden']) {
-                    case $codigo_activo:
-
-                        if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
-                            $activo -= $cuenta['saldo'];
-                        } else {
-                            $activo += $cuenta['saldo'];
-                        }
-
-                        break;
-                    case $codigo_pasivo:
-
-                        if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
-                            $pasivo -= $cuenta['saldo'];
-                        } else {
-                            $pasivo += $cuenta['saldo'];
-                        }
-
-                        break;
-                    case $codigo_patrimonio:
-                        if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
-                            $patrimonio -= $cuenta['saldo'];
-                        } else {
-                            $patrimonio += $cuenta['saldo'];
-                        }
-
-                        break;
-                }
-
-                $total_segundo_nivel += $cuenta['saldo'];
-
-
-
+            break;
     }
-    $pdf->SetFont('courier', 'B', 9);
 
-    if ($contador_segundo_nivel > 0) {
-        $pdf->Row(array(
-            'Total ' . $nombre_segundo_nivel,
-            Utiles::monto($total_segundo_nivel)
-        ));
-        $pdf->Row(array(
-            '', ''
-        ));
 
+
+    $recorrido++;
+
+    if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
+        $total_subcuenta -= $cuenta['saldo'];
+    } else {
+        $total_subcuenta += $cuenta['saldo'];
     }
+
 
 }
 
-
+$pdf->SetFont('courier', 'B', 9);
 $pdf->Row(array(
-    'Pasivo + Patrimonio',
-    Utiles::monto(($pasivo + $patrimonio))
+    'Total Activo no Corriente',
+    Utiles::monto($total_subcuenta)
 ));
+$pdf->Row(array(
+    'Total Activo',
+    Utiles::monto($activo)
+));
+$pdf->Row(array('',''));
+$pdf->SetFont('courier', '', 9);
+
+$total_subcuenta = 0;
+
+$recorrido = 0;
+$codigo = '';
+
+//PASIVO
+
+foreach ($cuentas_pasivo as $key => $cuenta) {
+    if ($codigo != $cuenta['codigo'][0] . $cuenta['codigo'][1]) {
+
+        if ($recorrido > 0) {
+            $pdf->SetFont('courier', 'B', 9);
+            $pdf->Row(array(
+                'Total Pasivo Corriente',
+                Utiles::monto($total_subcuenta)
+            ));
+            $pdf->Row(array('',''));
+            $total_subcuenta = 0;
+            $pdf->SetFont('courier', '', 9);
+        }
+
+        $codigo = $cuenta['codigo'][0] . $cuenta['codigo'][1];
+
+        $cuenta_padre = $cuenta_model->seleccionar(['codigo', 'nombre'], array(
+            'empresa' => $sesion['id'],
+            'periodo' => $sesion['periodo'],
+            'codigo' => $codigo
+        ));
+
+        $pdf->SetFont('courier', 'B', 9);
+
+
+        $pdf->Row(array(
+            $cuenta_padre[0]['codigo'] . ' - ' . $cuenta_padre[0]['nombre'],
+            ''
+        ));
+
+        $pdf->SetFont('courier', '', 9);
+    }
+
+    if ($cuenta['saldo'] > 0) {
+        $pdf->Row(array(
+            $cuenta['codigo'] . ' - ' . $cuenta['nombre'],
+            substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R' ? '(' . Utiles::monto($cuenta['saldo']) . ')'
+                : Utiles::monto($cuenta['saldo'])
+        ));
+    }
+
+    switch ($cuenta['orden']) {
+        case $codigo_activo:
+
+            if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
+                $activo -= $cuenta['saldo'];
+            } else {
+                $activo += $cuenta['saldo'];
+            }
+
+            break;
+        case $codigo_pasivo:
+
+            if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
+                $pasivo -= $cuenta['saldo'];
+            } else {
+                $pasivo += $cuenta['saldo'];
+            }
+
+            break;
+        case $codigo_patrimonio:
+            if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
+                $patrimonio -= $cuenta['saldo'];
+            } else {
+                $patrimonio += $cuenta['saldo'];
+            }
+
+            break;
+    }
+
+
+
+    $recorrido++;
+
+    if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
+        $total_subcuenta -= $cuenta['saldo'];
+    } else {
+        $total_subcuenta += $cuenta['saldo'];
+    }
+
+
+}
+
+$pdf->SetFont('courier', 'B', 9);
+$pdf->Row(array(
+    'Total Pasivo no Corriente',
+    Utiles::monto($total_subcuenta)
+));
+$pdf->Row(array(
+    'Total Pasivo',
+    Utiles::monto($pasivo)
+));
+$pdf->Row(array('',''));
+$pdf->SetFont('courier', '', 9);
+
+$total_subcuenta = 0;
+$recorrido = 0;
+$codigo = '';
+
+//Patrimonio
+
+foreach ($cuentas_patrimonio as $key => $cuenta) {
+    if ($codigo != $cuenta['codigo'][0] . $cuenta['codigo'][1]) {
+
+        if ($recorrido > 0) {
+            $pdf->SetFont('courier', 'B', 9);
+            $pdf->Row(array(
+                'Total patrimonio',
+                Utiles::monto($total_subcuenta)
+            ));
+            $pdf->Row(array('',''));
+            $total_subcuenta = 0;
+            $pdf->SetFont('courier', '', 9);
+        }
+
+        $codigo = $cuenta['codigo'][0] . $cuenta['codigo'][1];
+
+        $cuenta_padre = $cuenta_model->seleccionar(['codigo', 'nombre'], array(
+            'empresa' => $sesion['id'],
+            'periodo' => $sesion['periodo'],
+            'codigo' => $codigo
+        ));
+
+        $pdf->SetFont('courier', 'B', 9);
+
+
+        $pdf->Row(array(
+            $cuenta_padre[0]['codigo'] . ' - ' . $cuenta_padre[0]['nombre'],
+            ''
+        ));
+
+        $pdf->SetFont('courier', '', 9);
+    }
+
+    if ($cuenta['saldo'] > 0) {
+        $pdf->Row(array(
+            $cuenta['codigo'] . ' - ' . $cuenta['nombre'],
+            substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R' ? '(' . Utiles::monto($cuenta['saldo']) . ')'
+                : Utiles::monto($cuenta['saldo'])
+        ));
+    }
+
+    switch ($cuenta['orden']) {
+        case $codigo_activo:
+
+            if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
+                $activo -= $cuenta['saldo'];
+            } else {
+                $activo += $cuenta['saldo'];
+            }
+
+            break;
+        case $codigo_pasivo:
+
+            if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
+                $pasivo -= $cuenta['saldo'];
+            } else {
+                $pasivo += $cuenta['saldo'];
+            }
+
+            break;
+        case $codigo_patrimonio:
+            if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
+                $patrimonio -= $cuenta['saldo'];
+            } else {
+                $patrimonio += $cuenta['saldo'];
+            }
+
+            break;
+    }
+
+
+
+    $recorrido++;
+
+    if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
+        $total_subcuenta -= $cuenta['saldo'];
+    } else {
+        $total_subcuenta += $cuenta['saldo'];
+    }
+
+
+}
+
+$pdf->SetFont('courier', 'B', 9);
+$pdf->Row(array(
+    'Total patrimonio',
+    Utiles::monto($total_subcuenta)
+));
+$pdf->Row(array(
+    'Total Pasivo + Patrimonio',
+    Utiles::monto($pasivo + $patrimonio)
+));
+$pdf->Row(array('',''));
+$pdf->SetFont('courier', '', 9);
+
+$total_subcuenta = 0;
+
 
 /**/
 
