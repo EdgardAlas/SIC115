@@ -15,11 +15,13 @@ class PDF extends FPDF
     public $widths;
     public $aligns;
     public $empresa;
+    public $anio;
 
-    public function __construct($empresa)
+    public function __construct($empresa, $anio)
     {
         parent::__construct();
         $this->empresa = $empresa;
+        $this->anio = $anio;
     }
 
     public function Header()
@@ -30,7 +32,7 @@ class PDF extends FPDF
         $this->Cell(30, 10, $this->empresa, 0, 1, 'C');
         $this->SetFont('Arial', '', 12);
         $this->Cell(80);
-        $this->Cell(30, 10, utf8_decode('Balance General'), 0, 0, 'C');
+        $this->Cell(30, 10, utf8_decode('Balance General al 31 de Diciembre de ' . $this->anio), 0, 0, 'C');
         $this->Ln(15);
         $this->SetFillColor(21, 151, 168);
         $this->SetTextColor(255);
@@ -155,7 +157,7 @@ class PDF extends FPDF
     }
 }
 
-$pdf = new PDF($empresa);
+$pdf = new PDF($empresa, $sesion['anio']);
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->SetDrawColor(255, 255, 255);
@@ -195,7 +197,7 @@ foreach ($cuentas_activo as $key => $cuenta) {
                 'Total Activo Corriente',
                 Utiles::monto($total_subcuenta)
             ));
-            $pdf->Row(array('',''));
+            $pdf->Row(array('', ''));
             $total_subcuenta = 0;
             $pdf->SetFont('courier', '', 9);
         }
@@ -255,7 +257,6 @@ foreach ($cuentas_activo as $key => $cuenta) {
 
             break;
     }
-
 
 
     $recorrido++;
@@ -278,7 +279,7 @@ $pdf->Row(array(
     'Total Activo',
     Utiles::monto($activo)
 ));
-$pdf->Row(array('',''));
+$pdf->Row(array('', ''));
 $pdf->SetFont('courier', '', 9);
 
 $total_subcuenta = 0;
@@ -297,7 +298,7 @@ foreach ($cuentas_pasivo as $key => $cuenta) {
                 'Total Pasivo Corriente',
                 Utiles::monto($total_subcuenta)
             ));
-            $pdf->Row(array('',''));
+            $pdf->Row(array('', ''));
             $total_subcuenta = 0;
             $pdf->SetFont('courier', '', 9);
         }
@@ -357,7 +358,6 @@ foreach ($cuentas_pasivo as $key => $cuenta) {
 
             break;
     }
-
 
 
     $recorrido++;
@@ -380,7 +380,7 @@ $pdf->Row(array(
     'Total Pasivo',
     Utiles::monto($pasivo)
 ));
-$pdf->Row(array('',''));
+$pdf->Row(array('', ''));
 $pdf->SetFont('courier', '', 9);
 
 $total_subcuenta = 0;
@@ -398,7 +398,7 @@ foreach ($cuentas_patrimonio as $key => $cuenta) {
                 'Total patrimonio',
                 Utiles::monto($total_subcuenta)
             ));
-            $pdf->Row(array('',''));
+            $pdf->Row(array('', ''));
             $total_subcuenta = 0;
             $pdf->SetFont('courier', '', 9);
         }
@@ -460,7 +460,6 @@ foreach ($cuentas_patrimonio as $key => $cuenta) {
     }
 
 
-
     $recorrido++;
 
     if (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R') {
@@ -481,7 +480,7 @@ $pdf->Row(array(
     'Total Pasivo + Patrimonio',
     Utiles::monto($pasivo + $patrimonio)
 ));
-$pdf->Row(array('',''));
+$pdf->Row(array('', ''));
 $pdf->SetFont('courier', '', 9);
 
 $total_subcuenta = 0;
