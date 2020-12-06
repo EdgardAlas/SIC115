@@ -202,8 +202,8 @@ function limpiarAgregarDetalle() {
 
 function limpiarEditarDetalle() {
     $('#btn_agregar').text('Agregar');
-    $('#btn_agregar').data('indice', -1);
-    $('#btn_agregar').data('accion', 'agregar');
+    $('#btn_agregar').attr('data-indice', -1);
+    $('#btn_agregar').attr('data-accion', 'agregar');
 }
 
 function camposEditar(index) {
