@@ -55,4 +55,4 @@
 <input type="hidden" id='cargo' value='<?= Utiles::monto($total_cargo)?>'>
 <input type="hidden" id='abono' value='<?= Utiles::monto($total_abono)?>'>
 <input type="hidden" id='diferencia' value='<?= Utiles::monto(abs($total_abono-$total_cargo))?>'>
-<input type="hidden" id='validar_diferencia' value='<?= abs($total_abono-$total_cargo)?>'>
+<input type="hidden" id='validar_diferencia' value='<?= Utiles::montoFormato(abs($total_abono-$total_cargo))?>'>

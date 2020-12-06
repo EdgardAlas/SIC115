@@ -245,7 +245,7 @@ function eliminar(indice) {
 }
 
 function validarGuardarPartida() {
-    let diferencia = $('#validar_diferencia').val();
+    let diferencia = parseFloat($('#validar_diferencia').val());
 
     if (diferencia > 0) {
         Swal.fire({

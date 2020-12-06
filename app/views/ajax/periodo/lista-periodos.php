@@ -82,6 +82,8 @@ $lista_periodos = isset($periodos) ? $periodos : array();
                                     de Resultados</a>
                             </div>
                             <?php
+                        }else{
+                            echo "<p>No hay estado financiero disponible. <em class='font-weight-bold' style='font-style: inherit'>[Periodo aun activo]</em></p>";
                         }
                         ?>
                     </td>

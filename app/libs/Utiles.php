@@ -15,6 +15,10 @@ class Utiles
 
     }
 
+    public static function montoFormato($monto){
+        return number_format($monto, 2);
+    }
+
     public static function fecha($fecha)
     {
         setlocale(LC_ALL, "es_ES", 'Spanish_Spain', 'Spanish');
