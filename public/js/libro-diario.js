@@ -427,7 +427,8 @@ function tablaLibroDiarioFechas() {
 function cambiarFechas(anio) {
     let fecha = new Date();
     $('#fecha_inicial').val(`${anio}-01-01`);
-    $('#fecha_final').val(`${anio}-${fecha.getMonth() + 1}-${fecha.getDate()}`);
+    const dia = fecha.getDate();
+    $('#fecha_final').val(`${anio}-${fecha.getMonth() + 1}-${dia<10 ? '0' : ''}${dia}`);
 }
 
 
