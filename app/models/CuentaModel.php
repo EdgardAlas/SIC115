@@ -62,7 +62,7 @@ class CuentaModel extends Model
             return $array;
         }if($size===2){
             return $this->codigoSiguiente($codigo[0], $array);
-        }else if($existeR>0 && $size-2 > 4){
+        }else if($existeR>0 && $size-2 >= 4){
             $cuenta = substr($codigoSinR, 0, $size-2).'R';
             return $this->codigoSiguiente($cuenta,$array);
         }else if($size>2){

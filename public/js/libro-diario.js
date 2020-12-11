@@ -394,13 +394,15 @@ function tablaLibroDiario(carga = false) {
     });
 }
 
-function tablaLibroDiarioFechas() {
-    /* Swal.fire({
-        title: 'Actualizando...',
-        onBeforeOpen: () => {
-            Swal.showLoading()
-        }
-    }) */
+function tablaLibroDiarioFechas(carga = false) {
+    if (carga) {
+        Swal.fire({
+            title: 'Cargando...',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            }
+        })
+    }
 
     cambiarFechas($('#periodo').find(':selected').attr('data-anio'));
 
@@ -417,7 +419,9 @@ function tablaLibroDiarioFechas() {
         numero,
         periodo
     }, function () {
-        /* Swal.close(); */
+        if (carga) {
+            Swal.close();
+        }
     });
 
     reporteLibroDiario();

@@ -80,7 +80,9 @@ class LibroDiarioController extends Controller
 
                 $saldo_cueta_acumular = 0;
 
-                foreach ($cuentas_acumular as $key => $cuenta) {
+                foreach ($cuentas_acumular as $key_3 => $cuenta) {
+
+                    var_dump($cuenta);
 
                     $cuenta_base = $cuenta_model->seleccionar(
                         array('nombre', 'saldo', 'tipo_saldo'), array(
@@ -106,6 +108,7 @@ class LibroDiarioController extends Controller
                     }
 
                     //por si falla
+                    //ya que no se me ocurrio hacer rollback con el autocmmmit el false xdxd sistma pedorro
 
                     $reestablecer_saldos[] = array(
                         'codigo' => $cuenta,
