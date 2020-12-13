@@ -257,6 +257,69 @@ class CuentaController extends Controller
 
     public function eliminar()
     {
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('POST');
+
+        if(!isset($_POST['id'])){
+            Excepcion::json(
+                ['error'=> true, 'mensaje'=>'Error al procesar esta accion', 'icono'=> 'warning']
+            );
+        }
+
+        $id = base64_decode($_POST['id']);
+        $login = $this->sesion->get('login');
+        $cuenta = $this->modelo->seleccionar(array('codigo','padre'), array(
+            'empresa' => $login['id'],
+            'periodo' => $login['periodo'],
+            'id' => $id
+        ));
+
+
+
+        $cuenta = $cuenta[0];
+
+        var_dump($cuenta);
+        $padre = $cuenta['padre'];
+
+        $this->modelo->eliminar(array(
+            'id' => $id
+        ));
+
+        $codigo_padre = $this->modelo->seleccionar(array('codigo'), array(
+            'empresa' => $login['id'],
+            'periodo' => $login['periodo'],
+            'id' => $padre
+        ));
+
+        $codigo_padre = $codigo_padre[0]['codigo'];
+
+
+        $cuenta_padre = $this->modelo->conexion()->query('select count(*) hijos from cuenta where codigo like :codigo and empresa = :empresa and periodo = :periodo and id != :padre',
+        array(
+            ':codigo' => $codigo_padre.'%',
+            ':empresa' => $login['id'],
+            ':periodo' => $login['periodo'],
+            'padre' => $padre
+        ))->fetchAll();
+
+        var_dump($cuenta_padre);
+
+
+
+        if($cuenta_padre[0]['hijos'] == 0){
+            $this->modelo->actualizar(array(
+                'ultimo_nivel' => 1
+            ), array(
+                'id' => $padre
+            ));
+        }
+
+        Excepcion::json(
+            ['error'=> false, 'mensaje'=>'Cuenta eliminada correctamente', 'icono'=> 'success', 'oal' => $cuenta_padre]
+        );
+
+
 
     }
 

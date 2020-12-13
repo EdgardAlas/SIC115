@@ -10,6 +10,7 @@ class LoginController extends Controller
     public function __construct($conexion)
     {
         $this->modelo = new EmpresaModel($conexion);
+        parent::__construct();
     }
 
     public function index()

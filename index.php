@@ -12,7 +12,10 @@ Flight::map('notFound', function () {
     Flight::render('error/404', 404);
 });
 
-
+Flight::map('error', function(Exception $ex){
+    // Handle error
+    var_dump($ex);
+});
 
 //MVC creditos: https://steemit.com/php/@kalangaum/easy-php-routing-management
 

@@ -199,6 +199,33 @@ function submitFormularioEspecico() {
     }
 }
 
+
+function eliminarCuenta(id){
+    console.log(id)
+    $.post('/cuenta/eliminar',{id}, function(data){
+        console.log(data)
+        if(data.error){
+            Swal.fire({
+                title: 'Error',
+                text: data.mensaje,
+                icon: data.icono,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+            })
+        }else{
+            Swal.fire({
+                title: 'Exito',
+                text: data.mensaje,
+                icon: data.icono,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+            }).then(()=>{
+                cargarTablaCuentas(true)
+            })
+        }
+    })
+}
+
 /* Inicio */
 $(document).ready((event) => {
 
@@ -238,6 +265,27 @@ $(document).ready((event) => {
         cargarModalEditar(id);
         $('#modal_acciones_cuenta').modal('show');
     })
+
+    $(document).on('click', '#btn_eliminar_cuenta', function() {
+        $('#btn_eliminar_cuenta').blur();
+        const id = $(this).attr('data-id');
+        Swal.fire({
+            title: 'Atención',
+            text: "¿Esta seguro de eliminar esta cuenta?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#6777ef',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.value)
+            {
+                eliminarCuenta(id);
+            }
+        })
+    })
+
 
     $(document).on("keydown", "#codigo", function(event) {
 

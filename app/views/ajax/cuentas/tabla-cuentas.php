@@ -25,7 +25,16 @@
                             base64_encode($cuenta['id'])
                         ."'>
                         <i class='fa fa-edit'></i>
-                    </button></td>
+                    </button>
+                    
+                    <button type='button' id ='btn_eliminar_cuenta' class='btn btn-danger ".($cuenta['saldo'] > 0  ? 'd-none' : ($cuenta['ultimo_nivel']==1 ? '' : 'd-none'))."'
+                        data-toggle='tooltip' data-placement='top'
+                        title='' data-original-title='Eliminar' data-id = '".
+                    base64_encode($cuenta['id'])
+                    ."'>
+                        <i class='fa fa-trash'></i>
+                    </button>
+                    </td>
                     </tr>
                 ";
             }
