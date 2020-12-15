@@ -10,7 +10,6 @@
     </thead>
     <tbody>
         <?php $datos = isset($cuentas) ? $cuentas  : array();?>
-
         <?php
 
             $debe = 0;
@@ -21,6 +20,7 @@
             $saldo = 0;
             
             foreach ($datos as $key => $cuenta) {
+                var_dump($cuenta['codigo']);
                 $aux_debe = isset($cuenta['debe']) ? ($cuenta['debe']) : 0;
                 $aux_haber = isset($cuenta['haber']) ? ($cuenta['haber']) : 0;
                 $saldo = ($cuenta['tipo_saldo'] === 'Deudor' ? ($aux_debe - $aux_haber ): ($aux_haber- $aux_debe));

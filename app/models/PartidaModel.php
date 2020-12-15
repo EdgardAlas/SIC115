@@ -41,7 +41,13 @@ class PartidaModel extends Model
     public function obtenerPartidas($cuentas, $condicion)
     {
         foreach ($cuentas as $key => $cuenta) {
-            $condicion['cuenta'] = $cuenta['codigo'];
+            $condicion['cuenta'] = $cuenta['codigo'].'%';
+
+            if(Utiles::endsWith($cuenta['codigo'],'R')){
+                $cuenta['codigo'] = substr($cuenta['codigo'], 0, -1);
+                $condicion['cuenta'] = $cuenta['codigo'].'%R';
+            }
+
 
             $partida = $this->obtenerPartidaPorCuenta($condicion);
 
@@ -66,7 +72,7 @@ class PartidaModel extends Model
             [
                 ':empresa' => $condicion['empresa'],
                 ':periodo' => $condicion['periodo'],
-                ':cuenta' => $condicion['cuenta'] . '%',
+                ':cuenta' => $condicion['cuenta'],
                 ':fecha_inicial' => $condicion['fecha_inicial'],
                 ':fecha_final' => $condicion['fecha_final']
             ]

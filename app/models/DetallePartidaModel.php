@@ -90,6 +90,13 @@ class DetallePartidaModel extends Model
 
         foreach ($cuentas as $key => $cuenta) {
 
+            $codigo = $cuenta['codigo'].'%';
+
+            if(Utiles::endsWith($cuenta['codigo'],'R')){
+                $cuenta['codigo'] = substr($cuenta['codigo'], 0, -1);
+                $codigo = $cuenta['codigo'].'%R';
+            }
+
             $auxiliar_consulta = $this->conexion()->query("select detalle_partida.movimiento movimiento,
             sum(monto) monto
                 from detalle_partida inner join partida on partida.id = detalle_partida.partida
@@ -100,7 +107,7 @@ class DetallePartidaModel extends Model
                 ':fecha_inicial' => $condicion['fecha_inicial'],
                 ':fecha_final' => $condicion['fecha_final'],
                 ':periodo' => $condicion['periodo'],
-                ':codigo' => $cuenta['codigo'] . '%',
+                ':codigo' => $codigo,
             ))->fetchAll();
 
             foreach ($auxiliar_consulta as $indice => $consulta) {

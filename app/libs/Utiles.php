@@ -64,4 +64,17 @@ class Utiles
         return array_search($valor , array_column($arreglo, $columna));
     }
 
+    public static function startsWith( $haystack, $needle ) {
+        $length = strlen( $needle );
+        return substr( $haystack, 0, $length ) === $needle;
+    }
+
+    public static function endsWith( $haystack, $needle ) {
+        $length = strlen( $needle );
+        if( !$length ) {
+            return true;
+        }
+        return substr( $haystack, -$length ) === $needle;
+    }
+
 }
