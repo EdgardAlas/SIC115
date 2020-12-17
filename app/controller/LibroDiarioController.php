@@ -246,7 +246,11 @@ class LibroDiarioController extends Controller
             'numero' => $numero,
         );
 
+
+
         $datos = $detalle_partida_model->obtenerLibroDiario($condicion);
+
+
 
         Flight::render('pdf/libro-diario', array(
             'datos' => $datos,

@@ -13,6 +13,7 @@ function calcularCierre() {
     $.post('/cierre-contable/calcular-cierre', {
         inventario_final
     }, function (data) {
+        log(data)
         // for (const i in data) {
         //     log(`${i} = ${data[i]}`)
         // }

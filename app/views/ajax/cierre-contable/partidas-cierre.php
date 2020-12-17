@@ -13,30 +13,43 @@ function buscarSubCuentas($valor, $columna, $arreglo)
     return (isset($cuenta_auxiliar['subcuentas'])) ? $cuenta_auxiliar['subcuentas'] : array();
 }
 
-function imprimirFila($arreglo, $tipo, $saldo = null, $fecha = null)
+function imprimirFila(&$arreglo, $tipo, $saldo = null, $fecha = null, $eliminar = false)
 {
     $monto_acumulado = 0;
+    $acumulador_fecha = 1;
     foreach ($arreglo as $key => $cuenta) {
 //        echo $cuenta['nombre'].' - '.$key.'<br>';
         if ($cuenta['ultimo_nivel']) {
-            ?>
-            <tr>
-                <td class="table-light">
-                    <?= $fecha != null && $tipo === 'cargo' ? $fecha : '' ?>
-                </td>
-                <td class="table-light" <?= $tipo === 'abono' ? "style='padding-left: 6em;'" : '' ?>>
-                    <?= $cuenta['codigo'] . ' - ' . $cuenta['nombre'] ?>
-                </td>
-                <td class="table-light text-right font-weight-bold">
-                    <?= $tipo === 'cargo' ? Utiles::monto(($saldo !== null ? $saldo : $cuenta['saldo'])) : '-' ?>
-                </td>
-                <td class="table-light text-right font-weight-bold">
-                    <?= $tipo === 'abono' ? Utiles::monto(($saldo !== null ? $saldo : $cuenta['saldo'])) : '-' ?>
-                </td>
-            </tr>
 
-            <?php
-            $monto_acumulado += ($saldo !== null ? $saldo : $cuenta['saldo']);
+
+
+            if ($cuenta['saldo'] > 0 || $saldo != null) {
+
+                if($cuenta['saldo']==0 && $eliminar){
+                    unset($arreglo[$key]);
+                    continue;
+                }
+
+                ?>
+                <tr>
+                    <td class="table-light">
+                        <?= $fecha != null && $tipo === 'cargo' && $acumulador_fecha == 1? $fecha : '' ?>
+                    </td>
+                    <td class="table-light" <?= $tipo === 'abono' ? "style='padding-left: 6em;'" : '' ?>>
+                        <?= $cuenta['codigo'] . ' - ' . $cuenta['nombre'] ?>
+                    </td>
+                    <td class="table-light text-right font-weight-bold">
+                        <?= $tipo === 'cargo' ? Utiles::monto(($saldo !== null ? $saldo : $cuenta['saldo'])) : '-' ?>
+                    </td>
+                    <td class="table-light text-right font-weight-bold">
+                        <?= $tipo === 'abono' ? Utiles::monto(($saldo !== null ? $saldo : $cuenta['saldo'])) : '-' ?>
+                    </td>
+                </tr>
+
+                <?php
+                $acumulador_fecha++;
+                $monto_acumulado += ($saldo !== null ? $saldo : $cuenta['saldo']);
+            }
         }
     }
     return $monto_acumulado;
@@ -79,7 +92,7 @@ function calcularMonto($monto, $saldo, $movimiento, $codigo)
         ($saldo === 'Acreedor' && substr($codigo, strlen($codigo) - 1) == 'R' && $movimiento === 'Abono') ||
         ($saldo === 'Deudor' && substr($codigo, strlen($codigo) - 1) != 'R' && $movimiento === 'Abono') ||
         ($saldo === 'Acreedor' && substr($codigo, strlen($codigo) - 1) != 'R' && $movimiento === 'Cargo')) {
-        $saldocuenta = -1*$saldocuenta;
+        $saldocuenta = -1 * $saldocuenta;
     }
     return $saldocuenta;
 }
@@ -118,9 +131,9 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
     foreach ($cuentas as $key => $cuenta) {
 
         if ($cuenta['ultimo_nivel']) {
-            if(substr($cuenta['codigo'], strlen($cuenta['codigo'])-1)==='R'){
+            if (Utiles::endsWith($cuenta['codigo'], 'R')) {
                 $movimiento = ($movimiento === 'Abono') ? 'Cargo' : 'Abono';
-            }else{
+            } else {
                 $movimiento = $aux_movimiento;
             }
 
@@ -138,6 +151,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
                     'codigo' => $cuenta['codigo']
                 );
         }
+        $movimiento = $aux_movimiento;
     }
 
     return $partidas;
@@ -185,7 +199,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
 
         $partidas_cierre[] = array(
             'partida' => array(
-                "numero" => $partida-1,
+                "numero" => $partida - 1,
                 "descripcion" => 'Liquidar cuentsa de IVA.',
                 'fecha' => date($empresa['anio'] . '-m-d'),
                 'partida_cierre' => 1,
@@ -221,7 +235,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
 
         $partidas_cierre[] = array(
             'partida' => array(
-                "numero" => $partida-1,
+                "numero" => $partida - 1,
                 "descripcion" => 'Liquidar cuentas de IVA y asignar impuesto por pagar.',
                 'fecha' => date($empresa['anio'] . '-m-d'),
                 'partida_cierre' => 1,
@@ -255,7 +269,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
 
         $partidas_cierre[] = array(
             'partida' => array(
-                "numero" => $partida-1,
+                "numero" => $partida - 1,
                 "descripcion" => 'Liquidar cuentas de IVA Debito Fiscal',
                 'fecha' => date($empresa['anio'] . '-m-d'),
                 'partida_cierre' => 1,
@@ -289,7 +303,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
         $estado_resultados['ventas_netas'] = 0;
 
         $partida = imprimirCabeceraPartida($partida);
-        $cargo = imprimirFila($ventas, 'cargo', $total_liquidar, $fecha);
+        $cargo = imprimirFila($ventas, 'cargo', $total_liquidar, $fecha, true);
         $abono = imprimirFila($rebajas_devoluciones, 'abono', null, $fecha);
         imprimirPiePartida(
             $cargo,
@@ -300,7 +314,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
 
     $partidas_cierre[] = array(
         'partida' => array(
-            "numero" => $partida-1,
+            "numero" => $partida - 1,
             "descripcion" => 'Liquidar rebajas y devoluciones sobre ventas y generar ventas totales.',
             'fecha' => date($empresa['anio'] . '-m-d'),
             'partida_cierre' => 1,
@@ -341,7 +355,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
 
     $partidas_cierre[] = array(
         'partida' => array(
-            "numero" => $partida-1,
+            "numero" => $partida - 1,
             "descripcion" => 'Liquidar gastos sobre compras y generar compras totales.',
             'fecha' => date($empresa['anio'] . '-m-d'),
             'partida_cierre' => 1,
@@ -384,7 +398,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
 
     $partidas_cierre[] = array(
         'partida' => array(
-            "numero" => $partida-1,
+            "numero" => $partida - 1,
             "descripcion" => 'Liquidar rebajas y devoluciones sobre compras y generar compras netas.',
             'fecha' => date($empresa['anio'] . '-m-d'),
             'partida_cierre' => 1,
@@ -422,7 +436,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
 
     $partidas_cierre[] = array(
         'partida' => array(
-            "numero" => $partida-1,
+            "numero" => $partida - 1,
             "descripcion" => 'Liquidar inventario y generar mercaderia disponible.',
             'fecha' => date($empresa['anio'] . '-m-d'),
             'partida_cierre' => 1,
@@ -459,7 +473,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
 
         $partidas_cierre[] = array(
             'partida' => array(
-                "numero" => $partida-1,
+                "numero" => $partida - 1,
                 "descripcion" => 'Calculo del costo de venta.',
                 'fecha' => date($empresa['anio'] . '-m-d'),
                 'partida_cierre' => 1,
@@ -476,8 +490,6 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
         if (count($detalle) > 0)
             array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
     }
-
-
 
 
     //Aperturar inventario final
@@ -498,7 +510,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
 
         $partidas_cierre[] = array(
             'partida' => array(
-                "numero" => $partida-1,
+                "numero" => $partida - 1,
                 "descripcion" => 'Aperturar inventario final.',
                 'fecha' => date($empresa['anio'] . '-m-d'),
                 'partida_cierre' => 1,
@@ -515,8 +527,6 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
         if (count($detalle) > 0)
             array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
     }
-
-
 
 
     //liquidar ventas y determinar impuesto sobre la renta
@@ -559,7 +569,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
 
         $partidas_cierre[] = array(
             'partida' => array(
-                "numero" => $partida-1,
+                "numero" => $partida - 1,
                 "descripcion" => 'Calculo del impuesto sobre la renta.',
                 'fecha' => date(date($empresa['anio'] . '-m-d')),
                 'partida_cierre' => 1,
@@ -590,9 +600,6 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
         }
 
     }
-
-
-
 
 
     //liquidar gastos de administracion, de venta y determinar reserva legal
@@ -644,7 +651,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
 
         $partidas_cierre[] = array(
             'partida' => array(
-                "numero" => $partida-1,
+                "numero" => $partida - 1,
                 "descripcion" => 'Liquidar gastos, productos financieros y determinar reserva legal.',
                 'fecha' => date($empresa['anio'] . '-m-d'),
                 'partida_cierre' => 1,
@@ -685,8 +692,6 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
     }
 
 
-
-
     //Determinar utilidad del ejercicio
 
     $utiliadad = buscarSubCuentas('utilidad', 'descripcion', $cuentas);
@@ -708,7 +713,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
 
         $partidas_cierre[] = array(
             'partida' => array(
-                "numero" => $partida-1,
+                "numero" => $partida - 1,
                 "descripcion" => 'Perdida del ejercicio.',
                 'fecha' => date($empresa['anio'] . '-m-d'),
                 'partida_cierre' => 1,
@@ -738,7 +743,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
 
         $partidas_cierre[] = array(
             'partida' => array(
-                "numero" => $partida-1,
+                "numero" => $partida - 1,
                 "descripcion" => 'Perdida del ejercicio.',
                 'fecha' => date($empresa['anio'] . '-m-d'),
                 'partida_cierre' => 1,
@@ -757,7 +762,6 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
     }
 
 
-
     //LIquidicacion de cuentas de balance
     $partida++;
     $activo = buscarSubCuentas('activo', 'descripcion', $cuentas);
@@ -766,7 +770,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
 
     $partidas_cierre[] = array(
         'partida' => array(
-            "numero" => $partida-1,
+            "numero" => $partida - 1,
             "descripcion" => 'Liquidar cuentas de balance.',
             'fecha' => date($empresa['anio'] . '-m-d'),
             'partida_cierre' => 1,
@@ -794,6 +798,9 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
     $sesion = new Session();
     //Guardar partidas en sesion para despues guardarlas en la bd
     $sesion->set('partidas', $partidas_cierre);
+
+    //Excepcion::json($partidas_cierre);
+
     $sesion->set('cuentas', $cuentas);
 
     //print_r($estado_resultados);

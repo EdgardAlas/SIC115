@@ -20,7 +20,7 @@
             $saldo = 0;
             
             foreach ($datos as $key => $cuenta) {
-                var_dump($cuenta['codigo']);
+
                 $aux_debe = isset($cuenta['debe']) ? ($cuenta['debe']) : 0;
                 $aux_haber = isset($cuenta['haber']) ? ($cuenta['haber']) : 0;
                 $saldo = ($cuenta['tipo_saldo'] === 'Deudor' ? ($aux_debe - $aux_haber ): ($aux_haber- $aux_debe));
@@ -53,11 +53,11 @@
     </tbody>
     <tfooter>
         <tr>
-            <td class='table-light text-right font-weight-bold'>Totales: </td>
-            <td class='table-light text-right font-weight-bold'><?= Utiles::monto($debe)?></td>
-            <td class='table-light text-right font-weight-bold'><?= Utiles::monto($haber)?></td>
-            <td class='table-light text-right font-weight-bold'><?= Utiles::monto($deudor)?></td>
-            <td class='table-light text-right font-weight-bold'><?= Utiles::monto($acreedor)?></td>
+            <td class='table-secondary text-right font-weight-bold'>Totales: </td>
+            <td class='table-primary text-right font-weight-bold'><?= Utiles::monto($debe)?></td>
+            <td class='table-primary text-right font-weight-bold'><?= Utiles::monto($haber)?></td>
+            <td class='table-success text-right font-weight-bold'><?= Utiles::monto($deudor)?></td>
+            <td class='table-success text-right font-weight-bold'><?= Utiles::monto($acreedor)?></td>
         </tr>
     </tfooter>
 </table>

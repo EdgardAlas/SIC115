@@ -33,6 +33,7 @@
                         </div>
 
                         <div id='contenedor-balanza' class='table-responsive'></div>
+
                     </div>
                 </div>
             </div>

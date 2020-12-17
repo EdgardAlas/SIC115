@@ -126,6 +126,7 @@ class CierreContableController extends Controller
 //        $configuracion_model = new ConfiguracioModel(new Conexion());
 //        $cuenta_model = new CuentaModel(new Conexion());
         $datos = $this->obtenerCuentasConfiguracion(['estado_resultados', 'cierre'], $login);
+        //Excepcion::json($datos);
 
         $this->asignarSaldosEstadoResultados($login['periodo'], $login, $datos);
 
@@ -508,7 +509,8 @@ class CierreContableController extends Controller
 
 
         $ventas = $this->obtenerSubCuentas('ventas', $cuentas);
-        $detalle_partida_model->asignarSaldosCalculados($ventas, $periodo);
+
+        $detalle_partida_model->asignarSaldosCalculados($ventas, $periodo, true);
         $indice = Utiles::posicionArreglo('ventas', 'descripcion', $cuentas);
 
         if ($indice !== false) {
@@ -521,7 +523,7 @@ class CierreContableController extends Controller
         $rebajas_ventas = $this->obtenerSubCuentas('rebajas_ventas', $cuentas);
         $detalle_partida_model->asignarSaldosCalculados($rebajas_ventas, $periodo);
         $indice = Utiles::posicionArreglo('rebajas_ventas', 'descripcion', $cuentas);
-
+        //Excepcion::json($cuentas);
         if ($indice !== false) {
             $cuentas[$indice]['subcuentas'] = $rebajas_ventas;
         }
@@ -682,10 +684,13 @@ class CierreContableController extends Controller
 
 
         $inventario_final = $estado_resultados['inventario_final'];
+
         $codigo = $this->obtenerSubCuentas('inventario', $cuentas)[0]['codigo'];
+
         $this->asignarSaldo($activo, $inventario_final, $codigo, 'ASIGNAR');
 
         $reserva_legal = $estado_resultados['reserva_legal'];
+
         $codigo = $this->obtenerSubCuentas('reserva_legal', $cuentas)[0]['codigo'];
         $this->asignarSaldo($patrimonio, $reserva_legal, $codigo, 'ASIGNAR');
 
@@ -774,12 +779,16 @@ class CierreContableController extends Controller
     {
         $subcuentas = Utiles::buscar($buscar, 'descripcion', $cuentas);
         $subcuentas = isset($subcuentas['subcuentas']) ? $subcuentas['subcuentas'] : array();
+        $array_auxiliar = array();
+
         foreach ($subcuentas as $key => $cuenta) {
-            if (!$cuenta['ultimo_nivel']) {
-                unset($subcuentas[$key]);
+
+            if ($cuenta['ultimo_nivel']) {
+                array_push($array_auxiliar, $cuenta);
             }
         }
-        return $subcuentas;
+
+        return $array_auxiliar;
     }
 
 
@@ -1269,12 +1278,22 @@ class CierreContableController extends Controller
         $datos = $configuracion_model->obtenerConfiguracion($login['id'], $login['periodo'], $opciones);
 
         foreach ($datos as $key => $dato) {
+
+
+            if(Utiles::endsWith($dato['codigo'],'R')){
+                $dato['codigo'] = substr($dato['codigo'], 0, -1);
+                $dato['codigo'] = $dato['codigo'].'%R';
+
+            }else{
+                $dato['codigo'] = $dato['codigo'] . '%';
+            }
+
             $cuentas = $cuenta_model->conexion()->query(
                 'SELECT id, codigo, nombre, saldo, tipo_saldo, ultimo_nivel, nivel, orden from cuenta 
                         where empresa = :empresa and codigo LIKE :codigo  and periodo = :periodo and cuenta.periodo = :periodo ORDER BY tipo_saldo', array(
                     ':empresa' => $login['id'],
                     ':periodo' => $login['periodo'],
-                    ':codigo' => $dato['codigo'] . '%',
+                    ':codigo' => $dato['codigo'],
                 )
             )->fetchAll();
 

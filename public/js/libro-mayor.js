@@ -77,13 +77,15 @@ function tablaLibroDiarioEspecifico(numero, codigo) {
     }) */
 
     let fecha_inicial = $('#fecha_inicial').val(),
-        fecha_final = $('#fecha_final').val();
+        fecha_final = $('#fecha_final').val(),
+        periodo = $('#periodo').val();
 
     $('#partida_especifica').load('/libro-diario/tabla-libro-diario', {
         fecha_inicial,
         fecha_final,
         numero,
-        codigo
+        codigo,
+        periodo
     }, function () {
         /* Swal.close(); */
     });
