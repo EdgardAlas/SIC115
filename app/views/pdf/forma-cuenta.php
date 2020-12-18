@@ -305,7 +305,7 @@ $pdf->SetFont('courier', '', 9);
 $pdf->Row(array(
     '', '', '', '', ''
 ));
-$pdf->SetFont('courier', 'B', 9);
+$pdf->SetFont('courier', 'BI', 9);
 $pdf->Row(array(
     'Total Activo: ',
     Utiles::monto($activo),
@@ -445,56 +445,36 @@ $pdf->Row(array(
 ));
 $pdf->SetFont('courier', '', 9);
 $total_subcuentas = 0;
+$pdf->Row(array(
+    '',
+    '',
+    '',
+    '',
+    ''
+));
 
-//pasivo
+//patrimonio
+$pdf->SetFont('courier', 'B', 9);
 
+$cuenta_padre = $cuenta_model->seleccionar(['codigo', 'nombre'], array(
+    'empresa' => $sesion['id'],
+    'periodo' => $sesion['periodo'],
+    'codigo' => $codigo_patrimonio
+));
+
+$pdf->Row(array(
+    '',
+    '',
+    '',
+    $cuenta_padre[0]['codigo'].' - '.$cuenta_padre[0]['nombre'],
+    ''
+));
+$pdf->SetFont('courier', '', 9);
 foreach ($data[2]['subcuentas'] as $key => $cuenta) {
     if ($recorrido == 0) {
         $x = $pdf->GetX();
         $y = $pdf->GetY();
     }
-
-
-    if ($codigo != $cuenta['codigo'][0] . $cuenta['codigo'][1]) {
-
-        if ($recorrido > 0) {
-            $pdf->SetFont('courier', 'B', 9);
-            $pdf->Row(array(
-                '',
-                '',
-                '',
-                'Total Pasivo Corriente: ',
-                Utiles::monto($total_subcuentas),
-
-            ));
-            $pdf->SetFont('courier', '', 9);
-            $pdf->Row(array('', '', '', '', ''));
-            $total_subcuentas = 0;
-        }
-
-        $codigo = $cuenta['codigo'][0] . $cuenta['codigo'][1];
-
-        $cuenta_padre = $cuenta_model->seleccionar(['codigo', 'nombre'], array(
-            'empresa' => $sesion['id'],
-            'periodo' => $sesion['periodo'],
-            'codigo' => $codigo
-        ));
-
-        $pdf->SetFont('courier', 'B', 9);
-
-
-        $pdf->Row(array(
-            '',
-            '',
-            '',
-            $cuenta_padre[0]['codigo'] . ' - ' . $cuenta_padre[0]['nombre'],
-            ''
-
-        ));
-
-        $pdf->SetFont('courier', '', 9);
-    }
-
 
     if ($cuenta['saldo'] > 0) {
         $pdf->Row(array(
@@ -557,7 +537,7 @@ $pdf->SetFont('courier', '', 9);
 $pdf->Row(array(
     '', '', '', '', ''
 ));
-$pdf->SetFont('courier', 'B', 9);
+$pdf->SetFont('courier', 'BI', 9);
 $pdf->Row(array(
     '',
     '',

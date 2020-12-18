@@ -17,20 +17,29 @@ function acumularSaldos($cuentas)
     return $saldo;
 }
 
-function imprimirFila($cuentas, $saldo = 0, PDF $pdf, $tipo = false){
+function imprimirFila($cuentas, $saldo = 0, PDF $pdf, $tipo = false)
+{
     $cuentas = isset($cuentas['subcuentas']) ? $cuentas['subcuentas'] : array();
 
-    foreach ($cuentas as $key => $cuenta){
+    foreach ($cuentas as $key => $cuenta) {
+
+        if ($saldo === null && $cuenta['saldo']==0)
+            continue;
+
+
+        /*if (($cuenta['saldo'] == 0))
+            continue;*/
+
 
         $pdf->Row(
-           array(
-               $cuenta['codigo'].' - '.$cuenta['nombre'],
+            array(
+                $cuenta['codigo'] . ' - ' . $cuenta['nombre'],
 
-               $tipo ? ($saldo <0 ? '('.Utiles::monto(($saldo === null) ? $cuenta['saldo'] : abs($saldo)).')':
-                   Utiles::monto(($saldo === null) ? $cuenta['saldo'] : abs($saldo))): '',
-               !$tipo ? ($saldo <0 ? '('.Utiles::monto(($saldo === null) ? $cuenta['saldo'] : abs($saldo)).')':
-                   Utiles::monto(($saldo === null) ? $cuenta['saldo'] : abs($saldo))) : ''
-           )
+                $tipo ? ($saldo < 0 ? '(' . Utiles::monto(($saldo === null) ? $cuenta['saldo'] : abs($saldo)) . ')' :
+                    Utiles::monto(($saldo === null) ? $cuenta['saldo'] : abs($saldo))) : '',
+                !$tipo ? ($saldo < 0 ? '(' . Utiles::monto(($saldo === null) ? $cuenta['saldo'] : abs($saldo)) . ')' :
+                    Utiles::monto(($saldo === null) ? $cuenta['saldo'] : abs($saldo))) : ''
+            )
         );
     }
 }
@@ -44,9 +53,9 @@ function imprimirUtilidad($cuentas, $saldo = 0, PDF $pdf, $tipo = false)
             array(
                 $cuenta['codigo'] . ' - ' . $cuenta['nombre'],
 
-                $tipo ? ($saldo <0 ? '('.Utiles::monto(($saldo === null) ? $cuenta['saldo'] : abs($saldo)).')':
-                    Utiles::monto(($saldo === null) ? $cuenta['saldo'] : abs($saldo))): '',
-                !$tipo ? ($saldo <0 ? '('.Utiles::monto(($saldo === null) ? $cuenta['saldo'] : abs($saldo)).')':
+                $tipo ? ($saldo < 0 ? '(' . Utiles::monto(($saldo === null) ? $cuenta['saldo'] : abs($saldo)) . ')' :
+                    Utiles::monto(($saldo === null) ? $cuenta['saldo'] : abs($saldo))) : '',
+                !$tipo ? ($saldo < 0 ? '(' . Utiles::monto(($saldo === null) ? $cuenta['saldo'] : abs($saldo)) . ')' :
                     Utiles::monto(($saldo === null) ? $cuenta['saldo'] : abs($saldo))) : ''
 
 
@@ -56,30 +65,35 @@ function imprimirUtilidad($cuentas, $saldo = 0, PDF $pdf, $tipo = false)
     }
 }
 
-function imprimirValor($titulo , $saldo = 0, PDF $pdf, $tipo = false){
+function imprimirValor($titulo, $saldo = 0, PDF $pdf, $tipo = false)
+{
 
-
-        $pdf->Row(
-            array(
-                $titulo,
-                $tipo ? ($saldo <0 ? '('.Utiles::monto(abs($saldo)).')':
-                    Utiles::monto(abs($saldo))): '',
-                !$tipo ? ($saldo <0 ? '('.Utiles::monto(abs($saldo)).')':
-                    Utiles::monto(abs($saldo))) : ''
-            )
-        );
+    $pdf->Row(
+        array(
+            $titulo,
+            $tipo ? ($saldo < 0 ? '(' . Utiles::monto(abs($saldo)) . ')' :
+                Utiles::monto(abs($saldo))) : '',
+            !$tipo ? ($saldo < 0 ? '(' . Utiles::monto(abs($saldo)) . ')' :
+                Utiles::monto(abs($saldo))) : ''
+        )
+    );
 
 }
 
-function imprimirTotal($titulo, $saldo, PDF $pdf, $tipo = false){
+function imprimirTotal($titulo, $saldo, PDF $pdf, $tipo = false)
+{
     $pdf->SetFont('courier', 'B', 9);
 
+    if($saldo==0) {
+        $pdf->SetFont('courier', '', 9);
+        return;
+    }
 
     $pdf->Row(array(
-       $titulo,
-        $tipo ? ($saldo <0 ? '('.Utiles::monto(abs($saldo)).')':
-            Utiles::monto(abs($saldo))): '',
-        !$tipo ? ($saldo <0 ? '('.Utiles::monto(abs($saldo)).')':
+        $titulo,
+        $tipo ? ($saldo < 0 ? '(' . Utiles::monto(abs($saldo)) . ')' :
+            Utiles::monto(abs($saldo))) : '',
+        !$tipo ? ($saldo < 0 ? '(' . Utiles::monto(abs($saldo)) . ')' :
             Utiles::monto(abs($saldo))) : ''
 
     ));
@@ -91,7 +105,8 @@ $data = isset($partidas) ? $partidas : array();
 
 $empresa = isset($empresa) ? $empresa : 'Sistema Contable';
 
-$inventario_final = isset($inventario_final) ? $inventario_final: 0;
+$inventario_final = isset($inventario_final) ? $inventario_final : 0;
+
 use Fpdf\Fpdf;
 
 class PDF extends FPDF
@@ -270,10 +285,10 @@ $cuentas_rv = Utiles::buscar('rebajas_ventas', 'descripcion', $data);
 
 $cuentas_dv = Utiles::buscar('devoluciones_ventas', 'descripcion', $data);
 
-imprimirFila($cuentas_venta, null, $pdf );
+imprimirFila($cuentas_venta, null, $pdf);
 imprimirFila($cuentas_rv, null, $pdf);
 imprimirFila($cuentas_dv, null, $pdf);
-imprimirTotal('Ventas Netas', $ventas_netas, $pdf );
+imprimirTotal('Ventas Netas', $ventas_netas, $pdf);
 
 
 /*
@@ -313,23 +328,23 @@ $mercaderia_disponible = $compras_netas + $inventario_inicial;
 //costo de venta
 $costo_venta = $mercaderia_disponible - $inventario_final;
 
-$cuentas_compras =  Utiles::buscar('compras', 'descripcion', $data);
-$cuentas_gastos_compras =  Utiles::buscar('gastos_compras', 'descripcion', $data);
+$cuentas_compras = Utiles::buscar('compras', 'descripcion', $data);
+$cuentas_gastos_compras = Utiles::buscar('gastos_compras', 'descripcion', $data);
 
 $cuentas_rc = Utiles::buscar('rebajas_compras', 'descripcion', $data);
 $cuentas_dc = Utiles::buscar('devoluciones_compras', 'descripcion', $data);
 
 
-imprimirFila($cuentas_compras, null, $pdf, true );
-imprimirFila($cuentas_gastos_compras, null, $pdf, true );
-imprimirTotal('Compras Totales', $compras_totales, $pdf, true );
+imprimirFila($cuentas_compras, null, $pdf, true);
+imprimirFila($cuentas_gastos_compras, null, $pdf, true);
+imprimirTotal('Compras Totales', $compras_totales, $pdf, true);
 imprimirFila($cuentas_rc, null, $pdf, true);
-imprimirFila($cuentas_dc, null, $pdf,true);
-imprimirTotal('Conpras Netas', $compras_netas, $pdf, true );
+imprimirFila($cuentas_dc, null, $pdf, true);
+imprimirTotal('Conpras Netas', $compras_netas, $pdf, true);
 imprimirValor('Inventario Inicial', $inventario_inicial, $pdf, true);
-imprimirTotal('Mercaderia Disponible', $mercaderia_disponible, $pdf,true );
+imprimirTotal('Mercaderia Disponible', $mercaderia_disponible, $pdf, true);
 imprimirValor('Inventario Final', $inventario_final, $pdf, true);
-imprimirTotal('Costo de Ventas', $costo_venta, $pdf );
+imprimirTotal('Costo de Ventas', $costo_venta, $pdf);
 /*
  * FIN COSTO DE VENTA
  */
@@ -341,7 +356,7 @@ imprimirTotal('Costo de Ventas', $costo_venta, $pdf );
 //utilidad bruta
 
 $utilidad_bruta = $ventas_netas - $costo_venta;
-imprimirTotal('Utilidad Bruta', $utilidad_bruta, $pdf );
+imprimirTotal('Utilidad Bruta', $utilidad_bruta, $pdf);
 /*
  * FIN UTILIDAD BRUTA
  */
@@ -357,14 +372,14 @@ $gastos_operacion = saldoAcumulado('gastos_operacion', 'descripcion', $data);
 
 $utilidad_operacion = $utilidad_bruta - $gastos_operacion;
 
-$cuentas_gastos_operacion =  Utiles::buscar('gastos_operacion', 'descripcion', $data);
+$cuentas_gastos_operacion = Utiles::buscar('gastos_operacion', 'descripcion', $data);
 
 
-imprimirFila($cuentas_gastos_operacion, null, $pdf,true);
+imprimirFila($cuentas_gastos_operacion, null, $pdf, true);
 
 
-imprimirTotal('Gastos de Operacion', $gastos_operacion, $pdf );
-imprimirTotal('Utilidad de Operacion', $utilidad_operacion, $pdf );
+imprimirTotal('Gastos de Operacion', $gastos_operacion, $pdf);
+imprimirTotal('Utilidad de Operacion', $utilidad_operacion, $pdf);
 
 /*
 * FIN UTILIDAD BRUTA
@@ -386,11 +401,11 @@ $utilidad_antes_impuestos_reserva = $utilidad_operacion + $otros_productos - $ot
 $cuentas_otros_productos = Utiles::buscar('otros_productos', 'descripcion', $data);
 $cuentas_otros_gastos = Utiles::buscar('otros_gastos', 'descripcion', $data);
 
-imprimirFila($cuentas_otros_productos, null,$pdf,true);
-imprimirTotal('Otros Productos', $otros_productos, $pdf );
-imprimirFila($cuentas_otros_gastos, null,$pdf,true);
-imprimirTotal('Otros Gastos', $otros_gastos, $pdf );
-imprimirTotal('utilidad antes de Impuestos y Reserva', $utilidad_antes_impuestos_reserva, $pdf );
+imprimirFila($cuentas_otros_productos, null, $pdf, true);
+imprimirTotal('Otros Productos', $otros_productos, $pdf);
+imprimirFila($cuentas_otros_gastos, null, $pdf, true);
+imprimirTotal('Otros Gastos', $otros_gastos, $pdf);
+imprimirTotal('Utilidad antes de Impuestos y Reserva', $utilidad_antes_impuestos_reserva, $pdf);
 
 /*
  * FIN UTILIDAD ANTES DE IMPUESTOS y RESERVA
@@ -426,12 +441,12 @@ $utilidad_perdida = $utilidad_antes_impuestos - $impuesto_renta;
 $cuentas_impuesto_renta = Utiles::buscar('impuesto_renta', 'descripcion', $data);
 
 imprimirFila($cuentas_impuesto_renta, $impuesto_renta, $pdf);
-if ($utilidad_perdida <0){
+if ($utilidad_perdida < 0) {
     $cuentas_perdida = Utiles::buscar('perdida', 'descripcion', $data);
-    imprimirUtilidad($cuentas_perdida, $utilidad_perdida,$pdf);
-}else{
+    imprimirUtilidad($cuentas_perdida, $utilidad_perdida, $pdf);
+} else {
     $cuentas_utilidad = Utiles::buscar('utilidad', 'descripcion', $data);
-    imprimirUtilidad($cuentas_utilidad, $utilidad_perdida,$pdf);
+    imprimirUtilidad($cuentas_utilidad, $utilidad_perdida, $pdf);
 }
 
 

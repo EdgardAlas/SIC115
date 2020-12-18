@@ -276,6 +276,12 @@ $pdf->Row(array(
     Utiles::monto($total_subcuenta)
 ));
 $pdf->Row(array(
+
+    '',
+    ''
+));
+$pdf->SetFont('courier', 'BI', 9);
+$pdf->Row(array(
     'Total Activo',
     Utiles::monto($activo)
 ));
@@ -389,38 +395,21 @@ $codigo = '';
 
 //Patrimonio
 
+$cuenta_padre = $cuenta_model->seleccionar(['codigo', 'nombre'], array(
+    'empresa' => $sesion['id'],
+    'periodo' => $sesion['periodo'],
+    'codigo' => $codigo_patrimonio
+));
+
+$pdf->SetFont('courier', 'B', 9);
+$pdf->Row(array(
+    $cuenta_padre[0]['codigo'].' - '.$cuenta_padre[0]['nombre'],
+    ''
+));
+$total_subcuenta = 0;
+$pdf->SetFont('courier', '', 9);
+
 foreach ($cuentas_patrimonio as $key => $cuenta) {
-    if ($codigo != $cuenta['codigo'][0] . $cuenta['codigo'][1]) {
-
-        if ($recorrido > 0) {
-            $pdf->SetFont('courier', 'B', 9);
-            $pdf->Row(array(
-                'Total patrimonio',
-                Utiles::monto($total_subcuenta)
-            ));
-            $pdf->Row(array('', ''));
-            $total_subcuenta = 0;
-            $pdf->SetFont('courier', '', 9);
-        }
-
-        $codigo = $cuenta['codigo'][0] . $cuenta['codigo'][1];
-
-        $cuenta_padre = $cuenta_model->seleccionar(['codigo', 'nombre'], array(
-            'empresa' => $sesion['id'],
-            'periodo' => $sesion['periodo'],
-            'codigo' => $codigo
-        ));
-
-        $pdf->SetFont('courier', 'B', 9);
-
-
-        $pdf->Row(array(
-            $cuenta_padre[0]['codigo'] . ' - ' . $cuenta_padre[0]['nombre'],
-            ''
-        ));
-
-        $pdf->SetFont('courier', '', 9);
-    }
 
     if ($cuenta['saldo'] > 0) {
         $pdf->Row(array(
@@ -476,6 +465,12 @@ $pdf->Row(array(
     'Total patrimonio',
     Utiles::monto($total_subcuenta)
 ));
+$pdf->Row(array(
+
+    '',
+    ''
+));
+$pdf->SetFont('courier', 'BI', 9);
 $pdf->Row(array(
     'Total Pasivo + Patrimonio',
     Utiles::monto($pasivo + $patrimonio)
