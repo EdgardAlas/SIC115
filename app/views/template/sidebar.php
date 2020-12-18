@@ -47,7 +47,7 @@
                         Comprobación</span></a>
             </li>
 
-            <li class="menu-header">Estados Financieros</li>
+            <!--<li class="menu-header">Estados Financieros</li>
             <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-invoice-dollar"></i> <span>Balance General</span></a>
                 <ul class="dropdown-menu">
@@ -61,7 +61,7 @@
             <li class="nav-item dropdown">
                 <a href="estadoresultados" class="nav-link"><i class="fas fa-file-invoice-dollar"></i><span>Estado de
                         Resultados</span></a>
-            </li>
+            </li>-->
 
             <li class="menu-header">Configuración</li>
             <li>
