@@ -404,7 +404,7 @@ function tablaLibroDiarioFechas(carga = false) {
         })
     }
 
-    cambiarFechas($('#periodo').find(':selected').attr('data-anio'));
+//    cambiarFechas($('#periodo').find(':selected').attr('data-anio'));
 
     let fecha_inicial = $('#fecha_inicial').val(),
         fecha_final = $('#fecha_final').val(),
@@ -600,6 +600,7 @@ $(document).ready(() => {
     });
 
     $(document).on('change', '#periodo', function () {
+        cambiarFechas($('#periodo').find(':selected').attr('data-anio'));
         tablaLibroDiarioFechas();
     });
 

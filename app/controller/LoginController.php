@@ -132,6 +132,15 @@ class LoginController extends Controller
 
     }
 
+    public function usuario(){
+        $this->sesionActiva();
+        $this->view('usuario', [
+            'js_especifico' => Utiles::printScript('cambiar-datos')
+        ], [
+            'usuario' => $this->sesion->get('login')['usuario']
+        ]);
+    }
+
     //metodos privados
 
     private function crearSesion($usuario)
@@ -150,4 +159,6 @@ class LoginController extends Controller
         }
         $sesion->set('login', $data);
     }
+
+
 }

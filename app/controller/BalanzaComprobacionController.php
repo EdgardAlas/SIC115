@@ -110,6 +110,7 @@ class BalanzaComprobacionController extends Controller
 
         $cuentas = $cuenta_model->seleccionar(array('nombre', 'id', 'codigo', 'saldo', 'tipo_saldo'), array(
             'empresa' => $empresa,
+            'periodo' => $condicion['periodo'],
             'nivel' => $condicion['nivel'],
             'ORDER' => array(
                 'orden' => 'ASC'
