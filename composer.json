@@ -4,6 +4,7 @@
         "catfan/medoo": "^1.7",
         "wixel/gump": "^1.11",
         "fpdf/fpdf": "^1.82",
-      "ext-iconv": "*"
+      "ext-iconv": "*",
+        "phpmailer/phpmailer": "^6.2"
     }
 }
