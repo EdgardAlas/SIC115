@@ -42,14 +42,86 @@ function validarDatos() {
 }
 
 $(document).ready(() => {
+    //$('#modal_reestablecer').modal('show');
     $(document).on('submit', '#form_reestablecer', function (e) {
         e.preventDefault();
         $("#submit").blur();
         if(validarDatos()){
-            console.log('procede')
+
+            const correo = $('#correo').val(),
+                nueva = $('#nueva').val(),
+                confirmar = $('#confirmar').val();
+
+            $.post('/login/enviar-correo', {correo, nueva, confirmar}, function(data){
+                console.log(data)
+
+                if(!data.error){
+                    $('#modal_reestablecer').modal('show');
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'Atención',
+                    text: data.mensaje,
+                    icon: data.icono,
+                    showCancelButton: false,
+                    confirmButtonColor: '#6777ef',
+                    confirmButtonText: 'Ok',
+                }).then(() => {
+                    focusCampo(data.campo)
+                })
+
+            });
+
+
         }
     });
 
+    $('#modal_reestablecer').on('shown.bs.modal', function() {
+        focus('codigo');
+    })
+
+    $(document).on('submit', '#form_codigo', function(e){
+        e.preventDefault();
+        $("#submit_codigo").blur();
+        const codigo = $('#codigo').val();
+        if(codigo.length === 0){
+            validarCampo('codigo', true)
+            focusCampo('codigo')
+            return
+        }
+        const correo = $('#correo').val(),
+            nueva = $('#nueva').val(),
+            confirmar = $('#confirmar').val();
+
+        $.post('/login/cambiar-credenciales',{codigo, correo, nueva, confirmar},function(data){
+            console.log(data)
+
+            Swal.fire({
+                title: 'Atención',
+                text: data.mensaje,
+                icon: data.icono,
+                showCancelButton: false,
+                confirmButtonColor: '#6777ef',
+                confirmButtonText: 'Ok',
+            }).then(() => {
+                if(data.error){
+                    focusCampo('codigo')
+                }else{
+                    location.href = '/login';
+                }
+            })
+        })
+
+    });
+
+    $(document).on('keyup', '#codigo', function (e) {
+        const codigo = $(this).val();
+        validarCampo('codigo', false)
+        if (codigo.length === 0) {
+            validarCampo('codigo', true)
+        }
+    });
 
     $(document).on('keyup', '#correo', function (e) {
         const contra = $(this).val();

@@ -13,7 +13,7 @@ class EmpresaModel extends Model
 
         $this->validaciones = [
             "reglas" => [
-                'usuario'    => 'required|alpha_numeric|max_len,100|min_len,6',
+                'usuario'    => 'required|max_len,100|min_len,6',
                 'contrasena'    => 'required|max_len,100|min_len,8',
             ],
             "filtros" => [

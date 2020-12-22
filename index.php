@@ -56,7 +56,7 @@ Flight::route('/(@controlador(/@metodo(/@id)))', function ($controlador, $metodo
     }
 
     //se crea una instancia del controlador
-    $objControlador = new $nombreControlador(Flight::conexion());
+    $objControlador = new $nombreControlador(new Conexion());
 
     //se busca el metodo especifico y se pasa el parametro si lo hay
     if (!$metodo) {

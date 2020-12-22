@@ -35,7 +35,7 @@
                             <div class="card-body">
                                 <form method="POST" action="#" class="needs-validation" novalidate="" name='form_login'>
                                     <div class="form-group">
-                                        <label for="usuario">Usuario</label>
+                                        <label for="usuario">Usuario o correo</label>
                                         <input id="usuario" type="text" class="form-control" name="usuario" tabindex="1" required autofocus>
                                     </div>
 

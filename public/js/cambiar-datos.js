@@ -19,6 +19,27 @@ function modificarUsuario(usuario) {
     })
 }
 
+function modificarCorreo(correo) {
+    $('#correo').blur();
+    $.post("/login/cambiar-correo", {correo}, function (data) {
+        log(data);
+
+        Swal.fire({
+            title: 'Atención',
+            text: data.mensaje,
+            icon: data.icono,
+            showCancelButton: false,
+            confirmButtonColor: '#6777ef',
+            confirmButtonText: 'Ok',
+        }).then((result) => {
+            if (!data.error) {
+                location.reload()
+            }
+        })
+
+    })
+}
+
 function validarUsuarioExiste(usuario) {
     const input_usuario = document.querySelector('#usuario')
 
@@ -33,6 +54,24 @@ function validarUsuarioExiste(usuario) {
 
         if (usuario.length === 0) {
             input_usuario.dataset.ok = 0
+        }
+    })
+}
+
+function validarCorreoExiste(correo) {
+    const input_correo = document.querySelector('#correo')
+
+    $.get(`/login/validar-correo/${correo}`, function (data) {
+        console.log(data)
+        if (data.error) {
+            validarCampo('correo', true)
+            input_correo.dataset.ok = 0
+        } else {
+            input_correo.dataset.ok = 1
+        }
+
+        if (correo.length === 0) {
+            input_correo.dataset.ok = 0
         }
     })
 }
@@ -57,7 +96,7 @@ function validarContrena() {
         return false;
     }
 
-    if (validar_contrasena !== nueva){
+    if (validar_contrasena !== nueva) {
         Swal.fire({
             title: 'Atención',
             text: 'Contraseña nueva no coincide',
@@ -73,11 +112,11 @@ function validarContrena() {
     }
 
 
-        return true;
+    return true;
 
 }
 
-function modificarContrasena(){
+function modificarContrasena() {
     const antigua = $('#antigua').val(),
         nueva = $('#nueva').val(),
         validar_contrasena = $('#validar_nueva').val();
@@ -95,7 +134,7 @@ function modificarContrasena(){
                 location.reload()
             }
 
-            if(data.error){
+            if (data.error) {
                 focusCampo(data.campo)
             }
 
@@ -107,7 +146,7 @@ function modificarContrasena(){
 
 $(document).ready(() => {
     titulo('Usuario y Contraseña')
-    focusCampo('usuario');
+    focusCampo('correo');
     $(document).on('submit', '#form_usuario', function (e) {
         e.preventDefault();
         $('#usuario').blur();
@@ -128,10 +167,30 @@ $(document).ready(() => {
 
     });
 
+    $(document).on('submit', '#form_correo', function (e) {
+        e.preventDefault();
+        $('#correo').blur();
+        $('#submit_correo').blur();
+        const correo = $("#correo").val();
+        if (correo.length === 0 || correo === '' || correo.length < 8) {
+            return;
+        }
+
+        if ($("#correo").attr('data-ok') == 1) {
+            modificarCorreo(correo)
+            return
+        }
+
+        validarCampo('correo', true)
+        focusCampo('correo')
+
+
+    });
+
     $(document).on('submit', '#form_contasena', function (e) {
         e.preventDefault();
         $('#submit_contra').blur();
-        if(validarContrena()){
+        if (validarContrena()) {
             Swal.fire({
                 title: 'Atención',
                 text: "¿Esta seguro de modificar la contraseña?",
@@ -161,6 +220,18 @@ $(document).ready(() => {
             $('#form_usuario').submit();
         }
 
+
+    })
+
+    $(document).on('keyup', '#correo', function (e) {
+        const correo = $(this).val();
+
+        validarCampo('correo', false)
+        validarCorreoExiste(correo)
+        if (isEnter(e.keyCode, correo, 8)) {
+            $('#correo').blur();
+            $('#form_correo').submit();
+        }
 
 
     })
@@ -202,12 +273,12 @@ $(document).ready(() => {
         }
     })
 
-    shortcut.add("Alt+U", function() {
+    shortcut.add("Alt+U", function () {
         focusCampo('usuario')
 
     });
 
-    shortcut.add("Alt+C", function() {
+    shortcut.add("Alt+C", function () {
         focusCampo('antigua')
 
     });

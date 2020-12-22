@@ -7,9 +7,14 @@ class Controller
     public function __construct()
     {
         $this->sesion = new Session();
-        
         /* $empresa = $this->sesion->get('login')['id']; */
         //$this->recursive_rmdir('temp/'.$empresa);
+    }
+
+
+    protected function eliminarCodigo()
+    {
+        unset($_SESSION['codigo']);
     }
 
     protected function viewOne($ruta, $variables = array())
@@ -52,21 +57,26 @@ class Controller
     protected function sesionActiva()
     {
         $this->isNotAjax();
-        
+
         $sesion = new Session();
 
-        $url =  trim(Flight::request()->url,'/');
+        $url = trim(Flight::request()->url, '/');
 
         if ($sesion->get('login') === null && ($url === 'login') || ($url === 'login/registrar' || $url === 'login/recuperar')) {
+            if($url !== 'login/recuperar'){
+                $this->eliminarCodigo();
+            }
             return '';
         }
 
         if ($sesion->get('login') === null) {
+            $this->eliminarCodigo();
             Flight::redirect('/login', 200);
             exit();
         }
 
         if ($sesion->get('login') !== null && ($url === 'login') || ($url === 'login/registrar' || $url === 'login/recuperar')) {
+            $this->eliminarCodigo();
             Flight::redirect('/', 200);
             exit();
         }
@@ -106,12 +116,13 @@ class Controller
         }
     }
 
-    public function validarPeriodo(){
+    public function validarPeriodo()
+    {
         $periodo = $this->sesion->get('login')['periodo'];
-        if($periodo===null){
+        if ($periodo === null) {
             $this->view('sin-periodo', []);
             exit();
         }
-    } 
+    }
 
 }

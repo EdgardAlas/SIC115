@@ -137,7 +137,11 @@ class PeriodoController extends Controller
         $conexion = new Conexion();
         $periodoModel = new PeriodoModel($conexion);
         $empresaModel = new EmpresaModel($conexion);
-        $data = $empresaModel->seleccionar(array('id', 'nombre', 'usuario'), array('usuario' => $usuario));
+        $data = $empresaModel->seleccionar(array('id', 'nombre', 'usuario', 'correo'), array('usuario' => $usuario));
+
+        if(!isset($data[0])){
+            $data = $empresaModel->seleccionar(array('id', 'nombre', 'usuario', 'correo'), array('correo' => $usuario));
+        }
 
         $data = $data[0];
 
