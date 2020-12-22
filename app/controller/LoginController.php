@@ -19,6 +19,11 @@ class LoginController extends Controller
         $this->viewOne('login', []);
     }
 
+    public function recuperar(){
+        $this->sesionActiva();
+        $this->viewOne('recuperar', []);
+    }
+
     public function iniciarSesion()
     {
         $resultado_validaciones = [];
@@ -227,6 +232,14 @@ class LoginController extends Controller
 
         if(!$existe_contra)
             Excepcion::json(['error' => true, 'mensaje' => 'Contraseña antigua incorrecta', 'icono' => 'warning', 'campo' => 'antigua']);
+
+        $existe_contra = $this->modelo->existe(array(
+            'contrasena' => $nueva,
+            'id' => $login['id']
+        ));
+
+        if($existe_contra)
+            Excepcion::json(['error' => true, 'mensaje' => 'No puede colocar la misma contraseña', 'icono' => 'warning', 'campo' => 'antigua']);
 
         $rowCount = $this->modelo->actualizar(array(
             'contrasena' => $nueva

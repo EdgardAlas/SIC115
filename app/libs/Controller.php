@@ -21,7 +21,8 @@ class Controller
     {
         Flight::render('template/navbar', array(), 'navbar');
         Flight::render('template/sidebar', array(), 'sidebar');
-        ($main !== '') ? Flight::render($main, $variables_main, 'main') : '';
+        if ($main !== '')
+            Flight::render($main, $variables_main, 'main');
         Flight::render('template/footer', array(), 'footer');
         Flight::render('template/layout', $variables);
     }
@@ -56,7 +57,7 @@ class Controller
 
         $url =  trim(Flight::request()->url,'/');
 
-        if ($sesion->get('login') === null && ($url === 'login') || ($url === 'login/registrar')) {
+        if ($sesion->get('login') === null && ($url === 'login') || ($url === 'login/registrar' || $url === 'login/recuperar')) {
             return '';
         }
 
@@ -65,12 +66,12 @@ class Controller
             exit();
         }
 
-        if ($sesion->get('login') !== null && ($url === 'login') || ($url === 'login/registrar')) {
+        if ($sesion->get('login') !== null && ($url === 'login') || ($url === 'login/registrar' || $url === 'login/recuperar')) {
             Flight::redirect('/', 200);
             exit();
         }
 
-        return;
+        return false;
     }
 
     protected function validarMetodoPeticion($metodo)

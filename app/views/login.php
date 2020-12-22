@@ -41,7 +41,14 @@
 
                                     <div class="form-group">
                                         <div class="d-block">
-                                            <label for="contrasena" class="control-label">Contraseña</label>
+                                            <div class="d-block">
+                                                <label for="contrasena" class="control-label">Contraseña</label>
+                                                <div class="float-right">
+                                                    <a href="/login/recuperar" class="text-small">
+                                                        Reestablecer contraseña.
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                         <input id="contrasena" type="password" class="form-control" name="contrasena" tabindex="2" required>
                                     </div>

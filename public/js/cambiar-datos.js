@@ -69,6 +69,7 @@ function validarContrena() {
             focusCampo('nueva')
             return false
         })
+        return false
     }
 
 
