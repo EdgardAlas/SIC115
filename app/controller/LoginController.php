@@ -82,7 +82,7 @@ class LoginController extends Controller
     public function validarUsuario($usuario)
     {
         $this->isAjax();
-
+        $this->sesionActivaAjax();
         $existe = $this->modelo->existe(array(
             'usuario' => $usuario
         ));
@@ -132,13 +132,117 @@ class LoginController extends Controller
 
     }
 
-    public function usuario(){
+    public function usuario()
+    {
         $this->sesionActiva();
         $this->view('usuario', [
             'js_especifico' => Utiles::printScript('cambiar-datos')
         ], [
             'usuario' => $this->sesion->get('login')['usuario']
         ]);
+    }
+
+    public function cambiarUsuario()
+    {
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('POST');
+
+        $usuario = '';
+
+        if (isset($_POST['usuario'])) {
+            $usuario = $_POST['usuario'];
+        }
+
+        if (strlen($usuario) < 8) {
+            Excepcion::json(['error' => true, 'mensaje' => 'Minimo de 8 caracteres', 'icono' => 'warning']);
+        }
+
+        $login = $this->sesion->get('login');
+
+        $rowCount = $this->modelo->actualizar(array(
+            'usuario' => $usuario
+        ), array(
+            'id' => $login['id']
+        ));
+
+
+
+        //Excepcion::json($rowCount);
+
+
+        if ($rowCount) {
+            $this->crearSesion($usuario);
+            Excepcion::json(['error' => false, 'mensaje' => 'Usuario modificado con exito', 'icono' => 'success', 'count' => $rowCount]);
+        }
+
+        Excepcion::json(['error' => true, 'mensaje' => 'Ocurrio un error al tratar de modificar', 'icono' => 'warning', 'count' => $rowCount, 'test' => $this->modelo->error(), 'usuario' => $usuario]);
+    }
+
+
+    public function cambiarContrasena()
+    {
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('POST');
+
+        $nueva = '';
+        $antigua = '';
+        $validar = '';
+
+        if (isset($_POST['nueva'])) {
+            $nueva = $_POST['nueva'];
+        }
+
+        if (isset($_POST['antigua'])) {
+            $antigua = $_POST['antigua'];
+        }
+
+        if (isset($_POST['validar_contrasena'])) {
+            $validar = $_POST['validar_contrasena'];
+        }
+
+        if (strlen($nueva) < 8) {
+            Excepcion::json(['error' => true, 'mensaje' => 'Minimo de 8 caracteres', 'icono' => 'warning', 'campo' => 'nueva']);
+        }
+
+        if (strlen($antigua) < 8) {
+            Excepcion::json(['error' => true, 'mensaje' => 'Minimo de 8 caracteres', 'icono' => 'warning', 'campo' => 'antigua']);
+        }
+
+        if (strlen($validar) < 8) {
+            Excepcion::json(['error' => true, 'mensaje' => 'Minimo de 8 caracteres', 'icono' => 'warning', 'campo' => 'validar_contrasena']);
+        }
+
+        if(strcmp($validar, $nueva)!= 0){
+            Excepcion::json(['error' => true, 'mensaje' => 'Contraseña nueva no coincide', 'icono' => 'warning', 'campo' => 'nueva']);
+        }
+
+        $login = $this->sesion->get('login');
+
+        $existe_contra = $this->modelo->existe(array(
+            'contrasena' => $antigua,
+            'id' => $login['id']
+        ));
+
+        if(!$existe_contra)
+            Excepcion::json(['error' => true, 'mensaje' => 'Contraseña antigua incorrecta', 'icono' => 'warning', 'campo' => 'antigua']);
+
+        $rowCount = $this->modelo->actualizar(array(
+            'contrasena' => $nueva
+        ), array(
+            'id' => $login['id']
+        ));
+
+        //Excepcion::json($this->modelo->error());
+
+        //Excepcion::json($rowCount);
+
+        if ($rowCount > 0) {
+            Excepcion::json(['error' => false, 'mensaje' => 'Contrasena modificada con exito', 'icono' => 'success', 'count' => $rowCount]);
+        }
+
+        Excepcion::json(['error' => true, 'mensaje' => 'Ocurrio un error al tratar de modificar', 'icono' => 'warning', 'count' => $rowCount]);
     }
 
     //metodos privados
@@ -154,7 +258,7 @@ class LoginController extends Controller
         $data['periodo'] = $periodoModel->ultimoPeriodo($data['id']);
         $data['anio'] = $periodoModel->ultimoAnio($data['id']);
         $data['estado'] = $periodoModel->estadoPeriodo($data['periodo'], $data['id']);
-        if($data['estado']=='CERRADO'){
+        if ($data['estado'] == 'CERRADO') {
             $data['periodo'] = null;
         }
         $sesion->set('login', $data);
