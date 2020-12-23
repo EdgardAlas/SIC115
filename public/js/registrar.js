@@ -18,13 +18,33 @@ function validarEmpresa(nombre) {
 
 }
 
+function validarCorreo(correo) {
+    const input_correo = document.querySelector('#correo')
+
+    $.get(`/login/validar-correo-registro/${correo}`, function (data) {
+        console.log(data)
+        if (data.error) {
+            validarCampo('correo', true)
+            input_correo.dataset.ok = 0
+        } else {
+            input_correo.dataset.ok = 1
+        }
+
+        if (correo.length === 0) {
+            input_correo.dataset.ok = 0
+        }
+    })
+
+
+}
+
 function validarUsuario(usuario) {
     const input_usuario = document.querySelector('#usuario')
 
 
 
-    $.get(`/login/validar-usuario/${usuario}`, function (data) {
-
+    $.get(`/login/validar-usuario-registro/${usuario}`, function (data) {
+        console.log(data)
         if (data.error) {
             validarCampo('usuario', true)
             input_usuario.dataset.ok = 0
@@ -44,8 +64,12 @@ function validarGuardar() {
     const input_nombre = document.querySelector('#nombre'),
         input_usuario = document.querySelector('#usuario'),
         input_contrasena = document.querySelector('#contrasena'),
-        input_contrasenav = document.querySelector('#contrasenav')
+        input_contrasenav = document.querySelector('#contrasenav'),
+        input_correo = document.querySelector('#correo')
+
+
     const datos = {
+        correo: input_correo.value,
         nombre: input_nombre.value,
         usuario: input_usuario.value,
         contrasena: input_contrasena.value,
@@ -53,29 +77,52 @@ function validarGuardar() {
 
     if (datos.nombre.length < 8 || input_nombre.dataset.ok == 0) {
         validarCampo('nombre', true)
-        focus('nombre')
+        focusCampo('nombre')
         return
     }
 
     if (datos.usuario.length < 8 || input_usuario.dataset.ok == 0) {
         validarCampo('usuario', true)
-        focus('usuario')
+        focusCampo('usuario')
+        return
+    }
+
+    if (datos.correo.length === 0 || input_correo.dataset.ok == 0) {
+        validarCampo('correo', true)
+        focusCampo('correo')
         return
     }
 
     if (datos.contrasena.length < 8) {
         validarCampo('contrasena', true)
-        focus('contrasena')
+        focusCampo('contrasena')
         return
     }
 
-    if (datos.contrasena != input_contrasenav.value) {
+    if (datos.contrasena !== input_contrasenav.value) {
         validarCampo('contrasenav', true)
-        focus('contrasenav')
+        focusCampo('contrasenav')
         return
     }
 
-    guardar(datos)
+    Swal.fire({
+        title: 'Atención',
+        text: "¿Esta seguro de crear la cuenta?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#6777ef',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+    }).then((result) => {
+        if (result.value) {
+            guardar(datos)
+        } else {
+            focusCampo('empresa')
+        }
+    })
+
+
 
 }
 
@@ -103,6 +150,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
     const usuario = document.querySelector('#usuario')
     const contrasena = document.querySelector('#contrasena')
     const contrasenav = document.querySelector('#contrasenav')
+    const correo = document.querySelector('#correo')
+    const form = document.querySelector('#form_registrar')
     const btn_registrar = document.querySelector('#registrar')
 
 
@@ -123,9 +172,17 @@ document.addEventListener("DOMContentLoaded", function (event) {
         if (isEnter(e.keyCode, usuario.value, 0))
             focus('contrasena')
 
-
-        usuario.value
         validarUsuario(usuario.value)
+    })
+
+    correo.addEventListener('keyup', (e) => {
+
+        validarCampo('correo', false)
+        if (isEnter(e.keyCode, usuario.value, 0))
+            focus('correo')
+
+
+        validarCorreo(correo.value)
     })
 
     contrasena.addEventListener('keyup', (e) => {
@@ -143,7 +200,15 @@ document.addEventListener("DOMContentLoaded", function (event) {
         }   
     })
 
-    btn_registrar.addEventListener('click', (e) => {
-        validarGuardar();
+    // btn_registrar.addEventListener('click', (e) => {
+    //     validarGuardar();
+    // })
+
+    form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        btn_registrar.blur()
+        validarGuardar()
     })
+
+
 });

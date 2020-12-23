@@ -272,10 +272,55 @@ class LoginController extends Controller
         Excepcion::json($resultado);
     }
 
+    public function validarUsuarioRegistro($usuario)
+    {
+        $this->isAjax();
+
+        $existe = $this->modelo->existe(array(
+            'usuario' => $usuario
+        ));
+
+        $resultado = array();
+
+        if ($existe) {
+            $resultado = array(
+                'error' => true
+            );
+        } else {
+            $resultado = array(
+                'error' => false
+            );
+        }
+
+        Excepcion::json($resultado);
+    }
+
     public function validarCorreo($correo)
     {
         $this->isAjax();
         $this->sesionActivaAjax();
+        $existe = $this->modelo->existe(array(
+            'correo' => $correo
+        ));
+
+        $resultado = array();
+
+        if ($existe) {
+            $resultado = array(
+                'error' => true
+            );
+        } else {
+            $resultado = array(
+                'error' => false
+            );
+        }
+
+        Excepcion::json($resultado);
+    }
+
+    public function validarCorreoRegistro($correo)
+    {
+        $this->isAjax();
         $existe = $this->modelo->existe(array(
             'correo' => $correo
         ));
