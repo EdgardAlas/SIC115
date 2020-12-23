@@ -5,6 +5,7 @@
         "wixel/gump": "^1.11",
         "fpdf/fpdf": "^1.82",
       "ext-iconv": "*",
-        "phpmailer/phpmailer": "^6.2"
+        "phpmailer/phpmailer": "^6.2",
+      "ext-json": ""
     }
 }
