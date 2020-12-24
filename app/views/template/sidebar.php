@@ -13,11 +13,13 @@
             <?php
             $sesion = new Session();
             $login = $sesion->get('login');
-            $fecha_inicial = strtotime(date($login['anio']."-m-d",time()));
-            $fecha_final = strtotime(date($login['anio']."-m-d",time()));
+            $fecha_inicial = strtotime(date($login['anio'] . "-m-d", time()));
+//            $fecha_final = strtotime(date($login['anio'] . "-12-31", time()));
+            $fecha_final = strtotime(date($login['anio'] . "-m-d", time()));
+
 
             //esto es para validar que no aparezca el boton de cierre cuando no sea la fecha inidicada
-            if ($fecha_inicial>=$fecha_final && $login['estado']!=='CERRADO') {
+            if ($fecha_inicial >= $fecha_final && $login['estado'] !== 'CERRADO') {
                 ?>
 
                 <li class="menu-header">Cierre Contable</li>
@@ -26,6 +28,20 @@
                 </li>
                 <?php
             } ?>
+
+
+            <?php
+
+            if ($login['anio'] < date('Y') && $login['estado'] !== 'CERRADO') {
+                ?>
+
+                <li class="menu-header">Cierre Contable</li>
+                <li>
+                    <a class="nav-link" href="/cierre-contable"><i class="fas fa-exclamation-circle"></i> <span>Cierre Contable</span></a>
+                </li>
+                <?php
+            } ?>
+
 
             <li class="menu-header">Catálogo de Cuentas</li>
             <li>
@@ -68,13 +84,9 @@
                 <a class="nav-link" href="/configuracion"><i class="fas fa-cogs"></i> <span>Configurar
                         Cuentas</span></a>
             </li>
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-database"></i> <span>Backup</span></a>
-                <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="restaurar.php"><i class="fas fa-save"></i> Crear Backup</a></li>
-                    <li><a class="nav-link" href="bootstrap-badge.html"><i class="fas fa-file-upload"></i> Restaurar</a>
-                    </li>
-                </ul>
+            <li>
+                <a class="nav-link" href="/backup"><i class="fas fa-database"></i> <span>Copia de
+                    Seguridad</span></a>
             </li>
         </ul>
 

@@ -14,7 +14,11 @@ class BackupController extends Controller
 
     public function index()
     {
-        $this->viewOne('backup');
+        $this->sesionActiva();
+
+        $this->view('backup', [
+            'js_especifico' => Utiles::printScript('backup'),
+        ], []);
     }
 
     public function generarBackup(){
@@ -29,17 +33,25 @@ class BackupController extends Controller
         echo(base64_encode($json));
     }
 
-    public function leer(){
+    public function restaurar(){
 
         if(empty($_FILES)){
-            Excepcion::json('No hay archivos');
+            Excepcion::json([
+                'error' => true,
+                'mensaje' => 'No hay archivos',
+                'icono' => 'warning'
+            ]);
         }
 
         $ext_permitidas = array('sic115');
         $filename = $_FILES['file']['name'];
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
         if (!in_array($ext, $ext_permitidas)) {
-            Excepcion::json('Extension no soportada');
+            Excepcion::json([
+                'error' => true,
+                'mensaje' => 'Extensión no soportada',
+                'icono' => 'warning'
+            ]);
         }
 
 
@@ -48,11 +60,19 @@ class BackupController extends Controller
         $str = file_get_contents($_FILES["file"]["tmp_name"]);
 
         if(!Utiles::is_base64($str)){
-            Excepcion::json('hay algun error en el archivo');
+            Excepcion::json([
+                'error' => true,
+                'mensaje' => 'El archivo esta dañado',
+                'icono' => 'warning'
+            ]);
         }
 
-        $json = json_decode(base64_decode($str));
-        Excepcion::json($json);
+        $json = json_decode(base64_decode($str), true);
+
+        //Excepcion::json($json);
+        Excepcion::json($this->modelo->restaurrBackup($json));
+
+
     }
 
     public function guardar()
