@@ -26,7 +26,8 @@ class BackupController extends Controller
 
 
         $login = $this->sesion->get('login');
-        $filename = 'backup_periodo_'.$login['anio'].'.sic115';
+        $time = time();
+        $filename = 'backup_periodo_'.$login['anio'].'_generado_'.date("d-m-Y (h:i:s a)", $time).'.sic115';
 
         header('Content-disposition: attachment; filename='.$filename);
 
