@@ -133,11 +133,23 @@ class BackupModel
             'empresa' => $login['id']
         ));
 
-        $periodo_model->insertar($backup['periodo']);
-        $cuenta_model->insertar($backup['cuenta']);
-        $configuracion_model->insertar($backup['configuracion']);
-        $partida_model->insertar($backup['partida']);
-        $detalle_partida_model->insertar($backup['detalle_partida']);
+        if(!empty($backup['periodo'])){
+            $periodo_model->insertar($backup['periodo']);
+        }  
+        if(!empty($backup['cuenta'])){
+            $cuenta_model->insertar($backup['cuenta']);
+        }            
+        if(!empty($backup['configuracion'])){
+            $configuracion_model->insertar($backup['configuracion']);
+        }
+        if(!empty($backup['partida'])){
+            $partida_model->insertar($backup['partida']);
+        }
+        if(!empty($backup['detalle_partida'])){
+            $detalle_partida_model->insertar($backup['detalle_partida']);
+        }     
+        
+        
 
         $this->crearSesion($login['usuario']);
 
