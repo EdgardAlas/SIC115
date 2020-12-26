@@ -10,6 +10,7 @@
                         <div class='form-group row'>
                             <div class="col-12">
                                 <a href='<?= URL_BASE ?>/libro-mayor/reporte-libro-mayor' id='btn_imprimir' class="btn btn-success">
+                                    <i class="fas fa-file-pdf"></i>
                                     Reporte Libro Mayor
                                 </a>
                             </div>

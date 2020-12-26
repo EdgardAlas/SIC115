@@ -43,8 +43,9 @@
 
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close"></i> Cerrar</button>
         <button type="button" class="btn btn-primary" id='btn_editar' data-cuenta = '<?= !empty($cuenta_editar) ? base64_encode($cuenta_editar['id']) : '' ?>'>
+            <i class="fas fa-edit"></i>
             Editar Cuenta
         </button>
     </div>

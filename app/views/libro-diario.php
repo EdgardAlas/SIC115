@@ -14,6 +14,7 @@
                                     if($estado_periodo!=='CIERRE'){
                                         ?>
                                 <button type="button" id='btn_partida' class="btn btn-primary" autofocus>
+                                    <i class="fas fa-plus-square"></i>
                                     Agregar Partida
                                 </button>
                                 <?php
@@ -21,6 +22,7 @@
                                 ?>
                                 <a href='<?=URL_BASE?>/libro-diario/reporte-libro-diario' id='btn_imprimir'
                                     class="btn btn-success">
+                                    <i class="fas fa-file-pdf"></i>
                                     Reporte Libro Diario
                                 </a>
                             </div>
@@ -121,7 +123,7 @@
                         if($estado!=='CIERRE'){
                             ?>
                                     <button type="button" class="btn btn-success w-100" id='btn_agregar'
-                                        name='btn_agregar' data-indice=-1 data-accion='agregar'>Agregar</button>
+                                        name='btn_agregar' data-indice=-1 data-accion='agregar'><i class="fas fa-plus-square"></i> Agregar</button>
                             <?php
                         }
                     ?>
@@ -163,11 +165,11 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close"></i> Cerrar</button>
                     <?php
                         if($estado!=='CIERRE'){
                             ?>
-                    <button type="button" class="btn btn-primary" id='btn_guardar_partida'>Guardar Partida</button>
+                    <button type="button" class="btn btn-primary" id='btn_guardar_partida'><i class="fas fa-save"></i> Guardar Partida</button>
                             <?php
                         }
                     ?>

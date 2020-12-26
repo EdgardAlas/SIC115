@@ -11,6 +11,7 @@
                             <div class="col-12">
                                 <a href='<?=URL_BASE?>/balanza-comprobacion/reporte-balanza-comprobacion' id='btn_imprimir'
                                     class="btn btn-success">
+                                    <i class="fas fa-file-pdf"></i>
                                     Reporte Balanza Comprobacion
                                 </a>
                             </div>

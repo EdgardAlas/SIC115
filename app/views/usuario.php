@@ -19,7 +19,10 @@
                                                     <input type="text" class="form-control" value="<?=isset($correo)?$correo:''?>" id="correo" data-ok="0">
                                                 </div>
                                                 <div class="col-12 form-group">
-                                                    <input type="submit" value="Cambiar" class="btn btn-success" id="submit_correo">
+                                                    <button type="submit" class="btn btn-success btn-block" id="submit_correo">
+                                                        <i class="fas fa-save"></i>
+                                                        Cambiar
+                                                    </button>
                                                 </div>
                                             </div>
                                         </form>
@@ -39,7 +42,10 @@
                                                     <input type="text" class="form-control" value="<?=isset($usuario)?$usuario:''?>" id="usuario" data-ok="0">
                                                 </div>
                                                 <div class="col-12 form-group">
-                                                    <input type="submit" value="Cambiar" class="btn btn-success" id="submit_usuario">
+                                                    <button type="submit" class="btn btn-success btn-block" id="submit_usuario">
+                                                        <i class="fas fa-save"></i>
+                                                        Cambiar
+                                                    </button>
                                                 </div>
                                             </div>
                                         </form>
@@ -69,7 +75,10 @@
                                             <input type="password" class="form-control" id="validar_nueva">
                                         </div>
                                         <div class="col-12 form-group">
-                                            <input type="submit" value="Cambiar" class="btn btn-success" id="submit_contra">
+                                            <button type="submit" class="btn btn-success btn-block" id="submit_contra">
+                                                <i class="fas fa-save"></i>
+                                                Cambiar
+                                            </button>
                                         </div>
                                     </div>
                                 </form> 

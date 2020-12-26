@@ -370,7 +370,7 @@ class LoginController extends Controller
 
     }
 
-    public function usuario()
+    public function credenciales()
     {
         $this->sesionActiva();
 

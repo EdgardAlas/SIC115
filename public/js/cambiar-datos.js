@@ -82,16 +82,19 @@ function validarContrena() {
         validar_contrasena = $('#validar_nueva').val();
 
     if (antigua.length < 8) {
+        validarCampo('antigua', true)
         focusCampo('antigua')
         return false;
     }
 
     if (nueva.length < 8) {
+        validarCampo('nueva', true)
         focusCampo('nueva')
         return false;
     }
 
     if (validar_contrasena.length < 8) {
+        validarCampo('validar_nueva', true)
         focusCampo('validar_nueva')
         return false;
     }
@@ -153,11 +156,29 @@ $(document).ready(() => {
         $('#submit_usuario').blur();
         const usuario = $("#usuario").val();
         if (usuario.length === 0 || usuario === '' || usuario.length < 8) {
+            validarCampo('usuario', true)
+            focusCampo('usuario')
             return;
         }
 
         if ($("#usuario").attr('data-ok') == 1) {
-            modificarUsuario(usuario)
+            Swal.fire({
+                title: 'Atención',
+                text: "¿Esta seguro de modificar el usuario?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#6777ef',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.value) {
+                    modificarUsuario(usuario)
+                } else {
+                    focus('usuario');
+                }
+            })
+
             return
         }
 
@@ -172,12 +193,32 @@ $(document).ready(() => {
         $('#correo').blur();
         $('#submit_correo').blur();
         const correo = $("#correo").val();
-        if (correo.length === 0 || correo === '' || correo.length < 8) {
+        if (correo.length === 0 || correo === '') {
+            validarCampo('correo', true)
+            focusCampo('correo')
             return;
         }
 
         if ($("#correo").attr('data-ok') == 1) {
-            modificarCorreo(correo)
+
+            Swal.fire({
+                title: 'Atención',
+                text: "¿Esta seguro de modificar el correo electronico?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#6777ef',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.value) {
+                    modificarCorreo(correo)
+                } else {
+                    focus('correo');
+                }
+            })
+
+
             return
         }
 

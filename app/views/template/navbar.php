@@ -140,7 +140,7 @@
               echo $sesion->get('login')['usuario'];
             ?></div></a>
             <div class="dropdown-menu dropdown-menu-right">
-                <a href="/login/usuario" class="dropdown-item has-icon">
+                <a href="/login/credenciales" class="dropdown-item has-icon">
                     <i class="fas fa-edit"></i> Cambiar Credenciales
                 </a>
               <a href="/login/cerrar-sesion" class="dropdown-item has-icon text-danger">

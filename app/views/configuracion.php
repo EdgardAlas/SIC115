@@ -29,6 +29,7 @@
                         <div class='row'>
                             <div class="col-12 text-center">
                                 <button type='button' class='btn btn-primary' id='btn_guardar'>
+                                    <i class="fas fa-save"></i>
                                     Guardar
                                 </button>
                             </div>

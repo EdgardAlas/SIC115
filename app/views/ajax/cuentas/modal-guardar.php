@@ -33,7 +33,7 @@
 
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" id='btn_guardar'>Guardar Cuenta</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close"></i> Cerrar</button>
+        <button type="button" class="btn btn-primary" id='btn_guardar'><i class="fas fa-save"></i> Guardar Cuenta</button>
     </div>
 </form>

@@ -11,6 +11,7 @@ $lista_periodos = isset($periodos) ? $periodos : array();
         if ($periodo_activo['periodo'] === null || $periodo_activo['estado'] === 'CERRADO') {
             ?>
             <button type="button" id='btn_iniciar_periodo' class="btn btn-primary">
+                <i class="fas fa-plus-square"></i>
                 Iniciar nuevo periodo
             </button>
             <?php
@@ -63,6 +64,7 @@ $lista_periodos = isset($periodos) ? $periodos : array();
                                     <button class="btn btn-success dropdown-toggle" type="button"
                                             id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                             aria-expanded="false">
+                                        <i class="fas fa-book"></i>
                                         Balance General
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -78,7 +80,9 @@ $lista_periodos = isset($periodos) ? $periodos : array();
                                 </div>
 
                                 <a id="estado_resultados" class="btn btn-success"
-                                   href="/cierre-contable/estado-resultados?periodo=<?= $period['id'] ?>&periodo_pasado=true">Estado
+                                   href="/cierre-contable/estado-resultados?periodo=<?= $period['id'] ?>&periodo_pasado=true">
+                                    <i class="fas fa-book"></i>
+                                    Estado
                                     de Resultados</a>
                             </div>
                             <?php

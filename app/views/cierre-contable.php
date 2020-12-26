@@ -13,7 +13,7 @@
                                 <input type="text" class="form-control" id="inventario_final">
                             </div>
                             <div class="col-2 d-flex align-items-end">
-                                <button class='btn btn-primary' id="btn_calcular_cierre">Calcular Cierre</button>
+                                <button class='btn btn-primary' id="btn_calcular_cierre"><i class="fas fa-calculator"></i> Calcular Cierre</button>
                             </div>
                         </div>
 
@@ -23,6 +23,7 @@
                                     <button class="btn btn-success dropdown-toggle" type="button"
                                             id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                             aria-expanded="false">
+                                        <i class="fas fa-book"></i>
                                         Balance General
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -31,7 +32,9 @@
                                     </div>
                                 </div>
 
-                                <a id="estado_resultados" class="btn btn-success" href="/cierre-contable/estado-resultados">Estado de Resultados</a>
+                                <a id="estado_resultados" class="btn btn-success" href="/cierre-contable/estado-resultados">
+                                    <i class="fas fa-book"></i>
+                                    Estado de Resultados</a>
                             </div>
                         </div>
                         <div class="table-responsive" id="div_partidas">
@@ -55,7 +58,7 @@
                         </div>
 
                         <div class="col-12 position-sticky sticky-top sticky-bottom text-center p-3 border">
-                            <button class="btn btn-primary" id="realizar_cierre">Realizar Cierre</button>
+                            <button class="btn btn-primary" id="realizar_cierre"><i class="fas fa-check"></i> Realizar Cierre</button>
                         </div>
                     </div>
                 </div>

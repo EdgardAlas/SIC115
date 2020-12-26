@@ -18,7 +18,8 @@
                                         </small>
                                     </div>
                                     <div class="col-12 form-group">
-                                        <a href="/backup/generar-backup" class="btn btn-success">
+                                        <a href="/backup/generar-backup" class="btn btn-success btn-block">
+                                            <i class="fas fa-file-download"></i>
                                             Descargar Copia de Seguridad
                                         </a>
                                     </div>
@@ -32,12 +33,16 @@
                                       class="border p-4" id="form_restaurar">
                                     <h2 class="h4">Restaurar Copia de Seguridad</h2>
                                     <div class="custom-file form-group">
-                                        <input type="file" class="custom-file-input" id="file" name="file" accept=".sic115">
+                                        <input type="file" class="custom-file-input" id="file" name="file" accept=".sic115" required>
                                         <label class="custom-file-label" for="file"
                                                data-browse="Buscar Archivo">...</label>
                                     </div>
                                     <div class="col-12 form-group">
-                                        <input type="submit" value="Restaurar Copia de Seguridad" class="btn btn-success">
+
+                                        <button type="submit" class="btn btn-success btn-block">
+                                            <i class="fas fa-file-upload"></i>
+                                            Restaurar copiade seguridad
+                                        </button>
                                     </div>
                                 </form>
                             </div>

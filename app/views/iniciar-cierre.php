@@ -17,9 +17,11 @@
                         <div class="row form-group pt-3">
                             <div class="col-12 text-center">
                                 <button class="btn btn-primary" id="btn_empezar">
+                                    <i class="fas fa-file-invoice-dollar"></i>
                                     Cierre del Ejercicio Contable
                                 </button>
                                 <a href="/backup/generar-backup" class="btn btn-success">
+                                    <i class="fas fa-file-download"></i>
                                     Copia de Seguridad antes del cierre
                                 </a>
                             </div>

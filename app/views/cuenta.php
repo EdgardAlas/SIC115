@@ -16,6 +16,7 @@
                                 if ($estado !== 'CIERRE') {
                                     ?>
                                     <button type="button" id='btn_acciones_cuenta' class="btn btn-primary">
+                                        <i class="fas fa-plus-square"></i>
                                         Agregar Cuenta
                                     </button>
                                     <?php
@@ -25,6 +26,7 @@
 
                                 <a href='<?= URL_BASE ?>/cuenta/reporte-catalogo' id='btn_imprimir'
                                    class="btn btn-success">
+                                    <i class="fas fa-file-pdf"></i>
                                     Reporte de cuentas
                                 </a>
                             </div>
