@@ -19,6 +19,9 @@
                                 <button class="btn btn-primary" id="btn_empezar">
                                     Cierre del Ejercicio Contable
                                 </button>
+                                <a href="/backup/generar-backup" class="btn btn-success">
+                                    Copia de Seguridad antes del cierre
+                                </a>
                             </div>
                         </div>
                     </div>

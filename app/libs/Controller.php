@@ -1,5 +1,7 @@
 <?php
 
+require_once './app/models/PeriodoModel.php';
+
 class Controller
 {
     protected $sesion;
@@ -7,8 +9,47 @@ class Controller
     public function __construct()
     {
         $this->sesion = new Session();
+        $login = $this->sesion->get('login');
         /* $empresa = $this->sesion->get('login')['id']; */
         //$this->recursive_rmdir('temp/'.$empresa);
+
+        if($login!==null){
+            if ($login['anio'] < date('Y') && $login['estado'] !== 'CERRADO') {
+                if($login['estado'] !== 'CIERRE'){
+                    $conexion = new Conexion();
+                    $periodo_model = new PeriodoModel($conexion);
+
+                    $periodo_model->actualizar(array(
+                        'estado' => 'CIERRE'
+                    ), array(
+                        'empresa' => $login['id'],
+                        'id' => $login['periodo']
+                    ));
+
+                    $this->actualizarPeriodActual($login['usuario']);
+                }
+            }
+        }
+    }
+
+    private function actualizarPeriodActual($usuario)
+    {
+
+        $sesion = new Session();
+        $conexion = new Conexion();
+        $periodoModel = new PeriodoModel($conexion);
+        $empresaModel = new EmpresaModel($conexion);
+        $data = $empresaModel->seleccionar(array('id', 'nombre', 'usuario'), array('usuario' => $usuario));
+
+        $data = $data[0];
+
+        $data['periodo'] = $periodoModel->ultimoPeriodo($data['id']);
+        $data['anio'] = $periodoModel->ultimoAnio($data['id']);
+        $data['estado'] = $periodoModel->estadoPeriodo($data['periodo'], $data['id']);
+        if ($data['estado'] == 'CERRADO') {
+            $data['periodo'] = null;
+        }
+        $sesion->set('login', $data);
     }
 
 

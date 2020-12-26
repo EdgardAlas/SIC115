@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 22, 2020 at 07:34 PM
+-- Generation Time: Dec 24, 2020 at 08:56 PM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.19
 
@@ -63,27 +63,28 @@ INSERT INTO `configuracion` (`id`, `titulo`, `descripcion`, `periodo`, `cuenta`)
 (247, 'estado_resultados', 'impuesto_renta', 21, 270),
 (248, 'estado_resultados', 'utilidad', 21, 293),
 (249, 'estado_resultados', 'perdida', 21, 293),
-(271, 'clasificacion', 'activo', 23, 300),
-(272, 'clasificacion', 'pasivo', 23, 383),
-(273, 'clasificacion', 'patrimonio', 23, 450),
-(274, 'clasificacion', 'gastos', 23, 465),
-(275, 'clasificacion', 'ingresos', 23, 571),
-(276, 'cierre', 'pye', 23, 582),
-(277, 'cierre', 'iva_credito', 23, 338),
-(278, 'cierre', 'iva_debito', 23, 433),
-(279, 'cierre', 'impuesto_iva', 23, 428),
-(280, 'estado_resultados', 'ventas', 23, 573),
-(281, 'estado_resultados', 'rebajas_ventas', 23, 577),
-(282, 'estado_resultados', 'compras', 23, 467),
-(283, 'estado_resultados', 'gastos_compras', 23, 470),
-(284, 'estado_resultados', 'rebajas_compras', 23, 472),
-(285, 'estado_resultados', 'inventario', 23, 340),
-(286, 'estado_resultados', 'gastos_operacion', 23, 474),
-(287, 'estado_resultados', 'otros_gastos', 23, 568),
-(288, 'estado_resultados', 'reserva_legal', 23, 458),
-(289, 'estado_resultados', 'impuesto_renta', 23, 427),
-(290, 'estado_resultados', 'utilidad', 23, 460),
-(291, 'estado_resultados', 'perdida', 23, 460);
+(422, 'clasificacion', 'activo', 23, 300),
+(423, 'clasificacion', 'pasivo', 23, 383),
+(424, 'clasificacion', 'patrimonio', 23, 450),
+(425, 'clasificacion', 'gastos', 23, 465),
+(426, 'clasificacion', 'ingresos', 23, 571),
+(427, 'cierre', 'pye', 23, 582),
+(428, 'cierre', 'iva_credito', 23, 338),
+(429, 'cierre', 'iva_debito', 23, 433),
+(430, 'cierre', 'impuesto_iva', 23, 428),
+(431, 'estado_resultados', 'ventas', 23, 573),
+(432, 'estado_resultados', 'rebajas_ventas', 23, 577),
+(433, 'estado_resultados', 'compras', 23, 467),
+(434, 'estado_resultados', 'gastos_compras', 23, 470),
+(435, 'estado_resultados', 'rebajas_compras', 23, 472),
+(436, 'estado_resultados', 'inventario', 23, 341),
+(437, 'estado_resultados', 'gastos_operacion', 23, 474),
+(438, 'estado_resultados', 'otros_productos', 23, 579),
+(439, 'estado_resultados', 'otros_gastos', 23, 568),
+(440, 'estado_resultados', 'reserva_legal', 23, 459),
+(441, 'estado_resultados', 'impuesto_renta', 23, 427),
+(442, 'estado_resultados', 'utilidad', 23, 461),
+(443, 'estado_resultados', 'perdida', 23, 461);
 
 -- --------------------------------------------------------
 
@@ -923,7 +924,11 @@ INSERT INTO `empresa` (`id`, `correo`, `nombre`, `usuario`, `contrasena`) VALUES
 (4, '', 'JUE LULUE SA DE CV', '13123123', '123456789'),
 (5, '', 'fsadf123', 'dfadfadf', 'adsfdf123'),
 (6, '', 'Prueba SA DE CV', 'sinperiodo', 'admin123'),
-(7, '', 'CDM, S.A. DE S.V.', 'master2020', 'master2020');
+(7, 'edgardalasu@gmail.com', 'CDM, S.A. DE S.V.', 'master2020', 'master2020'),
+(8, '', '11311231321312', '12313123', '12345678'),
+(10, 'esphuma1@gmail.com', 'Empresa X 2', 'usuario12345', 'hola123456'),
+(11, 'esphuma1@gmail.com', 'Empresa X 2', 'usuario12345', 'hola123456'),
+(12, 'esphuma2@gmail.com', 'Empresa Prueba 2', 'user12346', '12345678');
 
 -- --------------------------------------------------------
 
@@ -1077,31 +1082,69 @@ ALTER TABLE `periodo`
 -- AUTO_INCREMENT for table `configuracion`
 --
 ALTER TABLE `configuracion`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=292;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=444;
 
 --
 -- AUTO_INCREMENT for table `cuenta`
 --
 ALTER TABLE `cuenta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=591;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=879;
 
 --
 -- AUTO_INCREMENT for table `empresa`
 --
 ALTER TABLE `empresa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `partida`
 --
 ALTER TABLE `partida`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
 
 --
 -- AUTO_INCREMENT for table `periodo`
 --
 ALTER TABLE `periodo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `configuracion`
+--
+ALTER TABLE `configuracion`
+  ADD CONSTRAINT `FK_configuracion_cuenta` FOREIGN KEY (`cuenta`) REFERENCES `cuenta` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_configuracion_periodo` FOREIGN KEY (`periodo`) REFERENCES `periodo` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cuenta`
+--
+ALTER TABLE `cuenta`
+  ADD CONSTRAINT `FK_cuenta_cuenta` FOREIGN KEY (`padre`) REFERENCES `cuenta` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_cuenta_empresa` FOREIGN KEY (`empresa`) REFERENCES `empresa` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_cuenta_periodo` FOREIGN KEY (`periodo`) REFERENCES `periodo` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `detalle_partida`
+--
+ALTER TABLE `detalle_partida`
+  ADD CONSTRAINT `FK_detalle_partida_cuenta` FOREIGN KEY (`cuenta`) REFERENCES `cuenta` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_detalle_partida_partida` FOREIGN KEY (`partida`) REFERENCES `partida` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `partida`
+--
+ALTER TABLE `partida`
+  ADD CONSTRAINT `FK_partida_periodo` FOREIGN KEY (`periodo`) REFERENCES `periodo` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `periodo`
+--
+ALTER TABLE `periodo`
+  ADD CONSTRAINT `FK_periodo_empresa` FOREIGN KEY (`empresa`) REFERENCES `empresa` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
