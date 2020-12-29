@@ -1,6 +1,7 @@
 <?php
 
 require_once './app/models/PeriodoModel.php';
+require_once './app/models/EmpresaModel.php';
 
 class Controller
 {

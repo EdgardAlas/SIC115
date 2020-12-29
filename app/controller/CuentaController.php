@@ -141,15 +141,15 @@ class CuentaController extends Controller
         ));
     }
 
-    /*public function arbol()
+    public function arbol()
     {
 
-        $cuentas = $this->catalogoDeCuentas($this->sesion->get('login')['id']);
+        $cuentas = $this->catalogoDeCuentas($this->sesion->get('login')['id'], $this->sesion->get('login')['periodo']);
 
         Flight::render('arbol', [
             'datos' => $cuentas,
         ]);
-    }*/
+    }
 
     public function guardar()
     {
