@@ -11,6 +11,7 @@
     <tbody>
         <?php
             $cuentas = isset($datos) ? $datos : array();
+            $estado = isset($estado) ? $estado : 'Activo';
 
             foreach ($cuentas as $key => $cuenta) {
                 echo "
@@ -19,7 +20,7 @@
                         <td>".$cuenta['nombre']."</td>
                         <td class='". ($cuenta['nivel']==1 ? 'font-weight-bold' : '') ."'>".$cuenta['nivel']."</td>
                         <td>".$cuenta['tipo_saldo']."</td>
-                        <td><button type='button' id ='btn_editar_cuenta' class='btn btn-warning' 
+                        <td><button type='button' id ='btn_editar_cuenta' class='btn btn-warning ".($estado == 'CIERRE'   ? 'd-none' : '')."' 
                         data-toggle='tooltip' data-placement='top'
                         title='' data-original-title='Editar' data-id = '".
                             base64_encode($cuenta['id'])
@@ -27,13 +28,15 @@
                         <i class='fa fa-edit'></i>
                     </button>
                     
-                    <button type='button' id ='btn_eliminar_cuenta' class='btn btn-danger ".($cuenta['saldo'] > 0  ? 'd-none' : ($cuenta['ultimo_nivel']==1 ? '' : 'd-none'))."'
+                    <button type='button' id ='btn_eliminar_cuenta' class='btn btn-danger ".($cuenta['saldo'] > 0 || $estado == 'CIERRE'   ? 'd-none' : ($cuenta['ultimo_nivel']==1 ? '' : 'd-none'))."'
                         data-toggle='tooltip' data-placement='top'
                         title='' data-original-title='Eliminar' data-id = '".
                     base64_encode($cuenta['id'])
                     ."'>
                         <i class='fa fa-trash'></i>
                     </button>
+                    
+                    ".($estado == 'CIERRE'   ? '<b>-</b>' : '')."
                     </td>
                     </tr>
                 ";

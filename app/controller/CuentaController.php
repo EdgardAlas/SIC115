@@ -27,6 +27,7 @@ class CuentaController extends Controller
         $this->sesionActivaAjax();
 
         $this->validarMetodoPeticion('GET');
+        $estado = $this->sesion->get('login')['estado'];
 
         $empresa = $this->sesion->get('login')['id'];
         $periodo = $this->sesion->get('login')['periodo'];
@@ -38,7 +39,8 @@ class CuentaController extends Controller
         )); */
 
         Flight::render('ajax/cuentas/tabla-cuentas', array(
-            'datos' => $datos
+            'datos' => $datos,
+            'estado' => $estado
         ));
 
     }

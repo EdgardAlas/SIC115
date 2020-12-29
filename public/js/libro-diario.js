@@ -201,7 +201,7 @@ function limpiarAgregarDetalle() {
 }
 
 function limpiarEditarDetalle() {
-    $('#btn_agregar').text('Agregar');
+    $('#btn_agregar').html("<i class=\"fas fa-plus-square\"></i> Agregar");
     $('#btn_agregar').attr('data-indice', -1);
     $('#btn_agregar').attr('data-accion', 'agregar');
 }
@@ -213,7 +213,7 @@ function camposEditar(index) {
     $('#cuenta').val(editar.cuenta).trigger('change');
     $('#movimiento').val(editar.movimiento);
     monto.setRawValue(Math.abs(editar.monto));
-    $('#btn_agregar').text('Editar');
+    $('#btn_agregar').html("<i class=\"fas fa-edit\"></i> Agregar");
 
     $('#btn_agregar').attr('data-indice', index);
     $('#btn_agregar').attr('data-accion', 'editar');
@@ -262,12 +262,18 @@ function validarGuardarPartida() {
         return;
     }
 
-    let fecha = $('#fecha').val(),
+    const fecha = $('#fecha').val(),
         descripcion = $('#descripcion').val();
+
+    if(fecha.length === 0 || fecha === ''){
+        validarCampo('fecha', true);
+        focusCampo('fecha');
+        return;
+    }
 
     if (descripcion.length === 0) {
         validarCampo('descripcion', true);
-        focus('descripcion');
+        focusCampo('descripcion');
         return;
     }
 
@@ -587,6 +593,13 @@ $(document).ready(() => {
 
     $(document).on('change', '#fecha_inicial', function () {
         tablaLibroDiarioFechas();
+    });
+
+    $(document).on('change', '#fecha', function () {
+        validarCampo('fecha', false)
+        if($(this).val()===''){
+            validarCampo('fecha', true)
+        }
     });
 
     $(document).on('change', '#fecha_final', function () {

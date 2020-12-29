@@ -51,13 +51,24 @@
                                            id="confirmar" tabindex="2" required>
                                 </div>
 
-                                <div class="form-group d-flex justify-content-between">
-                                    <a href="/" class="btn btn-secondary">Iniciar Sesión</a>
-                                    <button type="submit" class="btn btn-primary " tabindex="4"
-                                            id="submit">
-                                        Reestablecer contraseña
-                                    </button>
+                                <div>
+                                    <div class="col-12 mb-2">
+                                        <button type="submit" class="btn btn-primary w-100" tabindex="4"
+                                                id="submit">
+                                            Reestablecer contraseña
+                                        </button>
+                                    </div>
+
+
                                 </div>
+                                <div>
+                                    <div class="col-12">
+                                        <a href="/" class="btn btn-secondary w-100">Regresar a Iniciar Sesión</a>
+                                    </div>
+
+
+                                </div>
+
                             </form>
                         </div>
                     </div>
@@ -83,10 +94,10 @@
             </div>
             <form id="form_codigo">
                 <div class="modal-body">
-                   <div class="form-group">
-                       <label for="codigo">Código</label>
-                       <input type="text" id="codigo" class="form-control" required>
-                   </div>
+                    <div class="form-group">
+                        <label for="codigo">Código</label>
+                        <input type="text" id="codigo" class="form-control" required>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

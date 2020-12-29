@@ -59,7 +59,7 @@
                                                    name="contrasena" required>
                                         </div>
                                         <div class="form-group col-6">
-                                            <label for="contrasenav" class="d-block">Confirmar Contraseña</label>
+                                            <label for="contrasenav" class="d-block">Confirmar Contraseña <small>(min. 8 caracteres)</small></label>
                                             <input id="contrasenav" type="password" class="form-control"
                                                    name="contrasenav" required>
                                         </div>

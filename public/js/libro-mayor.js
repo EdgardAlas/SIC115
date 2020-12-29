@@ -1,6 +1,6 @@
 function tablaLibroMayorEspecifico(carga) {
 
-    cambiarFechas($('#periodo').find(':selected').attr('data-anio'));
+    //cambiarFechas($('#periodo').find(':selected').attr('data-anio'));
     const fecha_inicial = $("#fecha_inicial").val();
     const fecha_final = $("#fecha_final").val();
     const nivel = $("#nivel").val();
@@ -134,6 +134,7 @@ $(document).ready(() => {
     });
 
     $(document).on('change', '#periodo', function () {
+        cambiarFechas($('#periodo').find(':selected').attr('data-anio'));
         tablaLibroMayorEspecifico();
     });
 });

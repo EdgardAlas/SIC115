@@ -82,6 +82,8 @@ class LibroMayorController extends Controller
 
 
         if ($_POST['cuenta'][0] !== '') {
+
+            $_POST['cuenta'] = array_map('trim', $_POST['cuenta']);
             $cuentas = $cuenta_model->seleccionar(array('nombre', 'id', 'codigo', 'tipo_saldo', 'periodo'), array(
                 'empresa' => $login['id'],
                 'codigo' => $_POST['cuenta'],
@@ -145,6 +147,8 @@ class LibroMayorController extends Controller
 
         if (isset($_GET['cuenta'])) {
             if ($_GET['cuenta'] !== '') {
+                $_GET['cuenta'] = array_map('trim', explode(',', $_GET['cuenta']));
+
                 $cuentas = $cuenta_model->seleccionar(array('nombre', 'id', 'codigo', 'tipo_saldo'), array(
                     'empresa' => $login['id'],
                     'codigo' => $_GET['cuenta'],
