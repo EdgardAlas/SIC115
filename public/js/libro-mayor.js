@@ -56,7 +56,6 @@ function cargarNiveles() {
 
 function cargarPeriodos() {
     $('#list_periodos').load('/periodo/input-periodos', function (data) {
-        console.log(data)
         cargarNiveles();
     });
 }
@@ -114,10 +113,6 @@ $(document).ready(() => {
 
         const numero = $(this).data('partida');
         const codigo = $(this).data('codigo');
-        log({
-            numero,
-            codigo
-        });
         tablaLibroDiarioEspecifico([numero], codigo);
         $('#modal_partida').modal('show');
     });

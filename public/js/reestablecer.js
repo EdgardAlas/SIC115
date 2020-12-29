@@ -53,7 +53,6 @@ $(document).ready(() => {
                 confirmar = $('#confirmar').val();
 
             $.post('/login/enviar-correo', {correo, nueva, confirmar}, function(data){
-                console.log(data)
 
                 if(!data.error){
                     $('#modal_reestablecer').modal('show');
@@ -95,7 +94,6 @@ $(document).ready(() => {
             confirmar = $('#confirmar').val();
 
         $.post('/login/cambiar-credenciales',{codigo, correo, nueva, confirmar},function(data){
-            console.log(data)
 
             Swal.fire({
                 title: 'Atención',

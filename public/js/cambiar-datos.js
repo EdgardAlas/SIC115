@@ -1,7 +1,6 @@
 function modificarUsuario(usuario) {
     $('#usuario').blur();
     $.post("/login/cambiar-usuario", {usuario}, function (data) {
-        log(data);
 
         Swal.fire({
             title: 'Atención',
@@ -22,7 +21,6 @@ function modificarUsuario(usuario) {
 function modificarCorreo(correo) {
     $('#correo').blur();
     $.post("/login/cambiar-correo", {correo}, function (data) {
-        log(data);
 
         Swal.fire({
             title: 'Atención',
@@ -44,7 +42,6 @@ function validarUsuarioExiste(usuario) {
     const input_usuario = document.querySelector('#usuario')
 
     $.get(`/login/validar-usuario/${usuario}`, function (data) {
-        console.log(data)
         if (data.error) {
             validarCampo('usuario', true)
             input_usuario.dataset.ok = 0
@@ -62,7 +59,6 @@ function validarCorreoExiste(correo) {
     const input_correo = document.querySelector('#correo')
 
     $.get(`/login/validar-correo/${correo}`, function (data) {
-        console.log(data)
         if (data.error) {
             validarCampo('correo', true)
             input_correo.dataset.ok = 0
@@ -124,7 +120,6 @@ function modificarContrasena() {
         nueva = $('#nueva').val(),
         validar_contrasena = $('#validar_nueva').val();
     $.post("/login/cambiar-contrasena", {antigua, nueva, validar_contrasena}, function (data) {
-        log(data);
         Swal.fire({
             title: 'Atención',
             text: data.mensaje,

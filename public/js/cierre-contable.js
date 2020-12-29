@@ -13,7 +13,6 @@ function calcularCierre() {
     $.post('/cierre-contable/calcular-cierre', {
         inventario_final
     }, function (data) {
-        log(data)
         // for (const i in data) {
         //     log(`${i} = ${data[i]}`)
         // }
@@ -77,7 +76,6 @@ function realizarCierre() {
                 }
             })
             $.post('/cierre-contable/realizar-cierre', function (data) {
-                console.log(data)
                 Swal.close();
 
                 if (!data.error) {
@@ -118,7 +116,6 @@ $(document).ready(() => {
     $(document).on('click', '#btn_calcular_cierre', function () {
         $('#btn_calcular_cierre').blur();
         const monto = $("#inventario_final").val();
-        console.log(monto);
         if (monto.length > 1)
             calcularCierre();
         else

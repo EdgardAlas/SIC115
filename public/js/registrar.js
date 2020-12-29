@@ -22,7 +22,6 @@ function validarCorreo(correo) {
     const input_correo = document.querySelector('#correo')
 
     $.get(`/login/validar-correo-registro/${correo}`, function (data) {
-        console.log(data)
         if (data.error) {
             validarCampo('correo', true)
             input_correo.dataset.ok = 0
@@ -44,7 +43,6 @@ function validarUsuario(usuario) {
 
 
     $.get(`/login/validar-usuario-registro/${usuario}`, function (data) {
-        console.log(data)
         if (data.error) {
             validarCampo('usuario', true)
             input_usuario.dataset.ok = 0
@@ -128,7 +126,6 @@ function validarGuardar() {
 
 function guardar(datos) {
     $.post('/login/guardar', datos, function (data) {
-        log(data);
         if (!data.error) {
             Swal.fire({
                 title: 'Atención',
@@ -197,7 +194,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         validarCampo('contrasenav', false)
         if (isEnter(e.keyCode, contrasenav.value, 8)){
                 validarGuardar();
-        }   
+        }
     })
 
     // btn_registrar.addEventListener('click', (e) => {

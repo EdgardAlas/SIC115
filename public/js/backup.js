@@ -1,7 +1,5 @@
 function restaurar() {
     var archivo = new FormData(document.getElementById('form_restaurar'));
-    console.log(document.getElementById('form_restaurar'))
-    console.log(archivo)
     // $.post('/backup/leer', {archivo},function(data){
     //     console.log(data)
     // });
@@ -51,7 +49,6 @@ $(document).ready(() => {
                     contentType: false,
                     cache: false,
                     success: function (data) {
-                        console.log(data)
                         Swal.close();
 
                         Swal.fire({

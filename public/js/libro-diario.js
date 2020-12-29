@@ -289,7 +289,6 @@ function validarGuardarPartida() {
         return;
     }
 
-    log(partida.detalle_partida)
 
     guardarPartida();
 
@@ -308,9 +307,6 @@ function guardarPartida() {
         cancelButtonText: 'No',
     }).then((result) => {
 
-        log(partida.detalle_partida);
-
-        log(tabla_detalle);
 
         if (result.value) {
             Swal.fire({
@@ -322,7 +318,6 @@ function guardarPartida() {
             $.post('/libro-diario/guardar', {
                 partida
             }, function (data) {
-                log(data);
                 Swal.close();
                 if (data.error) {
                     Swal.fire({
@@ -457,7 +452,6 @@ function reporteLibroDiario() {
 
 function cargarPeriodos() {
     $('#list_periodos').load('/periodo/input-periodos', function (data) {
-        console.log(data)
         tablaLibroDiarioFechas(true);
     });
 }

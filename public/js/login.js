@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
             url: "/login/iniciarSesion",
             data: { login },
             success: function(result) {
-                console.log(result);
                 if (result.error && result.tipo === 'validaciones') {
                     //foco al primer elemento con error
                     document.querySelector(`#${Object.keys(result.errores)[0]}`).focus();

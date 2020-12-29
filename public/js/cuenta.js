@@ -62,7 +62,6 @@ function validarCuentaGuardar() {
         padre: $('#padre').data('padre'),
         tipo_saldo: $('#tipo_saldo').val()
     }
-    log(cuenta);
     // casos de error
     if (cuenta.codigo.length === 0 || cuenta.padre === btoa(-1)) {
         validarCampo('codigo', true);
@@ -103,7 +102,6 @@ function validarCuentaEditar() {
         nombre: $('#nombre').val(),
         tipo_saldo: $('#tipo_saldo').val()
     }
-    log(cuenta);
     // casos de error
     if (cuenta.nombre.length === 0) {
         validarCampo('nombre', true);
@@ -132,7 +130,6 @@ function validarCuentaEditar() {
 
 function guardarCuenta(cuenta) {
     $.post('/cuenta/guardar', { cuenta }, function(data) {
-        log(data);
         if (!data.error) {
             Swal.fire({
                 title: 'Exito',
@@ -160,7 +157,6 @@ function guardarCuenta(cuenta) {
 
 function editarCuenta(cuenta) {
     $.post('/cuenta/editar', { cuenta }, function(data) {
-        console.log(data)
         if (!data.error) {
             Swal.fire({
                 title: 'Exito',
@@ -201,9 +197,7 @@ function submitFormularioEspecico() {
 
 
 function eliminarCuenta(id){
-    console.log(id)
     $.post('/cuenta/eliminar',{id}, function(data){
-        console.log(data)
         if(data.error){
             Swal.fire({
                 title: 'Error',
@@ -372,7 +366,6 @@ $(document).ready((event) => {
 
     shortcut.add("Alt+N", function() {
         let modal_activo = $('#modal_acciones_cuenta').is(':visible');
-        log(modal_activo);
         if (modal_activo)
             focus('nombre');
 
@@ -382,7 +375,6 @@ $(document).ready((event) => {
         let formulario = $("#nombre").closest('form');
         let accion = formulario.data('accion');
         let modal_activo = $('#modal_acciones_cuenta').is(':visible');
-        log(modal_activo);
         if (modal_activo)
             if (accion === 'guardar') {
                 focus('codigo');

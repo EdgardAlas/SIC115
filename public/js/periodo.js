@@ -37,7 +37,6 @@ function iniciarPeriodo() {
             })
 
             $.post('/periodo/iniciar-periodo', {}, function (data) {
-                console.log(data)
                 if (!data.error) {
                     $('#modal_iniciar_periodo').modal('hide');
                     listaPeriodos(false);
