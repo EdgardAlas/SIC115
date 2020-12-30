@@ -4,7 +4,6 @@ $cuentas = isset($datos) ? $datos : array();
 //Excepcion::json(Utiles::posicionArreglo('1101', 'codigo', $cuentas));
 $arbol = array();
 
-$nivel = -1;
 
 foreach ($cuentas as $key => $cuenta) {
     if ($cuenta['nivel'] == 1) {
@@ -64,6 +63,17 @@ function search_in_array($srchvalue, &$array, $data)
     }
 
 }
+
+function eliminarVacios(&$arreglo){
+    foreach($arreglo as $key => &$posicion){
+        if(count($posicion['nodes'])>0){
+            eliminarVacios($posicion['nodes']);
+        }else{
+            unset($arreglo[$key]['nodes']);
+        }
+    }
+}
+
 
 function obtenerCodigoPadre($codigo_hijo)
 {
@@ -138,7 +148,9 @@ function obtenerCodigoPadre($codigo_hijo)
     return '';
 }
 
-//Excepcion::json($arbol);
+eliminarVacios($arbol);
+//Excepcion::json($arbol); 
+
 ?>
 
 

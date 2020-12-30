@@ -213,7 +213,7 @@ function camposEditar(index) {
     $('#cuenta').val(editar.cuenta).trigger('change');
     $('#movimiento').val(editar.movimiento);
     monto.setRawValue(Math.abs(editar.monto));
-    $('#btn_agregar').html("<i class=\"fas fa-edit\"></i> Agregar");
+    $('#btn_agregar').html("<i class=\"fas fa-edit\"></i> Editar");
 
     $('#btn_agregar').attr('data-indice', index);
     $('#btn_agregar').attr('data-accion', 'editar');

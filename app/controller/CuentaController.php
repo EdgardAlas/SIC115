@@ -141,7 +141,7 @@ class CuentaController extends Controller
         ));
     }
 
-    public function arbol()
+    /*public function arbol()
     {
 
         $cuentas = $this->catalogoDeCuentas($this->sesion->get('login')['id'], $this->sesion->get('login')['periodo']);
@@ -149,6 +149,73 @@ class CuentaController extends Controller
         Flight::render('arbol', [
             'datos' => $cuentas,
         ]);
+    }*/
+
+    public function datosGrafica()
+    {
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('GET');
+
+        $login = $this->sesion->get('login');
+
+        $consulta = $this->modelo->conexion()->query("select concat(cuenta.codigo, ' - ', cuenta.nombre) nombre, cuenta.saldo 
+                                                            from cuenta inner join configuracion on configuracion.cuenta = cuenta.id 
+                                                                            where cuenta.empresa = :empresa 
+                                                                              and cuenta.periodo = :periodo 
+                                                                              and configuracion.periodo = :periodo 
+                                                                              and configuracion.descripcion in ('activo', 'pasivo', 'patrimonio')", array(
+            ':empresa' => $login['id'],
+            ':periodo' => $login['periodo']
+        ))->fetchAll();
+
+
+        $retorno = array(
+            'data' => array(),
+            'labels' => array()
+        );
+
+        if(count($consulta) > 0){
+            for ($i=0; $i < count($consulta); $i++){
+
+                array_push($retorno['data'], $consulta[$i]['saldo']);
+                array_push($retorno['label'], $consulta[$i]['nombre']);
+            }
+        }
+
+        Excepcion::json($retorno);
+
+    }
+
+    public function estructuraCuentas()
+    {
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('GET');
+
+        $cuentas = $this->catalogoDeCuentas($this->sesion->get('login')['id'], $this->sesion->get('login')['periodo']);
+        $arbol = array();
+
+        foreach ($cuentas as $key => $cuenta) {
+            if ($cuenta['nivel'] == 1) {
+                $arbol[] = array(
+                    'text' => $cuenta['codigo'] . ' - ' . $cuenta['nombre'],
+                    'icon' => "fas fa-stream",
+                    'codigo' => $cuenta['codigo']
+                );
+                continue;
+            }
+
+            ($this->search_in_array($this->obtenerCodigoPadre($cuenta['codigo']), $arbol, array(
+                'text' => $cuenta['codigo'] . ' - ' . $cuenta['nombre'],
+                'icon' => "fas fa-stream",
+                'codigo' => $cuenta['codigo'],
+                'nodes' => array()
+            )));
+
+        }
+        $this->eliminarVacios($arbol);
+        Excepcion::json($arbol);
     }
 
     public function guardar()
@@ -263,20 +330,19 @@ class CuentaController extends Controller
         $this->sesionActivaAjax();
         $this->validarMetodoPeticion('POST');
 
-        if(!isset($_POST['id'])){
+        if (!isset($_POST['id'])) {
             Excepcion::json(
-                ['error'=> true, 'mensaje'=>'Error al procesar esta accion', 'icono'=> 'warning']
+                ['error' => true, 'mensaje' => 'Error al procesar esta accion', 'icono' => 'warning']
             );
         }
 
         $id = base64_decode($_POST['id']);
         $login = $this->sesion->get('login');
-        $cuenta = $this->modelo->seleccionar(array('codigo','padre'), array(
+        $cuenta = $this->modelo->seleccionar(array('codigo', 'padre'), array(
             'empresa' => $login['id'],
             'periodo' => $login['periodo'],
             'id' => $id
         ));
-
 
 
         $cuenta = $cuenta[0];
@@ -298,18 +364,17 @@ class CuentaController extends Controller
 
 
         $cuenta_padre = $this->modelo->conexion()->query('select count(*) hijos from cuenta where codigo like :codigo and empresa = :empresa and periodo = :periodo and id != :padre',
-        array(
-            ':codigo' => $codigo_padre.'%',
-            ':empresa' => $login['id'],
-            ':periodo' => $login['periodo'],
-            'padre' => $padre
-        ))->fetchAll();
+            array(
+                ':codigo' => $codigo_padre . '%',
+                ':empresa' => $login['id'],
+                ':periodo' => $login['periodo'],
+                'padre' => $padre
+            ))->fetchAll();
 
         var_dump($cuenta_padre);
 
 
-
-        if($cuenta_padre[0]['hijos'] == 0){
+        if ($cuenta_padre[0]['hijos'] == 0) {
             $this->modelo->actualizar(array(
                 'ultimo_nivel' => 1
             ), array(
@@ -318,9 +383,8 @@ class CuentaController extends Controller
         }
 
         Excepcion::json(
-            ['error'=> false, 'mensaje'=>'Cuenta eliminada correctamente', 'icono'=> 'success', 'oal' => $cuenta_padre]
+            ['error' => false, 'mensaje' => 'Cuenta eliminada correctamente', 'icono' => 'success', 'oal' => $cuenta_padre]
         );
-
 
 
     }
@@ -432,6 +496,37 @@ class CuentaController extends Controller
     }
 
     /*Metodos privados*/
+
+    public function search_in_array($srchvalue, &$array, $data)
+    {
+        if (is_array($array) && count($array) > 0) {
+            $foundkey = array_search($srchvalue, $array);
+            if ($foundkey === FALSE) {
+                foreach ($array as $key => &$value) {
+                    if (is_array($value) && count($value) > 0) {
+                        $foundkey = $this->search_in_array($srchvalue, $value, $data);
+                        if ($foundkey != FALSE)
+
+                            return $foundkey;
+                    }
+                }
+            } else
+                $array['nodes'][] = $data;
+            return $foundkey;
+        }
+
+    }
+
+    public function eliminarVacios(&$arreglo)
+    {
+        foreach ($arreglo as $key => &$posicion) {
+            if (count($posicion['nodes']) > 0) {
+                $this->eliminarVacios($posicion['nodes']);
+            } else {
+                unset($arreglo[$key]['nodes']);
+            }
+        }
+    }
 
     private function obtenerCodigoPadre($codigo_hijo)
     {

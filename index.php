@@ -41,7 +41,7 @@ Flight::route('/(@controlador(/@metodo(/@id)))', function ($controlador, $metodo
         }
     }
     
-    $controlador = $controlador ? $controlador : 'Home';
+    $controlador = $controlador ? $controlador : 'Inicio';
     $nombreControlador = $controlador.'Controller';
     $nombreArchivoControlador = './app/controller/' . $nombreControlador . '.php';
 

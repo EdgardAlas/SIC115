@@ -28,6 +28,9 @@
     <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/css/style.css">
     <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/css/custom.css" />
     <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/css/components.css">
+    <link rel="stylesheet" href="<?=URL_BASE?>/public/assets/css/bstreeview.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
+
 </head>
 
 <body>
@@ -55,6 +58,9 @@
     <script src="<?=URL_BASE?>/public/assets/js/plugins/jquery.dataTables.min.js"></script>
     <script src="<?=URL_BASE?>/public/assets/js/plugins/select2.min.js"></script>
     <script src="<?=URL_BASE?>/public/assets/js/plugins/shortcut.js"></script>
+    <script src="<?=URL_BASE?>/public/assets/js/plugins/bstreeview.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js" integrity="sha512-SuxO9djzjML6b9w9/I07IWnLnQhgyYVSpHZx0JV97kGBfTIsUYlWflyuW4ypnvhBrslz1yJ3R+S14fdCWmSmSA==" crossorigin="anonymous"></script>
+
 
     <!-- Template JS File -->
     <script src="<?=URL_BASE?>/public/js/utils.js"></script>
