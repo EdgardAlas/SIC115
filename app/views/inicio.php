@@ -45,7 +45,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <h2 class="h4">
-                                            Cuentas
+                                            Resumen de Cuentas
                                         </h2>
                                     </div>
                                 </div>
