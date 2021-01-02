@@ -47,6 +47,7 @@ class BackupModel
 
         $backup['periodo'] = $periodos_restaurar;
 
+
         $periodos_id = array();
 
         foreach ($periodos_restaurar as $key => $id) {
@@ -56,14 +57,17 @@ class BackupModel
         /*
          * Partidas
          * */
-        $partidas = $partida_model->seleccionar('*', array(
-            'periodo' => $periodos_id
-        ));
-
+        $partidas = array();
         $partidas_id = array();
 
-        foreach ($partidas as $key => $id) {
-            $partidas_id[] = $id['id'];
+        if(!empty($periodos_restaurar)){
+            $partidas = $partida_model->seleccionar('*', array(
+                'periodo' => $periodos_id
+            ));
+
+            foreach ($partidas as $key => $id) {
+                $partidas_id[] = $id['id'];
+            }
         }
 
         $backup['partida'] = $partidas;
@@ -72,10 +76,13 @@ class BackupModel
          * Detalle Partidas
          * */
 
+        $detalle_partidas = array();
 
-        $detalle_partidas = $detalle_partida_model->seleccionar('*', array(
-            'partida' => $partidas_id
-        ));
+        if(!empty($partidas_id)){
+            $detalle_partidas = $detalle_partida_model->seleccionar('*', array(
+                'partida' => $partidas_id
+            ));
+        }
 
         $backup['detalle_partida'] = $detalle_partidas;
 
@@ -83,9 +90,13 @@ class BackupModel
          * Configuraciones
          * */
 
-        $configuraciones = $configuracion_model->seleccionar('*', array(
-            'periodo' => $periodos_id
-        ));
+        $configuraciones = array();
+
+       if(!empty($periodos_id)){
+           $configuraciones = $configuracion_model->seleccionar('*', array(
+               'periodo' => $periodos_id
+           ));
+       }
 
         $backup['configuracion'] = $configuraciones;
 
@@ -97,6 +108,14 @@ class BackupModel
             'periodo' => $periodos_id,
             'empresa' => $login['id']
         ));
+
+        if(empty($periodos_id)){
+            $cuentas = $cuenta_model->seleccionar('*', array(
+                'periodo' => null,
+                'empresa' => $login['id']
+            ));
+        }
+
 
         $backup['cuenta'] = $cuentas;
 
@@ -137,6 +156,14 @@ class BackupModel
             $periodo_model->insertar($backup['periodo']);
         }  
         if(!empty($backup['cuenta'])){
+
+            if(empty($backup['periodo'])){
+                $cuenta_model->eliminar(array(
+                    'empresa' => $login['id'],
+                    'periodo' => null
+                ));
+            }
+
             $cuenta_model->insertar($backup['cuenta']);
         }            
         if(!empty($backup['configuracion'])){

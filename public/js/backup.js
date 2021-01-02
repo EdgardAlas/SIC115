@@ -49,6 +49,7 @@ $(document).ready(() => {
                     contentType: false,
                     cache: false,
                     success: function (data) {
+
                         Swal.close();
 
                         Swal.fire({

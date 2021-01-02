@@ -108,6 +108,8 @@ class PeriodoController extends Controller
                 //Partida inicial
                 $this->partidaInicialSiguientePeriodo($sesion, $ultimo_periodo, $conexion);
 
+            }else{
+                $this->actualizarPeriodoCuentas($sesion['periodo'], $sesion['id'], $conexion);
             }
 
             Excepcion::json(['error' => false, 'mensaje' => 'Periodo creado con exito', 'icono' => 'success', 'error_' => $this->modelo->error()]);
@@ -201,33 +203,6 @@ class PeriodoController extends Controller
 
     }
 
-    public function test()
-    {
-        $conexion = new Conexion();
-        $login = $this->sesion->get('login');
-        $periodo_pasado = 21;
-        $partida_model = new  PartidaModel($conexion);
-        $detalle_partida_model = new DetallePartidaModel($conexion);
-        $cuenta_model = new CuentaModel($conexion);
-
-
-        $ultima_partida = $detalle_partida_model->conexion()->query(
-            'select detalle_partida.monto, detalle_partida.movimiento, detalle_partida.cuenta 
-		from detalle_partida 
-			inner join partida on partida.id = detalle_partida.partida
-			inner join periodo on periodo.id = partida.periodo
-			inner join cuenta on cuenta.id = detalle_partida.cuenta
-				where periodo.id = :periodo and detalle_partida.partida = (select partida.id from partida inner join periodo on periodo.id = partida.periodo inner join empresa on empresa.id = periodo.empresa
-	where periodo.id = :periodo order by id desc limit 1))
-            ', array(
-                ':periodo' => $periodo_pasado,
-            )
-        )->fetchAll();
-
-
-        $ultima_partida = Utiles::eliminarDuplicados($ultima_partida);
-        Excepcion::json($ultima_partida);
-    }
 
     public function partidaInicialSiguientePeriodo($login, $periodo_pasado, Conexion $conexion)
     {
