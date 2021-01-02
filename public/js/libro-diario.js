@@ -397,6 +397,7 @@ function tablaLibroDiario(carga = false) {
 
 function tablaLibroDiarioFechas(carga = false) {
     if (carga) {
+        cambiarFechas($('#periodo').find(':selected').attr('data-anio'));
         Swal.fire({
             title: 'Cargando...',
             onBeforeOpen: () => {
@@ -432,8 +433,11 @@ function tablaLibroDiarioFechas(carga = false) {
 function cambiarFechas(anio) {
     let fecha = new Date();
     $('#fecha_inicial').val(`${anio}-01-01`);
-    const dia = fecha.getDate();
-    $('#fecha_final').val(`${anio}-${fecha.getMonth() + 1}-${dia<10 ? '0' : ''}${dia}`);
+    let dia = fecha.getDate();
+    let mes = fecha.getMonth() + 1;
+    mes = fecha.getFullYear()!=anio ? '12' : mes;
+    dia = fecha.getFullYear()!=anio ? '31' : dia;
+    $('#fecha_final').val(`${anio}-${mes<10 ? '0' : ''}${mes}-${dia<10 ? '0' : ''}${dia}`);
 }
 
 

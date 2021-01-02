@@ -2,6 +2,9 @@ function obtenerCuentas() {
 
     $.get('/cuenta/estructura-cuentas', function (data) {
         crearEstructura(data);
+        if(data.length==0){
+            $('#tree').html('<h3 class=\"h4 text-center\">No hay cuentas</h3>')
+        }
         //grafica()
     });
 

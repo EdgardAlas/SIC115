@@ -3,7 +3,7 @@ $estado_resultados = isset($estado_resultados) ? $estado_resultados : array();
 $cuentas = isset($cuentas) ? $cuentas : array();
 $partida = isset($partida) ? $partida : array();
 $empresa = isset($empresa) ? $empresa : array();
-$fecha = date('Y-m-d');
+$fecha = date($empresa['anio'].'-12-31');
 
 $partidas_cierre = array();
 
@@ -201,7 +201,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
             'partida' => array(
                 "numero" => $partida - 1,
                 "descripcion" => 'Liquidar cuentsa de IVA.',
-                'fecha' => date($empresa['anio'] . '-m-d'),
+                'fecha' => date($empresa['anio'] . '-12-31'),
                 'partida_cierre' => 1,
                 'periodo' => $empresa['periodo']
             ),
@@ -237,7 +237,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
             'partida' => array(
                 "numero" => $partida - 1,
                 "descripcion" => 'Liquidar cuentas de IVA y asignar impuesto por pagar.',
-                'fecha' => date($empresa['anio'] . '-m-d'),
+                'fecha' => date($empresa['anio'] . '-12-31'),
                 'partida_cierre' => 1,
                 'periodo' => $empresa['periodo']
             ),
@@ -271,7 +271,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
             'partida' => array(
                 "numero" => $partida - 1,
                 "descripcion" => 'Liquidar cuentas de IVA Debito Fiscal',
-                'fecha' => date($empresa['anio'] . '-m-d'),
+                'fecha' => date($empresa['anio'] . '-12-31'),
                 'partida_cierre' => 1,
                 'periodo' => $empresa['periodo']
             ),
@@ -316,7 +316,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
         'partida' => array(
             "numero" => $partida - 1,
             "descripcion" => 'Liquidar rebajas y devoluciones sobre ventas y generar ventas totales.',
-            'fecha' => date($empresa['anio'] . '-m-d'),
+            'fecha' => date($empresa['anio'] . '-12-31'),
             'partida_cierre' => 1,
             'periodo' => $empresa['periodo']
         ),
@@ -357,7 +357,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
         'partida' => array(
             "numero" => $partida - 1,
             "descripcion" => 'Liquidar gastos sobre compras y generar compras totales.',
-            'fecha' => date($empresa['anio'] . '-m-d'),
+            'fecha' => date($empresa['anio'] . '-12-31'),
             'partida_cierre' => 1,
             'periodo' => $empresa['periodo']
         ),
@@ -400,7 +400,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
         'partida' => array(
             "numero" => $partida - 1,
             "descripcion" => 'Liquidar rebajas y devoluciones sobre compras y generar compras netas.',
-            'fecha' => date($empresa['anio'] . '-m-d'),
+            'fecha' => date($empresa['anio'] . '-12-31'),
             'partida_cierre' => 1,
             'periodo' => $empresa['periodo']
         ),
@@ -438,7 +438,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
         'partida' => array(
             "numero" => $partida - 1,
             "descripcion" => 'Liquidar inventario y generar mercaderia disponible.',
-            'fecha' => date($empresa['anio'] . '-m-d'),
+            'fecha' => date($empresa['anio'] . '-12-31'),
             'partida_cierre' => 1,
             'periodo' => $empresa['periodo']
         ),
@@ -475,7 +475,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
             'partida' => array(
                 "numero" => $partida - 1,
                 "descripcion" => 'Calculo del costo de venta.',
-                'fecha' => date($empresa['anio'] . '-m-d'),
+                'fecha' => date($empresa['anio'] . '-12-31'),
                 'partida_cierre' => 1,
                 'periodo' => $empresa['periodo']
             ),
@@ -512,7 +512,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
             'partida' => array(
                 "numero" => $partida - 1,
                 "descripcion" => 'Aperturar inventario final.',
-                'fecha' => date($empresa['anio'] . '-m-d'),
+                'fecha' => date($empresa['anio'] . '-12-31'),
                 'partida_cierre' => 1,
                 'periodo' => $empresa['periodo']
             ),
@@ -571,7 +571,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
             'partida' => array(
                 "numero" => $partida - 1,
                 "descripcion" => 'Calculo del impuesto sobre la renta.',
-                'fecha' => date(date($empresa['anio'] . '-m-d')),
+                'fecha' => date(date($empresa['anio'] . '-12-31')),
                 'partida_cierre' => 1,
                 'periodo' => $empresa['periodo']
             ),
@@ -653,7 +653,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
             'partida' => array(
                 "numero" => $partida - 1,
                 "descripcion" => 'Liquidar gastos, productos financieros y determinar reserva legal.',
-                'fecha' => date($empresa['anio'] . '-m-d'),
+                'fecha' => date($empresa['anio'] . '-12-31'),
                 'partida_cierre' => 1,
                 'periodo' => $empresa['periodo']
             ),
@@ -715,7 +715,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
             'partida' => array(
                 "numero" => $partida - 1,
                 "descripcion" => 'Perdida del ejercicio.',
-                'fecha' => date($empresa['anio'] . '-m-d'),
+                'fecha' => date($empresa['anio'] . '-12-31'),
                 'partida_cierre' => 1,
                 'periodo' => $empresa['periodo']
             ),
@@ -745,7 +745,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
             'partida' => array(
                 "numero" => $partida - 1,
                 "descripcion" => 'Perdida del ejercicio.',
-                'fecha' => date($empresa['anio'] . '-m-d'),
+                'fecha' => date($empresa['anio'] . '-12-31'),
                 'partida_cierre' => 1,
                 'periodo' => $empresa['periodo']
             ),
@@ -772,7 +772,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
         'partida' => array(
             "numero" => $partida - 1,
             "descripcion" => 'Liquidar cuentas de balance.',
-            'fecha' => date($empresa['anio'] . '-m-d'),
+            'fecha' => date($empresa['anio'] . '-12-31'),
             'partida_cierre' => 1,
             'periodo' => $empresa['periodo']
         ),

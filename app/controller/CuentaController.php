@@ -338,7 +338,7 @@ class CuentaController extends Controller
 
         $id = base64_decode($_POST['id']);
         $login = $this->sesion->get('login');
-        $cuenta = $this->modelo->seleccionar(array('codigo', 'padre'), array(
+        $cuenta = $this->modelo->seleccionar(array('codigo', 'padre', 'nivel'), array(
             'empresa' => $login['id'],
             'periodo' => $login['periodo'],
             'id' => $id
@@ -354,36 +354,38 @@ class CuentaController extends Controller
             'id' => $id
         ));
 
-        $codigo_padre = $this->modelo->seleccionar(array('codigo'), array(
-            'empresa' => $login['id'],
-            'periodo' => $login['periodo'],
-            'id' => $padre
-        ));
-
-        $codigo_padre = $codigo_padre[0]['codigo'];
-
-
-        $cuenta_padre = $this->modelo->conexion()->query('select count(*) hijos from cuenta where codigo like :codigo and empresa = :empresa and periodo = :periodo and id != :padre',
-            array(
-                ':codigo' => $codigo_padre . '%',
-                ':empresa' => $login['id'],
-                ':periodo' => $login['periodo'],
-                'padre' => $padre
-            ))->fetchAll();
-
-        var_dump($cuenta_padre);
-
-
-        if ($cuenta_padre[0]['hijos'] == 0) {
-            $this->modelo->actualizar(array(
-                'ultimo_nivel' => 1
-            ), array(
+        if($cuenta['nivel']>1){
+            $codigo_padre = $this->modelo->seleccionar(array('codigo'), array(
+                'empresa' => $login['id'],
+                'periodo' => $login['periodo'],
                 'id' => $padre
             ));
+
+            $codigo_padre = $codigo_padre[0]['codigo'];
+
+
+            $cuenta_padre = $this->modelo->conexion()->query('select count(*) hijos from cuenta where codigo like :codigo and empresa = :empresa and periodo = :periodo and id != :padre',
+                array(
+                    ':codigo' => $codigo_padre . '%',
+                    ':empresa' => $login['id'],
+                    ':periodo' => $login['periodo'],
+                    'padre' => $padre
+                ))->fetchAll();
+
+            var_dump($cuenta_padre);
+
+
+            if ($cuenta_padre[0]['hijos'] == 0) {
+                $this->modelo->actualizar(array(
+                    'ultimo_nivel' => 1
+                ), array(
+                    'id' => $padre
+                ));
+            }
         }
 
         Excepcion::json(
-            ['error' => false, 'mensaje' => 'Cuenta eliminada correctamente', 'icono' => 'success', 'oal' => $cuenta_padre]
+            ['error' => false, 'mensaje' => 'Cuenta eliminada correctamente', 'icono' => 'success']
         );
 
 
@@ -520,10 +522,12 @@ class CuentaController extends Controller
     public function eliminarVacios(&$arreglo)
     {
         foreach ($arreglo as $key => &$posicion) {
-            if (count($posicion['nodes']) > 0) {
-                $this->eliminarVacios($posicion['nodes']);
-            } else {
-                unset($arreglo[$key]['nodes']);
+            if(isset($posicion['nodes'])){
+                if (count($posicion['nodes']) > 0) {
+                    $this->eliminarVacios($posicion['nodes']);
+                } else {
+                    unset($arreglo[$key]['nodes']);
+                }
             }
         }
     }

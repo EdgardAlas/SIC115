@@ -27,12 +27,7 @@
                     <a class="nav-link" href="/cierre-contable"><i class="fas fa-exclamation-circle"></i> <span>Cierre Contable</span></a>
                 </li>
                 <?php
-            } ?>
-
-
-            <?php
-
-            if ($login['anio'] < date('Y') && $login['estado'] !== 'CERRADO') {
+            }else if ($login['anio'] < date('Y') && $login['estado'] !== 'CERRADO') {
                 ?>
 
                 <li class="menu-header">Cierre Contable</li>

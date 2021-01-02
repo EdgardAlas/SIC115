@@ -1,5 +1,13 @@
 function tablaLibroMayorEspecifico(carga) {
-
+    if (carga) {
+        cambiarFechas($('#periodo').find(':selected').attr('data-anio'));
+        Swal.fire({
+            title: 'Cargando...',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            }
+        })
+    }
     //cambiarFechas($('#periodo').find(':selected').attr('data-anio'));
     const fecha_inicial = $("#fecha_inicial").val();
     const fecha_final = $("#fecha_final").val();
@@ -11,14 +19,7 @@ function tablaLibroMayorEspecifico(carga) {
     const cuenta = [...new Set(cuentas)];
 
 
-    if (carga) {
-        Swal.fire({
-            title: 'Cargando...',
-            onBeforeOpen: () => {
-                Swal.showLoading()
-            }
-        })
-    }
+
 
     $('#contenedor_mayor').load('/libro-mayor/tabla-libro-mayor', {
         fecha_inicial,
@@ -38,8 +39,11 @@ function tablaLibroMayorEspecifico(carga) {
 function cambiarFechas(anio) {
     let fecha = new Date();
     $('#fecha_inicial').val(`${anio}-01-01`);
-    const dia = fecha.getDate();
-    $('#fecha_final').val(`${anio}-${fecha.getMonth() + 1}-${dia<10 ? '0' : ''}${dia}`);
+    let dia = fecha.getDate();
+    let mes = fecha.getMonth() + 1;
+    mes = fecha.getFullYear()!=anio ? '12' : mes;
+    dia = fecha.getFullYear()!=anio ? '31' : dia;
+    $('#fecha_final').val(`${anio}-${mes<10 ? '0' : ''}${mes}-${dia<10 ? '0' : ''}${dia}`);
 }
 
 function cargarNiveles() {

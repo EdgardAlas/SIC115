@@ -198,6 +198,7 @@ function submitFormularioEspecico() {
 
 function eliminarCuenta(id){
     $.post('/cuenta/eliminar',{id}, function(data){
+
         if(data.error){
             Swal.fire({
                 title: 'Error',
