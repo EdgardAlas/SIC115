@@ -19,7 +19,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" id='btn_generar_periodo'>Iniciar Periodo</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close"></i> Cerrar</button>
+        <button type="button" class="btn btn-primary" id='btn_generar_periodo'><i class="fas fa-plus-square"></i> Iniciar Periodo</button>
     </div>
 </form>

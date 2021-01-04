@@ -730,7 +730,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
         if (count($detalle) > 0)
             array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
 
-    } else {
+    } else if($utilidad_perdida < 0){
         //ganancia
         $partida = imprimirCabeceraPartida($partida);
         $cargo = imprimirFila($perdidas_ganancias, 'cargo', abs($utilidad_perdida), $fecha);
@@ -793,6 +793,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
     $detalle = generarDetalleBalance($activo, null, 'Abono');
     if (count($detalle) > 0)
         array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+
 
 
     $sesion = new Session();

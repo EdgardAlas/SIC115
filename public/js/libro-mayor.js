@@ -41,8 +41,8 @@ function cambiarFechas(anio) {
     $('#fecha_inicial').val(`${anio}-01-01`);
     let dia = fecha.getDate();
     let mes = fecha.getMonth() + 1;
-    mes = fecha.getFullYear()!=anio ? '12' : mes;
-    dia = fecha.getFullYear()!=anio ? '31' : dia;
+    mes = 12;
+    dia = 31;
     $('#fecha_final').val(`${anio}-${mes<10 ? '0' : ''}${mes}-${dia<10 ? '0' : ''}${dia}`);
 }
 

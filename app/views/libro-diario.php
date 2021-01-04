@@ -11,7 +11,7 @@
                             <div class="col-12">
                                 <?php
                                     $estado_periodo = isset($estado) ? $estado : '';
-                                    if($estado_periodo!=='CIERRE'){
+                                    if($estado_periodo==='ACTIVO'){
                                         ?>
                                 <button type="button" id='btn_partida' class="btn btn-primary" autofocus>
                                     <i class="fas fa-plus-square"></i>
@@ -84,7 +84,10 @@
                                 <div class="col-12 col-sm-12">
                                     <label for="fecha">Fecha</label>
                                     <input type="date" id='fecha' name='fecha' class="form-control"
-                                        value='<?php echo date('Y-m-d'); ?>'>
+                                        value='<?php echo date((isset($anio) ? $anio : 'Y').'-m-d'); ?>'
+                                           min="<?= date((isset($anio) ? $anio : 'Y').'-01-01')?>"
+                                           max="<?= date((isset($anio) ? $anio : 'Y').'-12-31')?>"
+                                    >
                                 </div>
                             </div>
                             <div class='row form-group'>
@@ -120,7 +123,8 @@
                             <div class='row'>
                                 <div class="col-12">
                                 <?php
-                        if($estado!=='CIERRE'){
+                        if($estado==='ACTIVO'){
+
                             ?>
                                     <button type="button" class="btn btn-success w-100" id='btn_agregar'
                                         name='btn_agregar' data-indice=-1 data-accion='agregar'><i class="fas fa-plus-square"></i> Agregar</button>

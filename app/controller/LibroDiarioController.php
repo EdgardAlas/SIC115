@@ -143,6 +143,7 @@ class LibroDiarioController extends Controller
                         ), array(
                             'codigo' => $cuentas['codigo'],
                             'empresa' => $cuentas['empresa'],
+                            'periodo' => $periodo,
                         )
                     );
                 }

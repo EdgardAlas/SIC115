@@ -213,6 +213,7 @@ class CierreContableController extends Controller
                                 array('nombre', 'saldo', 'tipo_saldo'), array(
                                     'codigo' => $cuenta,
                                     'empresa' => $login['id'],
+                                    'periodo' => $login['periodo']
                                 )
                             );
 
@@ -290,6 +291,7 @@ class CierreContableController extends Controller
                         array('nombre', 'saldo', 'tipo_saldo'), array(
                             'codigo' => $codigo,
                             'empresa' => $login['id'],
+                            'periodo' => $login['periodo']
                         )
                     );
 
@@ -334,6 +336,7 @@ class CierreContableController extends Controller
                         ), array(
                             'codigo' => $cuenta,
                             'empresa' => $login['id'],
+                            'periodo' => $login['periodo']
                         ));
 
                         if ($es_R > 0) {
