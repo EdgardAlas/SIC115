@@ -9,6 +9,12 @@
                     <div class="card-body">
                         <div class="form-group row">
                             <div class="col-12">
+                                <small>*Solo se pueden eliminar cuentas que no hayan sido usadas y apartir de cuentas de ultimo nivel</small>
+                            </div>
+                            <div class="w-100">
+                                &nbsp;
+                            </div>
+                            <div class="col-12">
 
                                 <?php
                                 $estado = isset($estado) ? $estado : null;

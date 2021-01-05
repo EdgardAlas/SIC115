@@ -71,7 +71,7 @@
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content" id="modal-content-body">
             <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="exampleModalLabel">Agregar Partida</h5>
+                <h5 class="modal-title text-white" id="exampleModalLabel">Agregar Partida #<span id="partida_siguiente">1</span></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

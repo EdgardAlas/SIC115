@@ -170,6 +170,17 @@ class LibroDiarioController extends Controller
 
     }
 
+    public function partidaSiguiente(){
+        $this->isAjax();
+        $this->sesionActivaAjax();
+        $this->validarMetodoPeticion('GET');
+
+        $partida_model = new PartidaModel(new Conexion());
+        $login = $this->sesion->get('login');
+        Excepcion::json(['numero' => $partida_model->generarNumeroPartida($login['id'], $login['periodo'])]);
+
+    }
+
     public function tablaLibroDiario()
     {
         $this->isAjax();

@@ -265,7 +265,7 @@ function validarGuardarPartida() {
     const fecha = $('#fecha').val(),
         descripcion = $('#descripcion').val();
 
-    if(fecha.length === 0 || fecha === ''){
+    if (fecha.length === 0 || fecha === '') {
         validarCampo('fecha', true);
         focusCampo('fecha');
         return;
@@ -346,7 +346,8 @@ function guardarPartida() {
                         confirmButtonColor: '#6777ef',
                         confirmButtonText: 'Ok',
 
-                    }).then((result) => {
+                    }).then(async (result) => {
+                        await partidaSiguiente()
                         limpiarPartida();
                         tablaLibroDiario();
                     })
@@ -437,7 +438,7 @@ function cambiarFechas(anio) {
     let mes = fecha.getMonth() + 1;
     mes = 12;
     dia = 31;
-    $('#fecha_final').val(`${anio}-${mes<10 ? '0' : ''}${mes}-${dia<10 ? '0' : ''}${dia}`);
+    $('#fecha_final').val(`${anio}-${mes < 10 ? '0' : ''}${mes}-${dia < 10 ? '0' : ''}${dia}`);
 }
 
 
@@ -466,6 +467,12 @@ function cargarPeriodos() {
     });
 }
 
+function partidaSiguiente(){
+    $.get('/libro-diario/partida-siguiente', function (data) {
+        $('#partida_siguiente').text(data.numero);
+    });
+}
+
 $(document).ready(() => {
 
     titulo('Libro Diario');
@@ -479,6 +486,9 @@ $(document).ready(() => {
     /* Eventos */
 
     $(document).on('click', '#btn_partida', function () {
+
+        partidaSiguiente();
+
         $('#modal_partida').modal('show');
     });
 
@@ -601,7 +611,7 @@ $(document).ready(() => {
 
     $(document).on('change', '#fecha', function () {
         validarCampo('fecha', false)
-        if($(this).val()===''){
+        if ($(this).val() === '') {
             validarCampo('fecha', true)
         }
     });

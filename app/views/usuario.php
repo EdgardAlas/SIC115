@@ -57,9 +57,6 @@
                             </div>
                             <div class="col-12 col-md-6">
                                 <form id="form_contasena" class="border p-4 position-relative">
-                                    <div class="col-12 position-absolute fixed-top">
-                                        <span>Minimo de 8 caracteres*</span>
-                                    </div>
                                     <h2 class="h4">Cambiar contraseña</h2>
                                     <div class="row ">
                                         <div class="col-12 form-group">
@@ -67,11 +64,11 @@
                                             <input type="password" class="form-control" id="antigua">
                                         </div>
                                         <div class="col-12 form-group">
-                                            <label for="nueva">Contraseña nueva</label>
+                                            <label for="nueva">Contraseña nueva (min. 8 caracteres)</label>
                                             <input type="password" class="form-control" id="nueva">
                                         </div>
                                         <div class="col-12 form-group">
-                                            <label for="validar_nueva">Validar contraseña</label>
+                                            <label for="validar_nueva">Confirmar contraseña (min. 8 caracteres)</label>
                                             <input type="password" class="form-control" id="validar_nueva">
                                         </div>
                                         <div class="col-12 form-group">

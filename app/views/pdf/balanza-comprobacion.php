@@ -38,8 +38,7 @@ class PDF extends FPDF
         $this->Cell(32.5, 5, 'Debe', 1, 0, 'C', 1);
         $this->Cell(32.5, 5, 'Haber', 1, 0, 'C', 1);
         $this->Cell(32.5, 5, 'Deudor', 1, 0, 'C', 1);
-        $this->Cell(32.5, 5, 'Acreedor', 1, 1, 'C', 1);
-        ;
+        $this->Cell(32.5, 5, 'Acreedor', 1, 1, 'C', 1);;
     }
 
     public function Footer()
@@ -183,6 +182,11 @@ foreach ($data as $key => $cuenta) {
     $aux_debe = isset($cuenta['debe']) ? ($cuenta['debe']) : 0;
     $aux_haber = isset($cuenta['haber']) ? ($cuenta['haber']) : 0;
     $saldo = ($cuenta['tipo_saldo'] === 'Deudor' ? ($aux_debe - $aux_haber) : ($aux_haber - $aux_debe));
+
+    if ($aux_haber == 0 && $aux_debe == 0) {
+        continue;
+    }
+
     $pdf->Row(array(
         $cuenta['codigo'] . ' - ' . $cuenta['nombre'],
         isset($cuenta['debe']) ? Utiles::monto($cuenta['debe']) : '-',
