@@ -60,7 +60,7 @@ class BackupModel
         $partidas = array();
         $partidas_id = array();
 
-        if(!empty($periodos_restaurar)){
+        if (!empty($periodos_restaurar)) {
             $partidas = $partida_model->seleccionar('*', array(
                 'periodo' => $periodos_id
             ));
@@ -78,7 +78,7 @@ class BackupModel
 
         $detalle_partidas = array();
 
-        if(!empty($partidas_id)){
+        if (!empty($partidas_id)) {
             $detalle_partidas = $detalle_partida_model->seleccionar('*', array(
                 'partida' => $partidas_id
             ));
@@ -92,11 +92,11 @@ class BackupModel
 
         $configuraciones = array();
 
-       if(!empty($periodos_id)){
-           $configuraciones = $configuracion_model->seleccionar('*', array(
-               'periodo' => $periodos_id
-           ));
-       }
+        if (!empty($periodos_id)) {
+            $configuraciones = $configuracion_model->seleccionar('*', array(
+                'periodo' => $periodos_id
+            ));
+        }
 
         $backup['configuracion'] = $configuraciones;
 
@@ -109,7 +109,7 @@ class BackupModel
             'empresa' => $login['id']
         ));
 
-        if(empty($periodos_id)){
+        if (empty($periodos_id)) {
             $cuentas = $cuenta_model->seleccionar('*', array(
                 'periodo' => null,
                 'empresa' => $login['id']
@@ -123,7 +123,8 @@ class BackupModel
 
     }
 
-    public function restaurrBackup($backup){
+    public function restaurrBackup($backup)
+    {
 
         /*
          * detalle_partida
@@ -144,7 +145,7 @@ class BackupModel
         $cuenta_model = new CuentaModel($conexion);
         $periodo_model = new PeriodoModel($conexion);
 
-        if($login['id']!=$backup['empresa']){
+        if ($login['id'] != $backup['empresa']) {
             return array('error' => true, 'mensaje' => 'Este backup no corresponde a este usuario', 'icono' => 'warning');
         }
 
@@ -152,31 +153,27 @@ class BackupModel
             'empresa' => $login['id']
         ));
 
-        if(!empty($backup['periodo'])){
+        if (!empty($backup['periodo'])) {
             $periodo_model->insertar($backup['periodo']);
-        }  
-        if(!empty($backup['cuenta'])){
+        }
+        if (!empty($backup['cuenta'])) {
 
-            if(empty($backup['periodo'])){
-                $cuenta_model->eliminar(array(
-                    'empresa' => $login['id'],
-                    'periodo' => null
-                ));
-            }
-
+            $cuenta_model->eliminar(array(
+                'empresa' => $login['id'],
+                'periodo' => null
+            ));
             $cuenta_model->insertar($backup['cuenta']);
-        }            
-        if(!empty($backup['configuracion'])){
+        }
+        if (!empty($backup['configuracion'])) {
             $configuracion_model->insertar($backup['configuracion']);
         }
-        if(!empty($backup['partida'])){
+        if (!empty($backup['partida'])) {
             $partida_model->insertar($backup['partida']);
         }
-        if(!empty($backup['detalle_partida'])){
+        if (!empty($backup['detalle_partida'])) {
             $detalle_partida_model->insertar($backup['detalle_partida']);
-        }     
-        
-        
+        }
+
 
         $this->crearSesion($login['usuario']);
 
@@ -193,7 +190,7 @@ class BackupModel
         $empresaModel = new EmpresaModel($conexion);
         $data = $empresaModel->seleccionar(array('id', 'nombre', 'usuario', 'correo'), array('usuario' => $usuario));
 
-        if(!isset($data[0])){
+        if (!isset($data[0])) {
             $data = $empresaModel->seleccionar(array('id', 'nombre', 'usuario', 'correo'), array('correo' => $usuario));
         }
 
