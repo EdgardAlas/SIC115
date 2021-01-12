@@ -45,6 +45,12 @@ class BackupModel
             'id[<=]' => $login['periodo']
         ));
 
+        if(empty($periodos_restaurar)){
+            $periodos_restaurar = $periodo_model->seleccionar('*', array(
+                'empresa' => $login['id']
+            ));
+        }
+
         $backup['periodo'] = $periodos_restaurar;
 
 

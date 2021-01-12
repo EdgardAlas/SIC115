@@ -28,7 +28,7 @@
                         <i class='fa fa-edit'></i>
                     </button>
                     
-                    <button type='button' id ='btn_eliminar_cuenta' class='btn btn-danger ".($cuenta['saldo'] > 0 || $estado == 'CIERRE'   ? 'd-none' : ($cuenta['ultimo_nivel']==1 ? '' : 'd-none'))."'
+                    <button type='button' id ='btn_eliminar_cuenta' class='btn btn-danger ".($cuenta['saldo'] > 0 || ($estado == 'CIERRE'  || $estado == 'CERRADO')   ? 'd-none' : ($cuenta['ultimo_nivel']==1 ? '' : 'd-none'))."'
                         data-toggle='tooltip' data-placement='top'
                         title='' data-original-title='Eliminar' data-id = '".
                     base64_encode($cuenta['id'])
