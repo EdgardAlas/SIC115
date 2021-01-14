@@ -32,11 +32,11 @@
             <tr>
                 <td class="table-light align-top p-3"
                     rowspan=<?= $cantidad_detalle + 1 ?>><?= Utiles::fechaSinFormato($partida['fecha']) ?></td>
-                <td class="<?= $codigo_cuenta !== null ? ($codigo_cuenta === $partida['codigo'] ? 'text-danger' : '') : '' ?> table-light" <?= ($partida['movimiento'] === 'Abono') ? "style='padding-left: 8em;'" : "" ?>>
+                <td class="<?= $codigo_cuenta !== null ? ($codigo_cuenta === $partida['codigo'] ? 'text-danger font-weight-bold' : '') : '' ?> table-light" <?= ($partida['movimiento'] === 'Abono') ? "style='padding-left: 8em;'" : "" ?>>
                     <?= $partida['cuenta'] ?></td>
-                <td class="<?= $codigo_cuenta !== null ? ($codigo_cuenta === $partida['codigo'] ? 'text-danger' : '') : '' ?> table-light text-right font-weight-bold">
+                <td class="<?= $codigo_cuenta !== null ? ($codigo_cuenta === $partida['codigo'] ? 'text-danger font-weight-bold' : '') : '' ?> table-light text-right font-weight-bold">
                     <?= ($partida['movimiento'] === 'Cargo') ? Utiles::monto($partida['monto']) : '-' ?></td>
-                <td class="<?= $codigo_cuenta !== null ? ($codigo_cuenta === $partida['codigo'] ? 'text-danger' : '') : '' ?> table-light text-right font-weight-bold">
+                <td class="<?= $codigo_cuenta !== null ? ($codigo_cuenta === $partida['codigo'] ? 'text-danger font-weight-bold' : '') : '' ?> table-light text-right font-weight-bold">
                     <?= ($partida['movimiento'] === 'Abono') ? Utiles::monto($partida['monto']) : '-' ?></td>
             </tr>
             <?php

@@ -9,6 +9,12 @@
                     <div class="card-body">
                         <div class='form-group row'>
                             <div class="col-12">
+                                <small>*Click en el número de una partida para ver mas detalles.</small>
+                            </div>
+                            <div class="w-100">
+                                &nbsp;
+                            </div>
+                            <div class="col-12">
                                 <a href='<?= URL_BASE ?>/libro-mayor/reporte-libro-mayor' id='btn_imprimir' class="btn btn-success">
                                     <i class="fas fa-file-pdf"></i>
                                     Reporte Libro Mayor

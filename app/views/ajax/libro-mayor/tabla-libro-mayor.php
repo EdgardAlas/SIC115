@@ -45,7 +45,7 @@
                     <?= Utiles::fechaSinFormato($partida['fecha']) ?>
                 </td>
                 <td class="table-light text-right font-weight-bold">
-                <span class='numero_partida' data-codigo='<?= base64_encode($partida['codigo']) ?>'
+                <span class='numero_partida badge badge-info' data-codigo='<?= base64_encode($partida['codigo']) ?>'
                       data-partida=<?= $partida['numero'] ?>>
                     <?= $partida['numero'] ?>
                 </span>
