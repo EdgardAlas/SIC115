@@ -37,6 +37,7 @@
                 <?= $cuenta['codigo'] . ' - ' . $cuenta['nombre'] ?>
             </td>
             <?php
+            array_multisort(array_column($cuenta['partidas'], 'numero'), $cuenta['partidas']);
             foreach ($cuenta['partidas'] as $i_partida => $partida) {
                 ?>
                 <tr>

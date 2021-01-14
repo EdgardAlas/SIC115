@@ -49,11 +49,13 @@ class CuentaController extends Controller
     {
         $this->sesionActiva();
         $empresa = $this->sesion->get('login')['id'];
+        $nombre = $this->sesion->get('login')['nombre'];
         $periodo = $this->sesion->get('login')['periodo'];
         $datos = $this->catalogoDeCuentas($empresa, $periodo);
         Flight::render('pdf/catalogo', array(
             'datos' => $datos,
             'id' => $empresa,
+            'empresa' => $nombre
         ));
     }
 

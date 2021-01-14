@@ -35,7 +35,8 @@ class PDF extends FPDF
         $this->SetFont('Arial', 'B', 11);
         $this->SetFont('Arial', 'B', 11);
         $this->Cell(25, 5, 'Fecha', 1, 0, 'C', 1);
-        $this->Cell(100, 5, iconv('UTF-8', 'cp1252', 'Descripción'), 1, 0, 'C', 1);
+        $this->Cell(10, 5, '#', 1, 0, 'C', 1);
+        $this->Cell(90, 5, iconv('UTF-8', 'cp1252', 'Descripción'), 1, 0, 'C', 1);
         $this->Cell(32.5, 5, 'Cargo', 1, 0, 'C', 1);
         $this->Cell(32.5, 5, 'Abono', 1, 1, 'C', 1);
     }
@@ -164,8 +165,8 @@ $pdf->SetFont('');
 $contador_detalle = 0;
 $cantidad_detalle = 1;
 
-$pdf->SetWidths(array(25, 100, 32.5, 32.5));
-$pdf->SetAligns(array('L', 'L', 'R', 'R'));
+$pdf->SetWidths(array(25, 10, 90, 32.5, 32.5));
+$pdf->SetAligns(array('L', 'R', 'L', 'R', 'R'));
 
 
 foreach ($data as $key => $partida) {
@@ -175,13 +176,16 @@ foreach ($data as $key => $partida) {
         $pdf->SetFont('courier', 'B', 9);
 
         $pdf->Row(array(
-            '', $partida['codigo'] . ' - ' . iconv('UTF-8', 'cp1252', $partida['nombre']), '', ''
+            '', '', $partida['codigo'] . ' - ' . iconv('UTF-8', 'cp1252', $partida['nombre']), '', ''
         ));
 
         $pdf->SetFont('courier', '', 9);
+
+        array_multisort(array_column($partida['partidas'], 'numero'), $partida['partidas']);
         foreach ($partida['partidas'] as $key_movimiento => $movimientos) {
             $pdf->Row(array(
                 Utiles::fechaSinFormato($movimientos['fecha']),
+                $movimientos['numero'],
                 iconv('UTF-8', 'cp1252', $movimientos['descripcion']),
                 $movimientos['movimiento'] === 'Cargo' ? Utiles::monto($movimientos['monto']) : '-',
                 $movimientos['movimiento'] === 'Abono' ? Utiles::monto($movimientos['monto']) : '-'
@@ -191,16 +195,16 @@ foreach ($data as $key => $partida) {
         }
         $pdf->SetFont('courier', 'B', 9);
         $pdf->Row(array(
-            '', '', Utiles::monto($total_cargo), Utiles::monto($total_abono)
+            '', '', '', Utiles::monto($total_cargo), Utiles::monto($total_abono)
         ));
- 
-        
+
+
         $pdf->Row(array(
-            '', '',
+            '', '', '',
             $partida['tipo_saldo'] === 'Deudor' ? Utiles::monto($total_cargo - $total_abono) : '-',
             $partida['tipo_saldo'] === 'Acreedor' ? Utiles::monto($total_abono - $total_cargo) : '-'
         ));
-        $pdf->Row(array('','','',''));
+        $pdf->Row(array('', '', '', '', ''));
     }
 }
 

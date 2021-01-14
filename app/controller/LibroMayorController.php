@@ -102,6 +102,7 @@ class LibroMayorController extends Controller
 
     }
 
+
     public function reporteLibroMayor()
     {
 
