@@ -172,10 +172,10 @@ class CierreContableController extends Controller
 
         $partidas_cierre = $this->sesion->get('partidas');
 
-        $partidas_de_balance = $partidas_cierre[count($partidas_cierre) - 1];
+      //  $partidas_de_balance = $partidas_cierre[count($partidas_cierre) - 1];
 
 
-        unset($partidas_cierre[count($partidas_cierre) - 1]);
+        //unset($partidas_cierre[count($partidas_cierre) - 1]);
 
         $conexion = new Conexion();
         $partida_model = new PartidaModel($conexion);
@@ -245,7 +245,7 @@ class CierreContableController extends Controller
         }
 
         //liquidar cuentas de balance
-        $this->liquidarBalance($partidas_de_balance, $cuenta_model, $partida_model, $detalle_partida_model, $login);
+        //$this->liquidarBalance($partidas_de_balance, $cuenta_model, $partida_model, $detalle_partida_model, $login);
 
         //actualizar periodo
 

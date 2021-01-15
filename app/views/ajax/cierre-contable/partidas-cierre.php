@@ -3,9 +3,44 @@ $estado_resultados = isset($estado_resultados) ? $estado_resultados : array();
 $cuentas = isset($cuentas) ? $cuentas : array();
 $partida = isset($partida) ? $partida : array();
 $empresa = isset($empresa) ? $empresa : array();
-$fecha = date($empresa['anio'].'-12-31');
+$fecha = date($empresa['anio'] . '-12-31');
 
 $partidas_cierre = array();
+
+function moverCuentasRLiquidar(&$fuente, &$destino, $mostrar)
+{
+
+//    $array = array();
+    $orden_destino =  $destino[0]['orden'];
+
+    $pos = 0;
+
+    foreach ($fuente as $key => $cuenta) {
+        if (Utiles::endsWith($cuenta['codigo'], 'R') && $cuenta['ultimo_nivel']) {
+
+            if(!$mostrar){
+                if ($orden_destino != $cuenta['orden']) {
+                    array_push($destino, $fuente[$pos]);
+                    array_splice($fuente, $pos, 1);
+//                Excepcion::json($pos);
+                    continue;
+                    /*$array[] = $cuenta;*/
+                }
+            }else{
+                if ($orden_destino == $cuenta['orden']) {
+                    array_push($destino, $fuente[$pos]);
+                    array_splice($fuente, $pos, 1);
+//                Excepcion::json($pos);
+                    continue;
+                    /*$array[] = $cuenta;*/
+                }
+            }
+        }
+        $pos++;
+    }
+//    Excepcion::json($fuente);
+}
+
 
 function buscarSubCuentas($valor, $columna, $arreglo)
 {
@@ -22,10 +57,9 @@ function imprimirFila(&$arreglo, $tipo, $saldo = null, $fecha = null, $eliminar 
         if ($cuenta['ultimo_nivel']) {
 
 
-
             if ($cuenta['saldo'] > 0 || $saldo != null) {
 
-                if($cuenta['saldo']==0 && $eliminar){
+                if ($cuenta['saldo'] == 0 && $eliminar) {
                     unset($arreglo[$key]);
                     continue;
                 }
@@ -33,7 +67,7 @@ function imprimirFila(&$arreglo, $tipo, $saldo = null, $fecha = null, $eliminar 
                 ?>
                 <tr>
                     <td class="table-light">
-                        <?= $fecha != null && $tipo === 'cargo' && $acumulador_fecha == 1? $fecha : '' ?>
+                        <?= $fecha != null && $tipo === 'cargo' && $acumulador_fecha == 1 ? $fecha : '' ?>
                     </td>
                     <td class="table-light" <?= $tipo === 'abono' ? "style='padding-left: 6em;'" : '' ?>>
                         <?= $cuenta['codigo'] . ' - ' . $cuenta['nombre'] ?>
@@ -173,6 +207,9 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
 
     $cargo = 0;
     $abono = 0;
+    $activo = buscarSubCuentas('activo', 'descripcion', $cuentas);
+    $pasivo = buscarSubCuentas('pasivo', 'descripcion', $cuentas);
+    $patrimonio = buscarSubCuentas('patrimonio', 'descripcion', $cuentas);
 
     //print_r($estado_resultados);
 
@@ -494,6 +531,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
 
     //Aperturar inventario final
     $total_liquidar = $estado_resultados['inventario_final'];
+    $inv_final = $estado_resultados['inventario_final'];
 
     if ($total_liquidar > 0) {
         $estado_resultados['compras'] -= $total_liquidar;
@@ -730,7 +768,11 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
         if (count($detalle) > 0)
             array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
 
-    } else if($utilidad_perdida < 0){
+
+        $indice = Utiles::posicionArreglo($perdida[0]['codigo'],'codigo', $patrimonio);
+        $patrimonio[$indice]['saldo'] += (!Utiles::endsWith($perdida[0]['codigo'], 'R')) ? -1*abs($utilidad_perdida) : abs($utilidad_perdida);
+
+    } else if ($utilidad_perdida < 0) {
         //ganancia
         $partida = imprimirCabeceraPartida($partida);
         $cargo = imprimirFila($perdidas_ganancias, 'cargo', abs($utilidad_perdida), $fecha);
@@ -759,14 +801,60 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
         $detalle = generarDetalle($utiliadad, abs($utilidad_perdida), 'Abono');
         if (count($detalle) > 0)
             array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
+
+        $indice = Utiles::posicionArreglo($utiliadad[0]['codigo'],'codigo', $patrimonio);
+        $patrimonio[$indice]['saldo'] +=  abs($utilidad_perdida);
+//        Excepcion::json($patrimonio[$indice]);
     }
 
 
     //LIquidicacion de cuentas de balance
-    $partida++;
-    $activo = buscarSubCuentas('activo', 'descripcion', $cuentas);
-    $pasivo = buscarSubCuentas('pasivo', 'descripcion', $cuentas);
-    $patrimonio = buscarSubCuentas('patrimonio', 'descripcion', $cuentas);
+    //$partida++;
+
+
+
+    //    Transferir cuentas para poder vizualsarlas mejor
+    moverCuentasRLiquidar($activo, $pasivo, false);
+    moverCuentasRLiquidar($pasivo, $activo, false);
+    //Excepcion::json($activo);
+    moverCuentasRLiquidar($patrimonio, $activo, false);
+
+    $indice = Utiles::posicionArreglo($inventario[0]['codigo'],'codigo', $activo);
+    $activo[$indice]['saldo'] = $inv_final;
+
+    $indice = Utiles::posicionArreglo($impuesto_renta[0]['codigo'],'codigo', $pasivo);
+    $pasivo[$indice]['saldo'] += $saldo_impuesto_renta;
+
+    $indice = Utiles::posicionArreglo($impuesto_iva[0]['codigo'],'codigo', $pasivo);
+    $pasivo[$indice]['saldo'] += $saldo_impuesto_iva;
+
+    $indice = Utiles::posicionArreglo($iva_debito[0]['codigo'],'codigo', $pasivo);
+    $pasivo[$indice]['saldo'] -= $saldo_iva_debito;
+
+    $indice = Utiles::posicionArreglo($iva_credito[0]['codigo'],'codigo', $activo);
+    $activo[$indice]['saldo'] -= $saldo_iva_credito;
+
+    $indice = Utiles::posicionArreglo($reserva_legal[0]['codigo'],'codigo', $patrimonio);
+    $patrimonio[$indice]['saldo'] += $saldo_reserva_legal;
+
+
+
+
+    $partida = imprimirCabeceraPartida($partida);
+    $cargo = imprimirFila($pasivo, 'cargo', null, $fecha);
+    $cargo += imprimirFila($patrimonio, 'cargo', null, null);
+    $abono = imprimirFila($activo, 'abono', null, null);
+    imprimirPiePartida(
+        $cargo,
+        $abono,
+        'Liquidar cuentas de balance.'
+    );
+
+    moverCuentasRLiquidar($pasivo, $activo, true);
+    moverCuentasRLiquidar($activo, $pasivo, true);
+    //Excepcion::json($activo);
+    moverCuentasRLiquidar($activo, $patrimonio, true);
+
 
     $partidas_cierre[] = array(
         'partida' => array(
@@ -777,6 +865,10 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
             'periodo' => $empresa['periodo']
         ),
     );
+
+//    $activo = buscarSubCuentas('activo', 'descripcion', $cuentas);
+//    $pasivo = buscarSubCuentas('pasivo', 'descripcion', $cuentas);
+//    $patrimonio = buscarSubCuentas('patrimonio', 'descripcion', $cuentas);
 
     $posicion = count($partidas_cierre) - 1;
 
@@ -794,7 +886,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
     if (count($detalle) > 0)
         array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
 
-
+    //Excepcion::json($partidas_cierre);
 
     $sesion = new Session();
     //Guardar partidas en sesion para despues guardarlas en la bd
