@@ -35,20 +35,20 @@
     width: 100% !important;
 }
 
-.numero_partida{
+.numero_partida {
     cursor: pointer;
 }
 
-.numero_partida:hover{
+.numero_partida:hover {
     color: #6777ef;
 }
 
 
-td{
+td {
     /*word-break:break-all;*/
 }
 
-.sticky-bottom{
+.sticky-bottom {
     background-color: #fff;
     position: sticky;
     bottom: 0;

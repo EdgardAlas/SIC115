@@ -133,6 +133,36 @@ $(document).ready(() => {
 
     $(document).on('click', '#realizar_cierre', function (e) {
         $('#realizar_cierre').blur();
+
+        const total_cargo = $("#total_cargo").val() || null,
+            total_abono = $("#total_abono").val() || null;
+
+        if(total_cargo != total_abono){
+            Swal.fire({
+                title: 'Atención',
+                text: 'Revise el inventario final ingresado, una partida o varias no cuadran',
+                icon: 'warning',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                focus('inventario_final')
+            })
+            return;
+        }
+
+        if(total_cargo == null ||  total_abono == null){
+            Swal.fire({
+                title: 'Atención',
+                text: 'Por favor ingrese un inventario final',
+                icon: 'warning',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                focus('inventario_final')
+            })
+            return;
+        }
+
         realizarCierre();
     })
 
