@@ -14,8 +14,7 @@ Flight::map('notFound', function () {
 
 Flight::map('error', function(Exception $ex){
     // Handle error
-//    var_dump($ex);
-    header("HTTP/1.0 500 Internal Server Error");
+
     Flight::render('error/500', 500);
 });
 
@@ -24,7 +23,7 @@ Flight::map('error', function(Exception $ex){
 Flight::route('/(@controlador(/@metodo(/@id)))', function ($controlador, $metodo, $id) {
 
     //si no hay un controlador se asigna el por defecto
-    
+
     $partesControlador = explode('-', $controlador);
     $controlador = "";
     foreach ($partesControlador as $key => $parte) {
@@ -71,7 +70,9 @@ Flight::route('/(@controlador(/@metodo(/@id)))', function ($controlador, $metodo
         try {
             $objControlador->$metodo($id);
         } catch (Exception $e) {
+
             Excepcion::generarExcepcion('Error interno');
+
 //            var_dump($e);
         }
     }
