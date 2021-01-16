@@ -14,6 +14,7 @@ class InicioController extends Controller
 
     public function index()
     {
+//        var_dump($this->sesion->get('login'));
         $this->sesionActiva();
         $this->view('inicio', [
             'js_especifico' => Utiles::printScript('home')

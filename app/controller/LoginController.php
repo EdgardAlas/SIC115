@@ -550,6 +550,7 @@ class LoginController extends Controller
             $data['periodo'] = null;
         }
         $sesion->set('login', $data);
+        //Excepcion::json($this->sesion->get('login'));
     }
 
     private function enviarCodigo($correo, $codigo)

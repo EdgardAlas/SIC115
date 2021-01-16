@@ -19,7 +19,7 @@
 
 
             //esto es para validar que no aparezca el boton de cierre cuando no sea la fecha inidicada
-            if ($fecha_inicial >= $fecha_final && $login['estado'] !== 'CERRADO') {
+            if ($fecha_inicial >= $fecha_final && $login['estado'] !== 'CERRADO' && $login['estado'] != null) {
                 ?>
 
                 <li class="menu-header">Cierre Contable</li>
@@ -27,7 +27,7 @@
                     <a class="nav-link" href="/cierre-contable"><i class="fas fa-exclamation-circle"></i> <span>Cierre Contable</span></a>
                 </li>
                 <?php
-            }else if ($login['anio'] < date('Y') && $login['estado'] !== 'CERRADO') {
+            }else if ($login['anio'] < date('Y') && $login['estado'] !== 'CERRADO' && $login['estado'] != null) {
                 ?>
 
                 <li class="menu-header">Cierre Contable</li>

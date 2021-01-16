@@ -51,7 +51,9 @@ function iniciarPeriodo() {
                     confirmButtonColor: '#6777ef',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Ok',
-                })
+                }).then(()=>{
+                    location.reload()
+                });
 
 
             });

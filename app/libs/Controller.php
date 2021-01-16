@@ -11,12 +11,13 @@ class Controller
     {
         $this->sesion = new Session();
         $login = $this->sesion->get('login');
+//        var_dump($login);
         /* $empresa = $this->sesion->get('login')['id']; */
         //$this->recursive_rmdir('temp/'.$empresa);
 
         if($login!==null){
             if ($login['anio'] < date('Y') && $login['estado'] !== 'CERRADO') {
-                if($login['estado'] !== 'CIERRE'){
+                if($login['estado'] !== 'CIERRE' && $login['estado']!==null){
                     $conexion = new Conexion();
                     $periodo_model = new PeriodoModel($conexion);
 
@@ -40,7 +41,7 @@ class Controller
         $conexion = new Conexion();
         $periodoModel = new PeriodoModel($conexion);
         $empresaModel = new EmpresaModel($conexion);
-        $data = $empresaModel->seleccionar(array('id', 'nombre', 'usuario'), array('usuario' => $usuario));
+        $data = $empresaModel->seleccionar(array('id', 'nombre', 'usuario', 'correo'), array('usuario' => $usuario));
 
         $data = $data[0];
 

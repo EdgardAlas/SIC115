@@ -8,7 +8,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row form-group">
-                            <div class="col-10">
+                            <div class="col-9">
                                 <label for="inventario_final">Inventario Final</label>
                                 <input type="text" class="form-control" id="inventario_final">
                             </div>

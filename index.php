@@ -14,7 +14,7 @@ Flight::map('notFound', function () {
 
 Flight::map('error', function(Exception $ex){
     // Handle error
-
+//    var_dump($ex);
     Flight::render('error/500', 500);
 });
 
@@ -73,7 +73,7 @@ Flight::route('/(@controlador(/@metodo(/@id)))', function ($controlador, $metodo
 
             Excepcion::generarExcepcion('Error interno');
 
-//            var_dump($e);
+//            var_dump($_SESSION);
         }
     }
 });
