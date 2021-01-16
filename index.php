@@ -14,7 +14,9 @@ Flight::map('notFound', function () {
 
 Flight::map('error', function(Exception $ex){
     // Handle error
-    var_dump($ex);
+//    var_dump($ex);
+    header("HTTP/1.0 500 Internal Server Error");
+    Flight::render('error/500', 500);
 });
 
 //MVC creditos: https://steemit.com/php/@kalangaum/easy-php-routing-management
@@ -69,8 +71,8 @@ Flight::route('/(@controlador(/@metodo(/@id)))', function ($controlador, $metodo
         try {
             $objControlador->$metodo($id);
         } catch (Exception $e) {
-//            Exepcion::generarExcepcion('');
-            var_dump($e);
+            Excepcion::generarExcepcion('Error interno');
+//            var_dump($e);
         }
     }
 });
