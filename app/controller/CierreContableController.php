@@ -695,17 +695,27 @@ class CierreContableController extends Controller
         $reserva_legal = $estado_resultados['reserva_legal'];
 
         $codigo = $this->obtenerSubCuentas('reserva_legal', $cuentas)[0]['codigo'];
-        $this->asignarSaldo($patrimonio, $reserva_legal, $codigo, 'ASIGNAR');
+
+        $this->asignarSaldo($patrimonio, $reserva_legal, $codigo, 'AUMENTAR');
 
         $utilidad_perdida = $estado_resultados['utilidad_perdida'];
 
-        if ($utilidad_perdida > 0) {
-            $codigo = $this->obtenerSubCuentas('utilidad', $cuentas)[0]['codigo'];
-            $this->asignarSaldo($patrimonio, $utilidad_perdida, $codigo, 'AUMENTAR');
-        } else {
-            $codigo = $this->obtenerSubCuentas('perdida', $cuentas)[0]['codigo'];
-            $this->asignarSaldo($patrimonio, abs($utilidad_perdida), $codigo, 'AUMENTAR');
-        }
+
+        $codigo = $this->obtenerSubCuentas('perdida', $cuentas)[0]['codigo'];
+        $this->asignarSaldo($patrimonio, ($utilidad_perdida), $codigo, 'AUMENTAR');
+
+
+        //Excepcion::json($utilidad_perdida);
+
+        //anterior para calcular la utilidad
+//        if ($utilidad_perdida > 0) {
+//            $codigo = $this->obtenerSubCuentas('utilidad', $cuentas)[0]['codigo'];
+//            $this->asignarSaldo($patrimonio, $utilidad_perdida, $codigo, 'AUMENTAR');
+//        } else {
+//            $codigo = $this->obtenerSubCuentas('perdida', $cuentas)[0]['codigo'];
+//            $this->asignarSaldo($patrimonio, abs($utilidad_perdida), $codigo, 'AUMENTAR');
+////            Excepcion::json($utilidad_perdida);
+//        }
 
 
         $impuesto_iva = $estado_resultados['impuesto_iva'];
@@ -733,7 +743,7 @@ class CierreContableController extends Controller
 
         $balance = array_slice($cuentas, 0, 3);
 
-
+//Excepcion::json($patrimonio);
         return $balance;
 
 

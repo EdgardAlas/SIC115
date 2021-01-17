@@ -221,10 +221,10 @@ foreach ($cuentas_activo as $key => $cuenta) {
         $pdf->SetFont('courier', '', 9);
     }
 
-    if ($cuenta['saldo'] > 0) {
+    if ($cuenta['saldo'] != 0) {
         $pdf->Row(array(
             $cuenta['codigo'] . ' - ' . $cuenta['nombre'],
-            substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R' ? '(' . Utiles::monto($cuenta['saldo']) . ')'
+            (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R' || $cuenta['saldo'] < 0) ? '(' . Utiles::monto(abs($cuenta['saldo'])) . ')'
                 : Utiles::monto($cuenta['saldo'])
         ));
     }
@@ -328,10 +328,10 @@ foreach ($cuentas_pasivo as $key => $cuenta) {
         $pdf->SetFont('courier', '', 9);
     }
 
-    if ($cuenta['saldo'] > 0) {
+    if ($cuenta['saldo'] != 0) {
         $pdf->Row(array(
             $cuenta['codigo'] . ' - ' . $cuenta['nombre'],
-            substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R' ? '(' . Utiles::monto($cuenta['saldo']) . ')'
+            (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R' || $cuenta['saldo'] < 0) ? '(' . Utiles::monto(abs($cuenta['saldo'])) . ')'
                 : Utiles::monto($cuenta['saldo'])
         ));
     }
@@ -403,7 +403,7 @@ $cuenta_padre = $cuenta_model->seleccionar(['codigo', 'nombre'], array(
 
 $pdf->SetFont('courier', 'B', 9);
 $pdf->Row(array(
-    $cuenta_padre[0]['codigo'].' - '.$cuenta_padre[0]['nombre'],
+    $cuenta_padre[0]['codigo'] . ' - ' . $cuenta_padre[0]['nombre'],
     ''
 ));
 $total_subcuenta = 0;
@@ -411,10 +411,10 @@ $pdf->SetFont('courier', '', 9);
 
 foreach ($cuentas_patrimonio as $key => $cuenta) {
 
-    if ($cuenta['saldo'] > 0) {
+    if ($cuenta['saldo'] != 0) {
         $pdf->Row(array(
             $cuenta['codigo'] . ' - ' . $cuenta['nombre'],
-            substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R' ? '(' . Utiles::monto($cuenta['saldo']) . ')'
+            (substr($cuenta['codigo'], strlen($cuenta['codigo']) - 1) === 'R' || $cuenta['saldo'] < 0) ? '(' . Utiles::monto(abs($cuenta['saldo'])) . ')'
                 : Utiles::monto($cuenta['saldo'])
         ));
     }

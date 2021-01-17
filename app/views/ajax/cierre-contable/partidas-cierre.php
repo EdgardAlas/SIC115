@@ -23,7 +23,12 @@ function moverCuentasRLiquidar(&$fuente, &$destino, $mostrar)
     $pos = 0;
 
     foreach ($fuente as $key => $cuenta) {
-        if (Utiles::endsWith($cuenta['codigo'], 'R') && $cuenta['ultimo_nivel']) {
+        /*if($cuenta['codigo']=='3102'){
+            Excepcion::json($cuenta);
+        }*/
+        if (Utiles::endsWith($cuenta['codigo'], 'R') && $cuenta['ultimo_nivel'] ||
+            $cuenta['saldo'] < 0
+        ) {
 
             if(!$mostrar){
                 if ($orden_destino != $cuenta['orden']) {
@@ -83,16 +88,16 @@ function imprimirFila(&$arreglo, $tipo, $saldo = null, $fecha = null, $eliminar 
                         <?= $cuenta['codigo'] . ' - ' . $cuenta['nombre'] ?>
                     </td>
                     <td class="table-light text-right font-weight-bold">
-                        <?= $tipo === 'cargo' ? Utiles::monto(($saldo !== null ? $saldo : $cuenta['saldo'])) : '-' ?>
+                        <?= $tipo === 'cargo' ? Utiles::monto(($saldo !== null ? $saldo : abs($cuenta['saldo']))) : '-' ?>
                     </td>
                     <td class="table-light text-right font-weight-bold">
-                        <?= $tipo === 'abono' ? Utiles::monto(($saldo !== null ? $saldo : $cuenta['saldo'])) : '-' ?>
+                        <?= $tipo === 'abono' ? Utiles::monto(($saldo !== null ? $saldo : abs($cuenta['saldo']))) : '-' ?>
                     </td>
                 </tr>
 
                 <?php
                 $acumulador_fecha++;
-                $monto_acumulado += ($saldo !== null ? $saldo : $cuenta['saldo']);
+                $monto_acumulado += ($saldo !== null ? $saldo : abs($cuenta['saldo']));
             }
         }
     }
@@ -170,12 +175,13 @@ function generarDetalle($cuentas, $monto = null, $movimiento)
 
 function generarDetalleBalance($cuentas, $monto = null, $movimiento)
 {
+    $orden_principal =  $cuentas[0]['orden'];
     $aux_movimiento = $movimiento;
     $partidas = array();
     foreach ($cuentas as $key => $cuenta) {
 
         if ($cuenta['ultimo_nivel']) {
-            if (Utiles::endsWith($cuenta['codigo'], 'R')) {
+            if (Utiles::endsWith($cuenta['codigo'], 'R') && $orden_principal == $cuenta['orden']) {
                 $movimiento = ($movimiento === 'Abono') ? 'Cargo' : 'Abono';
             } else {
                 $movimiento = $aux_movimiento;
@@ -866,11 +872,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
 
 
 
-    //    Transferir cuentas para poder vizualsarlas mejor
-    moverCuentasRLiquidar($activo, $pasivo, false);
-    moverCuentasRLiquidar($pasivo, $activo, false);
-    //Excepcion::json($activo);
-    moverCuentasRLiquidar($patrimonio, $activo, false);
+
 
     $indice = Utiles::posicionArreglo($inventario[0]['codigo'],'codigo', $activo);
     $activo[$indice]['saldo'] = $inv_final;
@@ -890,7 +892,11 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
     $indice = Utiles::posicionArreglo($reserva_legal[0]['codigo'],'codigo', $patrimonio);
     $patrimonio[$indice]['saldo'] += $saldo_reserva_legal;
 
-
+    //    Transferir cuentas para poder vizualsarlas mejor
+    moverCuentasRLiquidar($activo, $pasivo, false);
+    moverCuentasRLiquidar($pasivo, $activo, false);
+    //Excepcion::json($activo);
+    moverCuentasRLiquidar($patrimonio, $activo, false);
 
 
     $partida = imprimirCabeceraPartida($partida);
@@ -908,12 +914,12 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
     $total_cargo += $cargo;
     $total_abono += $abono;
 
-    moverCuentasRLiquidar($pasivo, $activo, true);
-    moverCuentasRLiquidar($activo, $pasivo, true);
+//    moverCuentasRLiquidar($pasivo, $activo, true);
+//    moverCuentasRLiquidar($activo, $pasivo, true);
     //Excepcion::json($activo);
-    moverCuentasRLiquidar($activo, $patrimonio, true);
+//    moverCuentasRLiquidar($activo, $patrimonio, true);
 
-
+//Excepcion::json($pasivo);
     $partidas_cierre[] = array(
         'partida' => array(
             "numero" => $partida - 1,
@@ -944,7 +950,7 @@ function generarDetalleBalance($cuentas, $monto = null, $movimiento)
     if (count($detalle) > 0)
         array_push($partidas_cierre[$posicion]['detalle_partida'], $detalle);
 
-    //Excepcion::json($partidas_cierre);
+//    Excepcion::json($partidas_cierre);
 
     $sesion = new Session();
     //Guardar partidas en sesion para despues guardarlas en la bd
