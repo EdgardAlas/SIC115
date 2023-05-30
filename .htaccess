@@ -1,8 +1,5 @@
 RewriteEngine On
 
-RewriteCond %{HTTP_HOST} ^www\.edgard2023\.me$ [NC]
-RewriteRule ^(.*)$ https://edgard2023.me/$1 [R=301,L]
-
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]
