@@ -14,10 +14,10 @@ class Conexion
     public function __construct()
     {
         $this->tipo = "mysql";
-        $this->bd = "sic175";
+        $this->bd = "test";
         $this->server = "localhost";
-        $this->usuario = "root";
-        $this->contrasena = "";
+        $this->usuario = "edgard";
+        $this->contrasena = "root";
         try {
             $this->conectar();
         } catch (\Throwable $th) {
